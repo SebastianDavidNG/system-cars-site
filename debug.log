@@ -1,0 +1,242 @@
+[02-Sep-2025 22:47:40 UTC] PHP Deprecated:  El archivo Tema sin header.php ha quedado <strong>obsoleto</strong> desde la versión 3.0.0 y no hay alternativas disponibles. Por favor, incluye una plantilla header.php en tu tema. in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 22:47:40 UTC] PHP Deprecated:  El archivo Tema sin footer.php ha quedado <strong>obsoleto</strong> desde la versión 3.0.0 y no hay alternativas disponibles. Por favor, incluye una plantilla footer.php en tu tema. in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 22:54:52 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 22:54:52 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 22:56:52 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 22:56:52 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 22:58:53 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 22:58:53 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:00:54 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:00:54 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:02:55 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:02:55 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:04:56 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:04:56 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:06:57 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:06:57 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:08:58 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:08:58 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:10:59 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:10:59 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:13:00 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:13:00 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:15:01 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:15:01 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:17:02 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:17:02 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:19:03 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:19:03 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:21:04 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:21:04 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:23:05 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:23:05 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:25:06 UTC] PHP Notice:  La función wp_enqueue_style ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-tailwind</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[02-Sep-2025 23:25:06 UTC] PHP Notice:  La función wp_enqueue_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-js</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:33:23 UTC] PHP Notice:  La función wp_script_is ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-editor-script</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:33:23 UTC] PHP Notice:  La función wp_register_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-editor-script</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:33:23 UTC] PHP Notice:  La función wp_style_is ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-style</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:33:23 UTC] PHP Fatal error:  Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, function "register_custom_blocks" not found or invalid function name in /var/www/html/wp-includes/class-wp-hook.php:324
+Stack trace:
+#0 /var/www/html/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#1 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action(Array)
+#2 /var/www/html/wp-settings.php(727): do_action('init')
+#3 /var/www/html/wp-config.php(142): require_once('/var/www/html/w...')
+#4 /var/www/html/wp-load.php(50): require_once('/var/www/html/w...')
+#5 /var/www/html/wp-admin/admin-ajax.php(22): require_once('/var/www/html/w...')
+#6 {main}
+  thrown in /var/www/html/wp-includes/class-wp-hook.php on line 324
+[03-Sep-2025 01:34:08 UTC] PHP Notice:  La función wp_script_is ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-editor-script</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:34:08 UTC] PHP Notice:  La función wp_register_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-editor-script</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:34:08 UTC] PHP Notice:  La función wp_style_is ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-style</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:34:08 UTC] PHP Fatal error:  Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, function "register_custom_blocks" not found or invalid function name in /var/www/html/wp-includes/class-wp-hook.php:324
+Stack trace:
+#0 /var/www/html/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#1 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action(Array)
+#2 /var/www/html/wp-settings.php(727): do_action('init')
+#3 /var/www/html/wp-config.php(142): require_once('/var/www/html/w...')
+#4 /var/www/html/wp-load.php(50): require_once('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(13): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-includes/class-wp-hook.php on line 324
+[03-Sep-2025 01:34:16 UTC] PHP Notice:  La función wp_script_is ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-editor-script</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:34:16 UTC] PHP Notice:  La función wp_register_script ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-editor-script</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:34:16 UTC] PHP Notice:  La función wp_style_is ha sido llamada <strong>de forma incorrecta</strong>. Los scripts y estilos no se deberían registrar o poner en cola hasta que se carguen los ganchos <code>wp_enqueue_scripts</code>, <code>admin_enqueue_scripts</code> y <code>login_enqueue_scripts</code>. Este aviso ha sido activado por la gestión de <code>system-cars-car-block-style</code>. Por favor, visita <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Depuración en WordPress</a> para más información. (Este mensaje se añadió en la versión 3.3.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 01:34:16 UTC] PHP Fatal error:  Uncaught TypeError: call_user_func_array(): Argument #1 ($callback) must be a valid callback, function "register_custom_blocks" not found or invalid function name in /var/www/html/wp-includes/class-wp-hook.php:324
+Stack trace:
+#0 /var/www/html/wp-includes/class-wp-hook.php(348): WP_Hook->apply_filters(NULL, Array)
+#1 /var/www/html/wp-includes/plugin.php(517): WP_Hook->do_action(Array)
+#2 /var/www/html/wp-settings.php(727): do_action('init')
+#3 /var/www/html/wp-config.php(142): require_once('/var/www/html/w...')
+#4 /var/www/html/wp-load.php(50): require_once('/var/www/html/w...')
+#5 /var/www/html/wp-admin/admin.php(35): require_once('/var/www/html/w...')
+#6 /var/www/html/wp-admin/themes.php(10): require_once('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-includes/class-wp-hook.php on line 324
+[03-Sep-2025 04:01:49 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:06:50 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:06:52 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:10:02 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:11:14 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:11:16 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:14:22 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:17:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:19:11 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:21:34 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:25:17 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:27:18 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:27:20 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:27:34 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:27:35 UTC] PHP Fatal error:  Uncaught Error: Call to undefined function wc_get_page_id() in /var/www/html/wp-content/themes/system-cars-theme/header.php:125
+Stack trace:
+#0 /var/www/html/wp-includes/template.php(810): require_once()
+#1 /var/www/html/wp-includes/template.php(745): load_template('/var/www/html/w...', true, Array)
+#2 /var/www/html/wp-includes/general-template.php(48): locate_template(Array, true, true, Array)
+#3 /var/www/html/wp-content/themes/system-cars-theme/front-page.php(1): get_header()
+#4 /var/www/html/wp-includes/template-loader.php(106): include('/var/www/html/w...')
+#5 /var/www/html/wp-blog-header.php(19): require_once('/var/www/html/w...')
+#6 /var/www/html/index.php(17): require('/var/www/html/w...')
+#7 {main}
+  thrown in /var/www/html/wp-content/themes/system-cars-theme/header.php on line 125
+[03-Sep-2025 04:27:51 UTC] PHP Notice:  Function _load_textdomain_just_in_time was called <strong>incorrectly</strong>. Translation loading for the <code>woocommerce</code> domain was triggered too early. This is usually an indicator for some code in the plugin or theme running too early. Translations should be loaded at the <code>init</code> action or later. Please see <a href="https://developer.wordpress.org/advanced-administration/debug/debug-wordpress/">Debugging in WordPress</a> for more information. (This message was added in version 6.7.0.) in /var/www/html/wp-includes/functions.php on line 6121
+[03-Sep-2025 04:29:01 UTC] PHP Warning:  Attempt to read property "title" on null in /var/www/html/wp-includes/class-wp-customize-widgets.php on line 926

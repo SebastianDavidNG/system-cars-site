@@ -1,0 +1,9 @@
+@use "../../scss/_variables.scss" as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wp-block-system-cars-car-block {
+  @apply p-4 bg-white rounded-lg shadow;
+}
