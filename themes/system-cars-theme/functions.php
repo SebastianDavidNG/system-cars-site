@@ -14,7 +14,6 @@ function system_cars_theme_setup() {
         'flex-height' => true,
         'flex-width'  => true,
     ));
-    add_theme_support('align-wide');
     add_theme_support('block-templates');
 
     register_nav_menus([
@@ -22,7 +21,7 @@ function system_cars_theme_setup() {
         'footer'  => __('Menú Footer', 'system-cars-theme'),
     ]);
 
-    // Añadir clase "active" a los ítems activos del menú
+    // Add "active" class to menu items
     function agregar_clase_active_a_menu($classes, $item) {
         if (in_array('current-menu-item', $classes) || in_array('current_page_item', $classes)) {
             $classes[] = 'active';
@@ -30,12 +29,10 @@ function system_cars_theme_setup() {
         return $classes;
     }
     add_filter('nav_menu_css_class', 'agregar_clase_active_a_menu', 10, 2);
-
 }
-
 add_action('after_setup_theme', 'system_cars_theme_setup');
 
-function systemcars_enqueue_assets() {
+function system_cars_enqueue_frontend_assets() {
     // Google Fonts
     wp_enqueue_style(
         'systemcars-roboto-condensed',
@@ -46,20 +43,21 @@ function systemcars_enqueue_assets() {
 
     // Font Awesome
     wp_enqueue_style(
-        'font-awesome',
+        'fa-cdn',
         'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css',
         [],
         '6.6.0'
     );
 
+
     // Theme CSS (Tailwind + SCSS merged)
     $dist_css = get_template_directory() . '/dist/style.css';
-    if ( file_exists( $dist_css ) ) {
+    if (file_exists($dist_css)) {
         wp_enqueue_style(
             'systemcars-style',
             get_template_directory_uri() . '/dist/style.css',
             [],
-            filemtime( $dist_css )
+            filemtime($dist_css)
         );
     }
 
@@ -71,25 +69,74 @@ function systemcars_enqueue_assets() {
         'before'
     );
 }
-add_action('wp_enqueue_scripts', 'systemcars_enqueue_assets');
+add_action('wp_enqueue_scripts', 'system_cars_enqueue_frontend_assets');
 
-function system_cars_enqueue_assets() {
-    wp_enqueue_style('system-cars-tailwind', get_template_directory_uri() . '/dist/css/main.css', [], '1.0.0');
-    // Comenta main.js si no es necesario
-    // wp_enqueue_script('system-cars-js', get_template_directory_uri() . '/dist/main.js', [], '1.0.0', true);
+function system_cars_enqueue_block_assets() {
+    // Enqueue Tailwind CSS
+    wp_enqueue_style(
+        'system-cars-tailwind',
+        get_template_directory_uri() . '/dist/css/main.css',
+        [],
+        filemtime(get_template_directory() . '/dist/css/main.css')
+    );
 
+    // Enqueue Swiper CSS
+    wp_enqueue_style(
+        'swiper-css',
+        'https://unpkg.com/swiper/swiper-bundle.min.css',
+        [],
+        '10.3.1'
+    );
+
+    // Enqueue Swiper JS
+    wp_enqueue_script(
+        'swiper-js',
+        'https://unpkg.com/swiper/swiper-bundle.min.js',
+        [],
+        '10.3.1',
+        true
+    );
+
+    // Enqueue Underscore explicitly
+    wp_enqueue_script('underscore');
+
+    // Enqueue car-block script
     wp_enqueue_script(
         'system-cars-car-block',
         get_template_directory_uri() . '/dist/car-block.js',
-        ['wp-blocks', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-element'],
-        '1.0.0',
+        ['wp-blocks', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-element', 'underscore'],
+        filemtime(get_template_directory() . '/dist/car-block.js'),
+        true
+    );
+
+    // Enqueue slider-block script
+    wp_enqueue_script(
+        'system-cars-slider-block',
+        get_template_directory_uri() . '/dist/slider-block.js',
+        ['wp-blocks', 'wp-block-editor', 'wp-components', 'wp-i18n', 'wp-element', 'underscore'],
+        filemtime(get_template_directory() . '/dist/slider-block.js'),
+        true
+    );
+
+    // Enqueue slider-frontend script
+    wp_enqueue_script(
+        'system-cars-slider-frontend',
+        get_template_directory_uri() . '/dist/slider-frontend.js',
+        ['swiper-js'],
+        filemtime(get_template_directory() . '/dist/slider-frontend.js'),
         true
     );
 }
-add_action('enqueue_block_assets', 'system_cars_enqueue_assets');
+add_action('enqueue_block_assets', 'system_cars_enqueue_block_assets');
 
 function system_cars_add_module_type($tag, $handle, $src) {
-    if ('system-cars-car-block' === $handle) {
+    $module_handles = [
+        'system-cars-car-block',
+        'system-cars-slider-block',
+        'system-cars-slider-frontend'
+    ];
+    if (in_array($handle, $module_handles)) {
+        error_log('Adding type=module to script: ' . $handle);
         $tag = str_replace('<script ', '<script type="module" ', $tag);
     }
     return $tag;
@@ -97,31 +144,51 @@ function system_cars_add_module_type($tag, $handle, $src) {
 add_filter('script_loader_tag', 'system_cars_add_module_type', 10, 3);
 
 function register_custom_blocks() {
-    register_block_type(__DIR__ . '/blocks/car-block');
+    $blocks = [
+        'car-block',
+        'slider-block',
+    ];
+    foreach ($blocks as $block) {
+        $block_path = get_template_directory() . '/blocks/' . $block;
+        if (file_exists($block_path . '/block.json')) {
+            register_block_type($block_path);
+        } else {
+            error_log('Block registration failed: ' . $block_path . '/block.json not found');
+        }
+    }
 }
 add_action('init', 'register_custom_blocks');
 
+function system_cars_add_block_category($categories) {
+    return array_merge(
+        $categories,
+        [
+            [
+                'slug'  => 'system-cars',
+                'title' => __('System Cars Blocks', 'system-cars-theme'),
+                'icon'  => 'dashicons-car'
+            ],
+        ]
+    );
+}
+add_filter('block_categories_all', 'system_cars_add_block_category', 10, 2);
 
+register_sidebar([
+    'name'          => __('Footer Widgets', 'system-cars-theme'),
+    'id'            => 'footer-widgets',
+    'before_widget' => '<div class="widget %2$s">',
+    'after_widget'  => '</div>',
+    'before_title'  => '<h3 class="widget-title">',
+    'after_title'   => '</h3>',
+]);
 
-
- register_sidebar(array(
-        'name'          => __('Footer Widgets', 'system-cars-theme'),
-        'id'            => 'footer-widgets',
-        'before_widget' => '<div class="widget %2$s">',
-        'after_widget'  => '</div>',
-        'before_title'  => '<h3 class="widget-title">',
-        'after_title'   => '</h3>',
-    ));
-
-    // ==========================================
-    // Página de Opciones ACF (para logo del footer, redes, etc.)
-    // ==========================================
-    if (function_exists('acf_add_options_page')) {
-        acf_add_options_page(array(
-            'page_title'  => __('Opciones del Tema', 'system-cars-theme'),
-            'menu_title'  => __('Opciones del Tema', 'system-cars-theme'),
-            'menu_slug'   => 'theme-general-settings',
-            'capability'  => 'edit_posts',
-            'redirect'    => false
-        ));
-    }
+// ACF Options Page
+if (function_exists('acf_add_options_page')) {
+    acf_add_options_page([
+        'page_title'  => __('Opciones del Tema', 'system-cars-theme'),
+        'menu_title'  => __('Opciones del Tema', 'system-cars-theme'),
+        'menu_slug'   => 'theme-general-settings',
+        'capability'  => 'edit_posts',
+        'redirect'    => false
+    ]);
+}

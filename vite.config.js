@@ -1,3 +1,4 @@
+// vite.config.js (en la raíz del proyecto)
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -5,8 +6,8 @@ import path from 'path';
 export default defineConfig({
   plugins: [
     react({
-      jsxRuntime: 'classic', // Usa el runtime clásico para evitar importaciones automáticas de 'react'
-      jsxInject: false, // Desactiva la inyección automática de importaciones de React
+      jsxRuntime: 'classic',
+      jsxInject: false,
     }),
   ],
   css: {
@@ -22,31 +23,48 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main: path.resolve(__dirname, 'themes/system-cars-theme/js/main.js'),
-        'car-block': path.resolve(__dirname, 'themes/system-cars-theme/blocks/car-block/index.js'),
+        main:               path.resolve(__dirname, 'themes/system-cars-theme/js/main.js'),
+        'car-block':        path.resolve(__dirname, 'themes/system-cars-theme/blocks/car-block/index.js'),
+        'slider-block':     path.resolve(__dirname, 'themes/system-cars-theme/blocks/slider-block/index.js'),
+        'slider-frontend':  path.resolve(__dirname, 'themes/system-cars-theme/blocks/slider-block/slider-frontend.js'),
+        // <<< Aquí añadimos el SCSS del editor como entrada:
+        'slider-block-editor': path.resolve(
+          __dirname,
+          'themes/system-cars-theme/blocks/slider-block/slider-block-editor.scss'
+        ),
       },
       output: {
-        format: 'es', // Mantiene módulos ES
+        format: 'es',
         entryFileNames: '[name].js',
         chunkFileNames: 'chunks/[name].js',
-        assetFileNames: (assetInfo) => {
-          if (assetInfo.name.endsWith('.css')) {
+        assetFileNames: assetInfo => {
+          if (assetInfo.name && assetInfo.name.endsWith('.css')) {
             return 'css/[name].[ext]';
           }
           return 'js/[name].[ext]';
         },
       },
-      external: [], // No necesitamos externalizar react ni WordPress, ya que usamos globales
+      external: [
+        '@wordpress/blocks',
+        '@wordpress/block-editor',
+        '@wordpress/components',
+        '@wordpress/data',
+        '@wordpress/element',
+        '@wordpress/i18n',
+        'wp',
+      ],
     },
-  },
-  esbuild: {
-    jsx: 'automatic',
-    include: /\.(js|jsx)$/,
   },
   resolve: {
     alias: {
-      react: 'wp.element', // Redirige importaciones de 'react' a wp.element
-      'react-dom': 'wp.element', // Redirige importaciones de 'react-dom' a wp.element
+      '@wordpress/blocks':       'wp.blocks',
+      '@wordpress/block-editor':'wp.blockEditor',
+      '@wordpress/components':  'wp.components',
+      '@wordpress/data':        'wp.data',
+      '@wordpress/element':     'wp.element',
+      '@wordpress/i18n':        'wp.i18n',
+      react:                   'wp.element',
+      'react-dom':             'wp.element',
     },
   },
 });
