@@ -3,8 +3,7 @@ import { Navigation, Autoplay, EffectFade } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/navigation';
 
-// Registrar módulos globalmente
-Swiper.use([Navigation, Autoplay, EffectFade]);
+// Elimina Swiper.use([...]);
 
 document.addEventListener('DOMContentLoaded', () => {
   document
@@ -21,6 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (totalEl) totalEl.textContent = totalSlides;
 
       const swiper = new Swiper(sliderEl, {
+        modules: [Navigation, Autoplay, EffectFade], // <-- Add this line
         loop: totalSlides > 1,
         autoplay: totalSlides > 1
           ? { delay: 5000, disableOnInteraction: false }

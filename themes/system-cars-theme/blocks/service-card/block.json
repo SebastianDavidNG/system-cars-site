@@ -1,0 +1,24 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/service-card",
+  "title": "Service Card",
+  "category": "system-cars",
+  "icon": "id-alt",
+  "description": "Un bloque de tarjeta de servicio.",
+  "supports": { "html": false },
+  "textdomain": "system-cars-theme",
+
+  "attributes": {
+    "linkUrl":      { "type": "string", "source": "attribute", "selector": "a", "attribute": "href", "default": "" },
+    "columns":      { "type": "number", "default": 4 },
+    "bgColor":      { "type": "string", "default": "white" },
+    "hoverBgImage": { "type": "string", "default": "" },
+    "svgIcon":      { "type": "string", "default": "" },
+    "title":        { "type": "string", "source": "html", "selector": "h3" },
+    "description":  { "type": "string", "source": "html", "selector": "p" }
+  },
+
+  "editorScript": "file:../../dist/service-card.js",
+  "editorStyle": "file:../../dist/css/service-card-editor.css",
+  "style": "file:../../dist/css/service-card-style.css"
+}

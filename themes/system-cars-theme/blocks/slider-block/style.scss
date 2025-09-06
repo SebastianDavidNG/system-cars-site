@@ -6,9 +6,17 @@
 
 .wp-block-system-cars-slider-block {
   /* full-width viewport hack */
-  @apply relative h-screen overflow-hidden;
+  @apply relative h-[600px] overflow-hidden;
   width: 100vw;
   margin-left: calc(50% - 50vw);
+
+  /* Adjust height for different viewports */
+  @screen md {
+    @apply h-[700px];
+  }
+  @screen lg {
+    @apply h-[80vh];
+  }
 
   .swiper {
     @apply w-full h-full;
@@ -34,8 +42,14 @@
 
   /* animated title */
   .slide-text {
-    @apply text-2xl font-bold mb-4 md:text-4xl lg:text-6xl;
+    @apply text-4xl font-bold mb-4 uppercase;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    @screen md {
+      @apply text-6xl;
+    }
+    @screen lg {
+      @apply text-8xl;
+    }
 
     opacity: 0;
     transform: translateY(20px);
@@ -44,8 +58,7 @@
 
   /* animated button */
   .slide-button {
-    @apply inline-block mt-4 px-6 py-3 rounded-full font-bold
-      bg-blue-600 hover:bg-blue-700 text-white text-lg;
+    @apply inline-block mt-4 px-6 py-3 border-2 border-white font-bold bg-transparent transition duration-300 ease-in-out hover:bg-[#232225] hover:border-transparent text-white text-lg;
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
@@ -65,12 +78,14 @@
   /* Font Awesome arrows */
   .swiper-button-prev,
   .swiper-button-next {
-    @apply flex items-center justify-center w-12 h-12 transition-opacity duration-300;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 50%;
+    @apply flex items-center justify-center w-[50px] h-[50px] transition-opacity duration-300;
+    background: rgba($white-color, 0.5);
     color: #fff;
     z-index: 10;
     pointer-events: auto;
+    @screen md {
+      @apply w-[65px] h-[65px];
+    }
   }
 
   .swiper-button-prev::before,
@@ -78,19 +93,32 @@
     @apply text-2xl;
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
+    @screen md {
+      @apply text-3xl;
+    }
+  }
+  .swiper-button-prev::after,
+  .swiper-button-next::after {
+    display: none;
   }
   .swiper-button-prev::before {
-    content: "\f053"; /* fa-chevron-left */
+    content: "\f177"; /* fa-chevron-left */
   }
   .swiper-button-next::before {
-    content: "\f054"; /* fa-chevron-right */
+    content: "\f178"; /* fa-chevron-right */
   }
 
   .swiper-button-prev {
-    @apply left-4;
+    @apply left-2;
+    @screen md {
+      @apply left-4;
+    }
   }
   .swiper-button-next {
-    @apply right-4;
+    @apply right-2;
+    @screen md {
+      @apply right-4;
+    }
   }
 
   /* hide arrows when only one slide */

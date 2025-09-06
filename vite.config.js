@@ -1,4 +1,3 @@
-// vite.config.js (en la raíz del proyecto)
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
@@ -23,15 +22,14 @@ export default defineConfig({
     emptyOutDir: true,
     rollupOptions: {
       input: {
-        main:               path.resolve(__dirname, 'themes/system-cars-theme/js/main.js'),
+        main: path.resolve(__dirname, 'themes/system-cars-theme/js/main.js'),
         'car-block':        path.resolve(__dirname, 'themes/system-cars-theme/blocks/car-block/index.js'),
+        'service-card':     path.resolve(__dirname, 'themes/system-cars-theme/blocks/service-card/index.js'),
         'slider-block':     path.resolve(__dirname, 'themes/system-cars-theme/blocks/slider-block/index.js'),
         'slider-frontend':  path.resolve(__dirname, 'themes/system-cars-theme/blocks/slider-block/slider-frontend.js'),
-        // <<< Aquí añadimos el SCSS del editor como entrada:
-        'slider-block-editor': path.resolve(
-          __dirname,
-          'themes/system-cars-theme/blocks/slider-block/slider-block-editor.scss'
-        ),
+        'slider-block-editor':      path.resolve(__dirname, 'themes/system-cars-theme/blocks/slider-block/slider-block-editor.scss'),
+        'service-card-editor':      path.resolve(__dirname, 'themes/system-cars-theme/blocks/service-card/editor.scss'),
+        'service-card-style': path.resolve(__dirname, 'themes/system-cars-theme/blocks/service-card/style.scss'),
       },
       output: {
         format: 'es',
@@ -43,6 +41,16 @@ export default defineConfig({
           }
           return 'js/[name].[ext]';
         },
+        globals: {
+          '@wordpress/blocks': 'wp.blocks',
+          '@wordpress/block-editor': 'wp.blockEditor',
+          '@wordpress/components': 'wp.components',
+          '@wordpress/data': 'wp.data',
+          '@wordpress/element': 'wp.element',
+          '@wordpress/i18n': 'wp.i18n',
+          'react': 'wp.element',
+          'react-dom': 'wp.element',
+        },
       },
       external: [
         '@wordpress/blocks',
@@ -51,20 +59,22 @@ export default defineConfig({
         '@wordpress/data',
         '@wordpress/element',
         '@wordpress/i18n',
-        'wp',
+        'react',
+        'react-dom',
+        'classnames',
       ],
     },
   },
   resolve: {
     alias: {
-      '@wordpress/blocks':       'wp.blocks',
-      '@wordpress/block-editor':'wp.blockEditor',
-      '@wordpress/components':  'wp.components',
-      '@wordpress/data':        'wp.data',
-      '@wordpress/element':     'wp.element',
-      '@wordpress/i18n':        'wp.i18n',
-      react:                   'wp.element',
-      'react-dom':             'wp.element',
+      '@wordpress/blocks':        'wp.blocks',
+      '@wordpress/block-editor':  'wp.blockEditor',
+      '@wordpress/components':    'wp.components',
+      '@wordpress/data':          'wp.data',
+      '@wordpress/element':       'wp.element',
+      '@wordpress/i18n':          'wp.i18n',
+      react:                      'wp.element',
+      'react-dom':                'wp.element',
     },
   },
 });

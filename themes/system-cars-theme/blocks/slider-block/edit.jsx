@@ -97,7 +97,7 @@ export default function Edit({ attributes, setAttributes }) {
             onSelect: m => updateSlide(idx, 'image', m.url),
             allowedTypes: ['image'],
             render: ({ open }) =>
-              createElement(Button, { isSecondary: true, onClick: open, className: 'w-full mb-4 max-w-40 justify-center' },
+              createElement(Button, { isSecondary: true, onClick: open, className: 'w-auto mb-4 justify-center' },
                 slide.image ? 'Cambiar imagen' : 'Selecciona una imagen'
               ),
           })
@@ -181,7 +181,7 @@ export default function Edit({ attributes, setAttributes }) {
       {
         isPrimary: true,
         onClick: addSlide,
-        className: 'w-full mb-4 max-w-40 justify-center',
+        className: 'w-auto mb-4 max-w-40 justify-center',
       },
       'Agregar slide'
     )

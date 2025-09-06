@@ -5,10 +5,7 @@
 // ============================
 @import "variables";
 @import "mixins";
-@import "base/reset";
-
-// Componentes
-@import "components/slider";
+// @import "base/reset";
 
 // ============================
 // Estilos globales
@@ -172,15 +169,11 @@ header {
 }
 
 
-
-
 main {
-    max-width: 1280px;
-    margin-left: auto;
-    margin-right: auto;
-    padding-top: 2rem;
-    padding-bottom: 2rem;
-
+    margin: 0 auto;
+    // max-width: 1280px;
+    // margin-left: auto;
+    // margin-right: auto;
     article {
         background-color: white;
         padding: 1.5rem;
@@ -196,9 +189,9 @@ main {
     font-size: 18px;
 }
 
-footer {
-    margin-top: 2rem;
-}
+// footer {
+//     margin-top: 2rem;
+// }
 .bg-footer {
     background-color: $tertiary-color;
 }

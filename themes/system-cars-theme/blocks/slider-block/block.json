@@ -26,12 +26,6 @@
   "editorScript": "file:../../dist/slider-block.js",
   "editorStyle":  "file:../../dist/css/slider-block-editor.css",
 
-  "viewScript": [
-    "file:../../dist/slider-block.js",
-    "file:../../dist/slider-frontend.js"
-  ],
-  "viewStyle": [
-    "swiper-css",
-    "file:../../dist/css/slider-block.css"
-  ]
+  "script": "file:../../dist/slider-frontend.js",
+  "style":  "file:../../dist/css/slider-block.css"
 }
