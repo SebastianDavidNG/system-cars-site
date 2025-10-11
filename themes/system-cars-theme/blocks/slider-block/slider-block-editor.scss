@@ -1,0 +1,15 @@
+/* wp-content/themes/system-cars-theme/blocks/slider-block/slider-block-editor.scss */
+
+/* Imagen de preview */
+.slide-image-preview {
+    @apply w-full max-h-40 object-cover;
+}
+
+/* Controles de paginación en el editor */
+.slider-controls-editor {
+  @apply flex items-center justify-center gap-4 p-2 rounded text-gray-900;
+}
+
+.slider-nav-btn {
+  @apply bg-transparent p-2 hover:bg-gray-700;
+}

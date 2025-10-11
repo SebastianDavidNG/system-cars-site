@@ -1,0 +1,37 @@
+@use "../../scss/_variables.scss" as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.service-card {
+    @apply relative overflow-hidden p-6 transition-transform duration-300 ease-in-out;
+
+    background-size: cover;
+    background-position: center;
+    background-image: var(--hover-bg-image);
+
+    .service-card__icon,
+    h3,
+    p {
+        @apply transform transition-all duration-300 ease-in-out;
+    }
+
+    .service-card__arrow {
+        @apply absolute bottom-4 right-4 opacity-0 transition-opacity duration-300;
+    }
+
+    &:hover {
+        @apply scale-105;
+
+        .service-card__icon,
+        h3,
+        p {
+            @apply -translate-y-4;
+        }
+
+        .service-card__arrow {
+            @apply opacity-100;
+        }
+    }
+}
