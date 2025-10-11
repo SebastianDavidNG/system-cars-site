@@ -2,3 +2,5 @@
 db_data/
 *.log
 .DS_Store
+node_modules
+
