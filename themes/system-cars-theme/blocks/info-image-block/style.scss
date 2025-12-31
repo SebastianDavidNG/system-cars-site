@@ -1,0 +1,89 @@
+@use "../../scss/variables" as *;
+
+.info-image-block {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin-bottom: 110px;
+
+  &.position-left {
+    flex-direction: row;
+  }
+
+  &.position-right {
+    flex-direction: row-reverse;
+  }
+
+  &__image {
+    flex: 0 0 69.69%;
+    background-size: cover;
+    background-position: center center;
+    min-height: 400px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .placeholder {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #f0f0f0;
+      color: #666;
+      height: 100%;
+      min-height: 400px;
+    }
+  }
+
+  &__content {
+    flex: 0 0 30.27%;
+    padding: 40px;
+    background: #fff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    h2 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: $secondary-color;
+    }
+
+    .info-description {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #666;
+
+      p {
+        margin-bottom: 1rem;
+      }
+    }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    flex-direction: column !important;
+    margin-bottom: 60px;
+
+    &__image,
+    &__content {
+      flex: 0 0 100%;
+    }
+
+    &__image {
+      min-height: 300px;
+    }
+
+    &__content {
+      padding: 30px 20px;
+
+      h2 {
+        font-size: 2rem;
+      }
+    }
+  }
+}

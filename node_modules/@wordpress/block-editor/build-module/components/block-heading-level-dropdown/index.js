@@ -1,0 +1,66 @@
+/**
+ * WordPress dependencies
+ */
+import { ToolbarDropdownMenu } from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
+
+/**
+ * Internal dependencies
+ */
+import HeadingLevelIcon from './heading-level-icon';
+import { jsx as _jsx } from "react/jsx-runtime";
+const HEADING_LEVELS = [1, 2, 3, 4, 5, 6];
+const POPOVER_PROPS = {
+  className: 'block-library-heading-level-dropdown'
+};
+
+/** @typedef {import('react').ComponentType} ComponentType */
+
+/**
+ * HeadingLevelDropdown props.
+ *
+ * @typedef WPHeadingLevelDropdownProps
+ *
+ * @property {number}     value    The chosen heading level.
+ * @property {number[]}   options  An array of supported heading levels.
+ * @property {()=>number} onChange Function called with
+ *                                 the selected value changes.
+ */
+
+/**
+ * Dropdown for selecting a heading level (1 through 6) or paragraph (0).
+ *
+ * @param {WPHeadingLevelDropdownProps} props Component props.
+ *
+ * @return {ComponentType} The toolbar.
+ */
+export default function HeadingLevelDropdown({
+  options = HEADING_LEVELS,
+  value,
+  onChange
+}) {
+  return /*#__PURE__*/_jsx(ToolbarDropdownMenu, {
+    popoverProps: POPOVER_PROPS,
+    icon: /*#__PURE__*/_jsx(HeadingLevelIcon, {
+      level: value
+    }),
+    label: __('Change level'),
+    controls: options.map(targetLevel => {
+      const isActive = targetLevel === value;
+      return {
+        icon: /*#__PURE__*/_jsx(HeadingLevelIcon, {
+          level: targetLevel
+        }),
+        title: targetLevel === 0 ? __('Paragraph') : sprintf(
+        // translators: %d: heading level e.g: "1", "2", "3"
+        __('Heading %d'), targetLevel),
+        isActive,
+        onClick() {
+          onChange(targetLevel);
+        },
+        role: 'menuitemradio'
+      };
+    })
+  });
+}
+//# sourceMappingURL=index.js.map

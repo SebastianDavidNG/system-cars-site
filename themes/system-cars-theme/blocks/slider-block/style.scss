@@ -1,0 +1,154 @@
+@use "../../scss/_variables.scss" as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wp-block-system-cars-slider-block {
+  /* full-width viewport hack */
+  @apply relative h-[600px] overflow-hidden;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+
+  /* Adjust height for different viewports */
+  @screen md {
+    @apply h-[700px];
+  }
+  @screen lg {
+    @apply h-[80vh];
+  }
+
+  .swiper {
+    @apply w-full h-full;
+  }
+
+  .swiper-wrapper {
+    @apply flex;
+  }
+
+  .swiper-slide {
+    @apply relative flex-shrink-0 w-full h-full;
+  }
+
+  .swiper-slide img {
+    @apply w-full h-full object-cover;
+  }
+
+  /* center overlay content */
+  .slide-content {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+      text-white text-center p-4 md:p-8 z-10 pointer-events-none;
+  }
+
+  /* animated title */
+  .slide-text {
+    @apply text-4xl font-bold mb-4 uppercase;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    @screen md {
+      @apply text-6xl;
+    }
+    @screen lg {
+      @apply text-8xl;
+    }
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+  }
+
+  /* animated button */
+  .slide-button {
+    @apply inline-block mt-4 px-6 py-3 border-2 border-white font-bold bg-transparent transition duration-300 ease-in-out hover:bg-[#232225] hover:border-transparent text-white text-lg;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
+    pointer-events: none;
+  }
+
+  /* trigger animations on active slide */
+  .swiper-slide-active {
+    .slide-text,
+    .slide-button {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+
+  /* Font Awesome arrows */
+  .swiper-button-prev,
+  .swiper-button-next {
+    @apply flex items-center justify-center w-[50px] h-[50px] transition-opacity duration-300;
+    background: rgba($white-color, 0.5);
+    color: #fff;
+    z-index: 10;
+    pointer-events: auto;
+    @screen md {
+      @apply w-[65px] h-[65px];
+    }
+  }
+
+  .swiper-button-prev::before,
+  .swiper-button-next::before {
+    @apply text-2xl;
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    @screen md {
+      @apply text-3xl;
+    }
+  }
+  .swiper-button-prev::after,
+  .swiper-button-next::after {
+    display: none;
+  }
+  .swiper-button-prev::before {
+    content: "\f177"; /* fa-chevron-left */
+  }
+  .swiper-button-next::before {
+    content: "\f178"; /* fa-chevron-right */
+  }
+
+  .swiper-button-prev {
+    @apply left-2;
+    @screen md {
+      @apply left-4;
+    }
+  }
+  .swiper-button-next {
+    @apply right-2;
+    @screen md {
+      @apply right-4;
+    }
+  }
+
+  /* hide arrows when only one slide */
+  &[data-slide-count="1"] .swiper-button-prev,
+  &[data-slide-count="1"] .swiper-button-next {
+    @apply hidden;
+  }
+
+  /* always visible on hover for 2+ slides */
+  &[data-slide-count="2"] .swiper-button-prev,
+  &[data-slide-count="2"] .swiper-button-next,
+  &[data-slide-count="3"] .swiper-button-prev,
+  &[data-slide-count="3"] .swiper-button-next,
+  &[data-slide-count="4"] .swiper-button-prev,
+  &[data-slide-count="4"] .swiper-button-next {
+    @apply opacity-100;
+  }
+  .swiper:hover .swiper-button-prev,
+  .swiper:hover .swiper-button-next {
+    @apply opacity-100;
+  }
+
+  /* dark overlay for better contrast */
+  .swiper-slide::before {
+    content: '';
+    @apply absolute inset-0 bg-black opacity-30 z-0;
+  }
+
+  /* slide counter “1 / N” */
+  .slide-counter {
+    @apply absolute bottom-4 right-4 text-white text-lg z-10;
+  }
+}

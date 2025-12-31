@@ -1,0 +1,140 @@
+@use "../../scss/variables" as *;
+
+.video-modal-block {
+  margin-bottom: 2rem;
+
+  .video-thumbnail {
+    position: relative;
+    background-size: cover;
+    background-position: center center;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.02);
+
+      .play-button {
+        transform: scale(1.1);
+      }
+    }
+
+    .placeholder {
+      background: #f0f0f0;
+      color: #666;
+      padding: 40px;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .play-button {
+      position: relative;
+      z-index: 2;
+      transition: transform 0.3s ease;
+      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+    }
+  }
+
+  .video-info {
+    padding: 20px 0;
+
+    .video-title {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: $secondary-color;
+    }
+
+    .video-description {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #666;
+
+      p {
+        margin-bottom: 0.5rem;
+      }
+    }
+  }
+
+  // Modal styles
+  .video-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .video-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    background: #000;
+
+    .modal-close {
+      position: absolute;
+      top: -40px;
+      right: 0;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 40px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 0;
+      width: 40px;
+      height: 40px;
+      transition: transform 0.2s ease;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%; // 16:9 aspect ratio
+      height: 0;
+      overflow: hidden;
+
+      iframe,
+      video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    .video-thumbnail {
+      min-height: 300px;
+    }
+
+    .video-info {
+      .video-title {
+        font-size: 1.5rem;
+      }
+    }
+
+    .video-modal-content {
+      max-width: 100%;
+    }
+  }
+}

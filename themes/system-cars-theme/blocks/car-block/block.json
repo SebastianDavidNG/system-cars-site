@@ -1,0 +1,19 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/car-block",
+  "title": "Car Block",
+  "category": "system-cars",
+  "icon": "car",
+  "description": "Un bloque personalizado para mostrar autos.",
+  "supports": { "html": false },
+  "textdomain": "system-cars-theme",
+  "style": "file:../../dist/css/car-block.css",
+  "attributes": {
+    "title": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "editorScript": "file:../../dist/car-block.js",
+  "viewScript": "file:../../dist/car-block.js"
+}

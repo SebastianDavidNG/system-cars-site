@@ -1,0 +1,36 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/styled-button",
+  "title": "Styled Button",
+  "category": "system-cars",
+  "icon": "button",
+  "description": "Botón estilizado con gradiente personalizable.",
+  "supports": { "html": false },
+  "textdomain": "system-cars-theme",
+
+  "attributes": {
+    "text": {
+      "type": "string",
+      "default": "Botón"
+    },
+    "url": {
+      "type": "string",
+      "default": ""
+    },
+    "gradientStart": {
+      "type": "string",
+      "default": "#FF4311"
+    },
+    "gradientEnd": {
+      "type": "string",
+      "default": "#EA0A0B"
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+
+  "editorScript": "file:../../dist/styled-button-block.js",
+  "style": "file:../../dist/css/styled-button-style.css"
+}

@@ -1,0 +1,20 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/service-card",
+  "title": "Service Card",
+  "category": "system-cars",
+  "icon": "id-alt",
+  "description": "Bloque de tarjetas de servicio con múltiples cards.",
+  "supports": { "html": false },
+  "textdomain": "system-cars-theme",
+
+  "attributes": {
+    "cards": {
+      "type": "array",
+      "default": []
+    }
+  },
+
+  "editorStyle": "file:../../dist/css/service-card-editor.css",
+  "style": "file:../../dist/css/service-card-style.css"
+}
