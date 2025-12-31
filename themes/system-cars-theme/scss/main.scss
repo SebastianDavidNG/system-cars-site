@@ -15,7 +15,9 @@ body {
   color: $secondary-color;
   background-color: $white-color;
 }
-
+.wp-block-columns{
+    margin-bottom: 0!important;
+}
 
 header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -192,9 +194,7 @@ main {
 // footer {
 //     margin-top: 2rem;
 // }
-.bg-footer {
-    background-color: $tertiary-color;
-}
+
 #menu-menu-footer {
     li {
         color: $white-color;
@@ -237,5 +237,12 @@ main {
                 background-color: color.adjust($primary-color, $lightness: -10%);
             }
         }
+    }
+}
+
+
+footer {
+    &.bg-footer {
+        background-color: $tertiary-color;
     }
 }

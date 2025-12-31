@@ -1,0 +1,25 @@
+.styled-button-wrapper {
+  display: inline-block;
+}
+
+.styled-button {
+  display: inline-block;
+  padding: 27px 38px;
+  color: #fff;
+  border-radius: 0;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  background: linear-gradient(90deg, #FF4311 0%, #EA0A0B 100%);
+}
+.styled-button:hover {
+  background: linear-gradient(90deg, #FF5A20 0%, #FF4311 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+.styled-button span {
+  color: #fff;
+}

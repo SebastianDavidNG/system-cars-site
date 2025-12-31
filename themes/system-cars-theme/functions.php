@@ -51,6 +51,10 @@ function sc_register_blocks_from_metadata() {
         'car-block',
         'slider-block',
         'service-card',
+        'styled-button-block',
+        'info-image-block',
+        'parallax-columns-block',
+        'video-modal-block',
     ];
 
     foreach ( $blocks as $block ) {
@@ -87,8 +91,18 @@ function sc_enqueue_frontend_assets() {
         );
     }
 
+    // Main CSS
+    $main_css = get_template_directory() . '/dist/css/main.css';
+    if ( file_exists( $main_css ) ) {
+        wp_enqueue_style(
+            'systemcars-main',
+            get_template_directory_uri() . '/dist/css/main.css',
+            [],
+            filemtime( $main_css )
+        );
+    }
 
-    // Swiper en frontend (CDN)
+    // Swiper en frontend (CDN) - necesario para slider-block
     wp_enqueue_style(
         'swiper-css',
         'https://unpkg.com/swiper/swiper-bundle.min.css',
@@ -100,69 +114,69 @@ function sc_enqueue_frontend_assets() {
         [], '10.3.1', true
     );
 
-    // slider-frontend.js (solo front-end, depende de Swiper CDN)
-    wp_enqueue_script(
-        'system-cars-slider-frontend',
-        get_template_directory_uri() . '/dist/slider-frontend.js',
-        [ 'swiper-js' ],
-        filemtime( get_template_directory() . '/dist/slider-frontend.js' ),
-        true
-    );
-    wp_script_add_data( 'system-cars-slider-frontend', 'type', 'module' );
+    // slider-frontend.js se carga manualmente porque necesita Swiper como dependencia
+    // (block.json no permite especificar dependencias)
+    $slider_frontend = get_template_directory() . '/dist/slider-frontend.js';
+    if ( file_exists( $slider_frontend ) ) {
+        wp_enqueue_script(
+            'system-cars-slider-frontend',
+            get_template_directory_uri() . '/dist/slider-frontend.js',
+            [ 'swiper-js' ],
+            filemtime( $slider_frontend ),
+            true
+        );
+        wp_script_add_data( 'system-cars-slider-frontend', 'type', 'module' );
+    }
 
-    // Bloque service-card front-end (CSS)
-    wp_enqueue_style(
-        'system-cars-service-card',
-        get_template_directory_uri() . '/dist/css/service-card-style.css',
-        [], filemtime( get_template_directory() . '/dist/css/service-card-style.css' )
-    );
+    // NOTA: Los otros scripts frontend (parallax-columns-frontend.js, video-modal-frontend.js)
+    // y estilos se cargan automáticamente desde block.json cuando el bloque está presente
 }
 add_action('wp_enqueue_scripts', 'sc_enqueue_frontend_assets');
 
 /**
  * Carga scripts y estilos para el Block Editor
+ * Encolamos manualmente los scripts del editor (no desde block.json)
  */
 function system_cars_block_editor_assets() {
-    wp_enqueue_script(
-        'system-cars-car-block',
-        get_template_directory_uri() . '/dist/car-block.js',
-        [ 'wp-blocks','wp-i18n','wp-element','underscore' ],
-        filemtime( get_template_directory() . '/dist/car-block.js' ),
-        true
-    );
-    wp_enqueue_script(
-        'system-cars-slider-block',
-        get_template_directory_uri() . '/dist/slider-block.js',
-        [ 'wp-blocks', 'wp-element', 'wp-i18n', 'wp-components' ],
-        null,
-        true
-    );
-    wp_script_add_data( 'system-cars-slider-block', 'type', 'module' );
+    $theme_dir = get_template_directory();
+    $theme_uri = get_template_directory_uri();
 
-    wp_enqueue_style(
-        'system-cars-slider-block-editor',
-        get_template_directory_uri() . '/dist/css/slider-block-editor.css',
-        [],
-        filemtime( get_template_directory() . '/dist/css/slider-block-editor.css' )
-    );
+    $blocks = [
+        'car-block' => [],
+        'slider-block' => ['editorStyle' => 'slider-block-editor.css'],
+        'service-card' => ['editorStyle' => 'service-card-editor.css'],
+        'styled-button-block' => [],
+        'info-image-block' => [],
+        'parallax-columns-block' => [],
+        'video-modal-block' => [],
+    ];
 
-    wp_enqueue_script(
-        'system-cars-service-card',
-        get_template_directory_uri() . '/dist/service-card.js',
-        [ 'wp-blocks','wp-i18n','wp-element','underscore' ],
-        filemtime( get_template_directory() . '/dist/service-card.js' ),
-        true
-    );
-    wp_script_add_data( 'system-cars-service-card', 'type', 'module' );
+    foreach ($blocks as $block_name => $config) {
+        $script_path = "{$theme_dir}/dist/{$block_name}.js";
+        if (file_exists($script_path)) {
+            wp_enqueue_script(
+                "system-cars-{$block_name}",
+                "{$theme_uri}/dist/{$block_name}.js",
+                ['wp-blocks', 'wp-block-editor', 'wp-element', 'wp-i18n', 'wp-components'],
+                filemtime($script_path),
+                false // Cargar en header, no en footer
+            );
+        }
 
-    wp_enqueue_style(
-        'system-cars-service-card-editor',
-        get_template_directory_uri() . '/dist/css/service-card-editor.css',
-        [],
-        filemtime( get_template_directory() . '/dist/css/service-card-editor.css' )
-    );
+        if (isset($config['editorStyle'])) {
+            $style_path = "{$theme_dir}/dist/css/{$config['editorStyle']}";
+            if (file_exists($style_path)) {
+                wp_enqueue_style(
+                    "system-cars-{$block_name}-editor",
+                    "{$theme_uri}/dist/css/{$config['editorStyle']}",
+                    [],
+                    filemtime($style_path)
+                );
+            }
+        }
+    }
 }
-add_action( 'enqueue_block_editor_assets', 'system_cars_block_editor_assets' );
+add_action('enqueue_block_editor_assets', 'system_cars_block_editor_assets');
 
 
 // Refrescar el contador del ícono de carrito (fa-bag-shopping)
@@ -191,59 +205,37 @@ add_action('wp_enqueue_scripts', 'systemcars_scripts');
 
 /**
  * Carga assets del front-end (página pública)
+ * NOTA: Esta función estaba duplicada - se eliminó.
+ * Los assets se cargan en sc_enqueue_frontend_assets()
  */
-function system_cars_frontend_assets() {
-    wp_enqueue_style(
-        'systemcars-roboto-condensed',
-        'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@200;300;400;500;700&display=swap',
-        [], null
-    );
-    wp_enqueue_style(
-        'fa-cdn',
-        'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css',
-        [], '6.6.0'
-    );
-    wp_enqueue_style(
-        'systemcars-style',
-        get_template_directory_uri() . '/dist/css/main.css',
-        [], filemtime( get_template_directory() . '/dist/css/main.css' )
-    );
-    wp_enqueue_style(
-        'swiper-css',
-        'https://unpkg.com/swiper/swiper-bundle.min.css',
-        [], '10.3.1'
-    );
-    wp_enqueue_script(
-        'swiper-js',
-        'https://unpkg.com/swiper/swiper-bundle.min.js',
-        [], '10.3.1', true
-    );
-    wp_enqueue_script(
-        'system-cars-slider-frontend',
-        get_template_directory_uri() . '/dist/slider-frontend.js',
-        [ 'swiper-js' ],
-        filemtime( get_template_directory() . '/dist/slider-frontend.js' ),
-        true
-    );
-    wp_script_add_data( 'system-cars-slider-frontend', 'type', 'module' );
-    wp_enqueue_style(
-        'system-cars-service-card',
-        get_template_directory_uri() . '/dist/css/service-card-style.css',
-        [], filemtime( get_template_directory() . '/dist/css/service-card-style.css' )
-    );
+// function system_cars_frontend_assets() { ... }
+// add_action( 'wp_enqueue_scripts', 'system_cars_frontend_assets' );
+
+// DEBUG: Registrar todos los scripts que se cargan
+function system_cars_debug_scripts() {
+    if (is_admin() && current_user_can('manage_options')) {
+        global $wp_scripts;
+        error_log('=== SCRIPTS ENCOLADOS ===');
+        foreach ($wp_scripts->queue as $handle) {
+            $src = isset($wp_scripts->registered[$handle]) ? $wp_scripts->registered[$handle]->src : 'N/A';
+            if (strpos($src, '/dist/') !== false) {
+                error_log("Handle: {$handle} | Src: {$src}");
+            }
+        }
+    }
 }
-add_action( 'wp_enqueue_scripts', 'system_cars_frontend_assets' );
+add_action('admin_enqueue_scripts', 'system_cars_debug_scripts', 9999);
 
 function system_cars_add_module_type($tag, $handle, $src) {
+    // Solo agregar type="module" a scripts frontend específicos
     $module_handles = [
-        'system-cars-car-block',
-        'system-cars-slider-block',
         'system-cars-slider-frontend',
-        'system-cars-service-card', // <-- must be present
     ];
+
     if (in_array($handle, $module_handles)) {
         $tag = str_replace('<script ', '<script type="module" ', $tag);
     }
+
     return $tag;
 }
 add_filter('script_loader_tag', 'system_cars_add_module_type', 10, 3);

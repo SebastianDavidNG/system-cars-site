@@ -1,0 +1,32 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/parallax-columns",
+  "title": "Parallax Columns",
+  "category": "system-cars",
+  "icon": "columns",
+  "description": "Columnas con efecto parallax en imagen de fondo.",
+  "supports": { "html": false },
+  "textdomain": "system-cars-theme",
+
+  "attributes": {
+    "columns": {
+      "type": "array",
+      "default": [
+        {
+          "backgroundImage": "",
+          "content": "",
+          "title": ""
+        },
+        {
+          "backgroundImage": "",
+          "content": "",
+          "title": ""
+        }
+      ]
+    }
+  },
+
+  "editorScript": "file:../../dist/parallax-columns-block.js",
+  "script": "file:../../dist/parallax-columns-frontend.js",
+  "style": "file:../../dist/css/parallax-columns-style.css"
+}

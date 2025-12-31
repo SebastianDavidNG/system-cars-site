@@ -1,1 +1,31 @@
-@charset "UTF-8";.slide-image-preview{max-height:10rem;width:100%;-o-object-fit:cover;object-fit:cover}.slider-controls-editor{display:flex;align-items:center;justify-content:center;gap:1rem;border-radius:.25rem;padding:.5rem;--tw-text-opacity: 1;color:rgb(17 24 39 / var(--tw-text-opacity, 1))}.slider-nav-btn{background-color:transparent;padding:.5rem}.slider-nav-btn:hover{--tw-bg-opacity: 1;background-color:rgb(55 65 81 / var(--tw-bg-opacity, 1))}
+@charset "UTF-8";
+/* wp-content/themes/system-cars-theme/blocks/slider-block/slider-block-editor.scss */
+/* Imagen de preview */
+.slide-image-preview{
+    max-height: 10rem;
+    width: 100%;
+    -o-object-fit: cover;
+       object-fit: cover
+}
+
+/* Controles de paginación en el editor */
+.slider-controls-editor{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    border-radius: 0.25rem;
+    padding: 0.5rem;
+    --tw-text-opacity: 1;
+    color: rgb(17 24 39 / var(--tw-text-opacity, 1))
+}
+
+.slider-nav-btn{
+    background-color: transparent;
+    padding: 0.5rem
+}
+
+.slider-nav-btn:hover{
+    --tw-bg-opacity: 1;
+    background-color: rgb(55 65 81 / var(--tw-bg-opacity, 1))
+}

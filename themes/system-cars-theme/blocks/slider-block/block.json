@@ -26,6 +26,5 @@
   "editorScript": "file:../../dist/slider-block.js",
   "editorStyle":  "file:../../dist/css/slider-block-editor.css",
 
-  "script": "file:../../dist/slider-frontend.js",
   "style":  "file:../../dist/css/slider-block.css"
 }

@@ -1,1 +1,39 @@
-const{useBlockProps:a,RichText:l}=wp.blockEditor,{createElement:t}=wp.element;function s({attributes:e,setAttributes:c}){return t("div",a(),t(l,{tagName:"h2",value:e.title,onChange:n=>c({title:n}),placeholder:"Título del auto"}))}const{useBlockProps:r,RichText:i}=wp.blockEditor,{createElement:o}=wp.element;function m({attributes:e}){return o("div",r.save(),o(i.Content,{tagName:"h2",value:e.title}))}const u="system-cars/car-block",p={name:u},{registerBlockType:d}=wp.blocks;d(p.name,{edit:s,save:m});
+(function(wp) {
+  'use strict';
+  const { useBlockProps: useBlockProps$1, RichText: RichText$1 } = wp.blockEditor;
+const { createElement: createElement$1 } = wp.element;
+function Edit({ attributes, setAttributes }) {
+  return createElement$1(
+    "div",
+    useBlockProps$1(),
+    createElement$1(RichText$1, {
+      tagName: "h2",
+      value: attributes.title,
+      onChange: (title) => setAttributes({ title }),
+      placeholder: "Título del auto"
+    })
+  );
+}
+const { useBlockProps, RichText } = wp.blockEditor;
+const { createElement } = wp.element;
+function Save({ attributes }) {
+  return createElement(
+    "div",
+    useBlockProps.save(),
+    createElement(RichText.Content, {
+      tagName: "h2",
+      value: attributes.title
+    })
+  );
+}
+const name = "system-cars/car-block";
+const metadata = {
+  name
+};
+const { registerBlockType } = wp.blocks;
+registerBlockType(metadata.name, {
+  edit: Edit,
+  save: Save
+});
+
+})(window.wp || {});

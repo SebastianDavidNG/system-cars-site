@@ -25,11 +25,12 @@ export default function Save({ attributes }) {
               className: 'slide-text'
             }),
             slide.buttonText && slide.buttonLink &&
-              createElement(
-                'a',
-                { href: slide.buttonLink, className: 'slide-button' },
-                slide.buttonText
-              )
+              createElement(RichText.Content, {
+                tagName: 'a',
+                value: slide.buttonText,
+                href: slide.buttonLink,
+                className: 'slide-button'
+              })
           )
         )
       )

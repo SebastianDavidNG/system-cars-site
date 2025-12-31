@@ -4,34 +4,85 @@
 @tailwind components;
 @tailwind utilities;
 
-.service-card {
-    @apply relative overflow-hidden p-6 transition-transform duration-300 ease-in-out;
+.bg-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease-in-out;
 
-    background-size: cover;
-    background-position: center;
-    background-image: var(--hover-bg-image);
+    // Card con link - tiene animación hover
+    &.card-item {
+        cursor: pointer;
 
-    .service-card__icon,
-    h3,
-    p {
-        @apply transform transition-all duration-300 ease-in-out;
-    }
-
-    .service-card__arrow {
-        @apply absolute bottom-4 right-4 opacity-0 transition-opacity duration-300;
-    }
-
-    &:hover {
-        @apply scale-105;
-
-        .service-card__icon,
-        h3,
-        p {
-            @apply -translate-y-4;
+        // Contenido de la card
+        .card-content {
+            position: relative;
+            z-index: 2;
+            transition: all 0.4s ease-in-out;
         }
 
-        .service-card__arrow {
-            @apply opacity-100;
+        // Icono
+        .card-icon {
+            transition: transform 0.4s ease-in-out;
+        }
+
+        // Título y descripción
+        .card-title,
+        .card-description {
+            transition: transform 0.4s ease-in-out;
+        }
+
+        // Flecha
+        .card-arrow-link {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+
+        // Imagen de fondo hover (oculta por defecto)
+        .card-bg-hover {
+            opacity: 0;
+            transform: scale(1.1);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+
+        // Hover effects
+        &:hover {
+            // Mostrar imagen de fondo con zoom
+            .card-bg-hover {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            // Icono permanece visible, solo se desplaza ligeramente
+            .card-icon {
+                transform: translateY(-5px);
+            }
+
+            // Desplazar título y descripción hacia arriba
+            .card-title {
+                transform: translateY(-10px);
+            }
+
+            .card-description {
+                transform: translateY(-5px);
+            }
+
+            // Mostrar flecha
+            .card-arrow-link {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    }
+
+    // Card sin link - no tiene animación, centrado
+    &:not(.card-item) {
+        .card-content {
+            text-align: center;
+
+            @media (min-width: 768px) {
+                text-align: start;
+            }
         }
     }
 }
