@@ -129,7 +129,7 @@ function sc_enqueue_frontend_assets() {
     }
 
     // NOTA: Los otros scripts frontend (parallax-columns-frontend.js, video-modal-frontend.js)
-    // y estilos se cargan automáticamente desde block.json cuando el bloque está presente
+    // y estilos (styled-button-style.css) se cargan automáticamente desde block.json cuando el bloque está presente
 }
 add_action('wp_enqueue_scripts', 'sc_enqueue_frontend_assets');
 
@@ -145,7 +145,7 @@ function system_cars_block_editor_assets() {
         'car-block' => [],
         'slider-block' => ['editorStyle' => 'slider-block-editor.css'],
         'service-card' => ['editorStyle' => 'service-card-editor.css'],
-        'styled-button-block' => [],
+        // 'styled-button-block' se carga desde block.json
         'info-image-block' => [],
         'parallax-columns-block' => [],
         'video-modal-block' => [],
@@ -169,6 +169,18 @@ function system_cars_block_editor_assets() {
                 wp_enqueue_style(
                     "system-cars-{$block_name}-editor",
                     "{$theme_uri}/dist/css/{$config['editorStyle']}",
+                    [],
+                    filemtime($style_path)
+                );
+            }
+        }
+
+        if (isset($config['style'])) {
+            $style_path = "{$theme_dir}/dist/css/{$config['style']}";
+            if (file_exists($style_path)) {
+                wp_enqueue_style(
+                    "system-cars-{$block_name}-style",
+                    "{$theme_uri}/dist/css/{$config['style']}",
                     [],
                     filemtime($style_path)
                 );

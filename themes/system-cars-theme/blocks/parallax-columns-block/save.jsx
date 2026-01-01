@@ -1,59 +1,45 @@
 /**
  * themes/system-cars-theme/blocks/parallax-columns-block/save.jsx
  */
-const { useBlockProps, RichText } = wp.blockEditor;
+const { useBlockProps, InnerBlocks } = wp.blockEditor;
 const { createElement } = wp.element;
 
 export default function Save({ attributes }) {
-  const { columns } = attributes;
+  const {
+    backgroundImage,
+    minHeight,
+    parallax,
+    mobileOptimized
+  } = attributes;
 
   const blockProps = useBlockProps.save({
     className: 'parallax-columns-block',
+    style: {
+      backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'none',
+      minHeight: `${minHeight}px`,
+      '--parallax-offset': '0px',
+    },
+    'data-parallax': parallax ? 'true' : 'false',
+    'data-height': minHeight.toString(),
+    'data-mobile-optimized': mobileOptimized ? 'true' : 'false',
   });
 
   return createElement(
     'div',
     blockProps,
 
-    columns.map((column, index) =>
-      createElement(
-        'div',
-        {
-          key: index,
-          className: 'parallax-column',
-          'data-bg-image': column.backgroundImage || '',
-        },
-
-        createElement(
-          'div',
-          { className: 'parallax-column-inner' },
-
-          column.backgroundImage
-            ? createElement('div', {
-                className: 'parallax-bg',
-                style: {
-                  backgroundImage: `url(${column.backgroundImage})`,
-                },
-              })
-            : null,
-
-          createElement(
-            'div',
-            { className: 'column-overlay' },
-
-            createElement(RichText.Content, {
-              tagName: 'h3',
-              value: column.title,
-            }),
-
-            createElement(RichText.Content, {
-              tagName: 'div',
-              className: 'column-content',
-              value: column.content,
-            })
-          )
-        )
-      )
+    // Contenedor para el contenido interno con z-index
+    createElement(
+      'div',
+      {
+        className: 'parallax-content-wrapper',
+        style: {
+          position: 'relative',
+          zIndex: 2,
+          width: '100%',
+        }
+      },
+      createElement(InnerBlocks.Content)
     )
   );
 }

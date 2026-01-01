@@ -3,23 +3,56 @@
 }
 
 .styled-button {
-  display: inline-block;
-  padding: 27px 38px;
-  color: #fff;
   border-radius: 0;
-  border: none;
   cursor: pointer;
+  display: inline-block;
   text-decoration: none;
-  font-weight: 600;
-  font-size: 16px;
   transition: all 0.3s ease;
-  background: linear-gradient(90deg, #FF4311 0%, #EA0A0B 100%);
-}
-.styled-button:hover {
-  background: linear-gradient(90deg, #FF5A20 0%, #FF4311 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: none;
+  color: #ffffff;
 }
 .styled-button span {
-  color: #fff;
+  color: inherit;
+}
+.styled-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+}
+.styled-button--secondary {
+  background-color: #002060;
+  color: #ffffff;
+}
+.styled-button--primary {
+  background-color: #ff0000;
+  color: #ffffff;
+}
+.styled-button--tertiary {
+  background-color: #232225;
+  color: #ffffff;
+}
+.styled-button--white {
+  background-color: #ffffff;
+  color: #000000;
+}
+.styled-button--black {
+  background-color: #000000;
+  color: #ffffff;
+}
+.styled-button--border-transparent {
+  border: 2px solid transparent;
+}
+.styled-button--border-secondary {
+  border: 2px solid #002060;
+}
+.styled-button--border-primary {
+  border: 2px solid #ff0000;
+}
+.styled-button--border-tertiary {
+  border: 2px solid #232225;
+}
+.styled-button--border-white {
+  border: 2px solid #ffffff;
+}
+.styled-button--border-black {
+  border: 2px solid #000000;
 }

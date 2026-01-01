@@ -3,6 +3,194 @@
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
+**Última actualización:** 2025-12-31
+**Docker Container:** `system-cars-site-wordpress-1`
+**Local URL:** http://localhost:8080
+**Working Directory:** `themes/system-cars-theme/` (todos los comandos npm se ejecutan desde aquí)
+
+## 🚧 Current Development Status
+
+### Completed Blocks ✅
+- `slider-block/` - Slider de imágenes con Swiper.js (FUNCIONANDO)
+- `service-card/` - Tarjetas de servicios (FUNCIONANDO)
+
+### In Progress 🔨
+1. **styled-button-block** - Botones con estilos personalizados (DEBUGGING - Ver sección de problemas conocidos)
+2. **parallax-columns-block** - Columnas con efecto parallax (EN DESARROLLO)
+3. **video-modal-block** - Modal overlay con video embebido (EN DESARROLLO)
+
+---
+
+## 📦 Detalles de Bloques
+
+### slider-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Archivos:**
+- `blocks/slider-block/index.js` - Registro del bloque
+- `blocks/slider-block/edit.jsx` - Componente del editor
+- `blocks/slider-block/save.jsx` - Componente de guardado
+- `blocks/slider-block/slider-frontend.js` - Inicialización de Swiper.js en frontend
+- `blocks/slider-block/style.scss` - Estilos del bloque
+- `blocks/slider-block/editor.scss` - Estilos del editor
+
+**Características:**
+- Slider responsive con Swiper.js
+- Navegación con flechas
+- Paginación
+- Auto-play opcional
+- Imágenes cargadas desde WordPress Media Library
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- SCSS: `npm run build:blocks`
+- Output: `dist/slider-block.js`, `dist/slider-frontend.js`, `dist/css/slider-block.css`
+
+---
+
+### service-card ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Archivos:**
+- `blocks/service-card/index.js` - Todo el bloque (edit + save incluidos)
+- `blocks/service-card/style.scss` - Estilos del bloque
+- `blocks/service-card/editor.scss` - Estilos del editor
+
+**Características:**
+- Tarjeta con icono, título y descripción
+- Iconos de FontAwesome
+- Estilos responsivos
+- Hover effects
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- SCSS: `npm run build:blocks`
+- Output: `dist/service-card.js`, `dist/css/service-card-style.css`
+
+---
+
+### styled-button-block 🔨
+**Estado:** EN DEBUGGING - Problemas con caché de WordPress
+**Última actualización:** 2025-12-31
+
+**Archivos:**
+- `blocks/styled-button-block/index.js` - Registro con versiones deprecated
+- `blocks/styled-button-block/edit.jsx` - Editor con Tailwind classes
+- `blocks/styled-button-block/save.jsx` - Guardado con Tailwind classes
+- `blocks/styled-button-block/style.scss` - Estilos base (sin padding/font-weight/font-size)
+- `blocks/styled-button-block/block.json` - Metadata (v2.1.0)
+
+**Objetivo actual:**
+Migrar estilos de SCSS a Tailwind CSS classes:
+- ✅ Código actualizado: Tailwind classes añadidas (`px-10 py-3 font-black capitalize text-base`)
+- ✅ SCSS actualizado: Removido `padding`, `font-weight`, `font-size`
+- ✅ Archivos compilados correctamente
+- ❌ **PROBLEMA:** WordPress no está usando los nuevos archivos compilados
+
+**Cambios realizados:**
+1. `save.jsx:16-25` - Añadidas clases Tailwind al array `buttonClasses`
+2. `edit.jsx:106` - Añadidas clases Tailwind al className del anchor
+3. `style.scss:5-13` - Removidas propiedades: `padding`, `font-weight`, `font-size`
+4. `block.json:4` - Versión actualizada a "2.1.0"
+5. `index.js:10-62` - Añadida versión deprecated para migración
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- SCSS: No existe `npm run build:styled-button` - usar `npm run build` (Vite compila todo)
+- Output: `dist/styled-button-block.js` (7.86 KB), `dist/css/styled-button-style.css` (1.10 KB)
+
+**Características planeadas:**
+- ✅ Múltiples estilos (primary, secondary, tertiary, white, black)
+- ✅ Bordes opcionales (transparent, secondary, primary, tertiary, white, black)
+- ✅ Links internos/externos
+- ✅ Opción "abrir en nueva pestaña"
+- ✅ Text editable con RichText
+- 🔨 Integración con Tailwind CSS (EN DEBUGGING)
+
+**PROBLEMA ACTUAL:**
+WordPress está sirviendo CSS inline en el `<head>` con valores antiguos:
+```css
+.styled-button {
+  padding: 27px 38px;      /* ← ANTIGUO, debería ser removido */
+  font-weight: 600;         /* ← ANTIGUO, debería ser removido */
+  font-size: 16px;          /* ← ANTIGUO, debería ser removido */
+}
+```
+
+Y el HTML renderizado NO incluye las clases de Tailwind:
+```html
+<!-- Actual (INCORRECTO): -->
+<a class="styled-button styled-button--secondary" href="#" target="_self">
+  <span>Botón</span>
+</a>
+
+<!-- Esperado (CORRECTO): -->
+<a class="styled-button styled-button--secondary px-10 py-3 font-black capitalize text-base" href="#" target="_self">
+  <span>Botón</span>
+</a>
+```
+
+**Intentos de solución:**
+1. ✅ Recompilar con `npm run build`
+2. ✅ Reiniciar contenedor Docker
+3. ✅ Añadir versión deprecated para migración
+4. ✅ Actualizar versión en block.json a 2.1.0
+5. ✅ Guardar página en WordPress Editor
+6. ❌ Los archivos compilados no se están cargando - aparece CSS inline cacheado
+
+**Próximos pasos sugeridos:**
+- Investigar por qué WordPress usa CSS inline en lugar de cargar el archivo compilado
+- Verificar si hay plugins de caché activos
+- Revisar cómo `functions.php` encola los assets del bloque
+- Posible solución: Eliminar completamente el bloque de la base de datos y recrearlo
+
+---
+
+### parallax-columns-block 🔨
+**Estado:** EN DESARROLLO
+**Archivos:**
+- `blocks/parallax-columns-block/index.js`
+- `blocks/parallax-columns-block/edit.jsx`
+- `blocks/parallax-columns-block/save.jsx`
+- `blocks/parallax-columns-block/frontend.js`
+- `blocks/parallax-columns-block/style.scss`
+- `blocks/parallax-columns-block/block.json`
+
+**Características planeadas:**
+- 2-4 columnas configurables
+- Background images con parallax effect
+- Velocidad parallax ajustable
+- Overlay de color opcional
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- SCSS: `npm run build:blocks`
+- Output: `dist/parallax-columns-block.js`, `dist/parallax-columns-frontend.js`, `dist/css/parallax-columns-style.css`
+
+---
+
+### video-modal-block 🔨
+**Estado:** EN DESARROLLO
+**Archivos:**
+- `blocks/video-modal-block/index.js`
+- `blocks/video-modal-block/edit.jsx`
+- `blocks/video-modal-block/save.jsx`
+- `blocks/video-modal-block/frontend.jsx`
+- `blocks/video-modal-block/style.scss`
+- `blocks/video-modal-block/block.json`
+
+**Características planeadas:**
+- Modal overlay responsive
+- Thumbnail clickable con play button
+- Soporte YouTube/Vimeo
+- Close button accesible
+- Lazy loading del video
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- SCSS: `npm run build:blocks`
+- Output: `dist/video-modal-block.js`, `dist/video-modal-frontend.js`, `dist/css/video-modal-style.css`
+
+---
+
 ## Tech Stack
 - **CMS**: WordPress
 - **Theme**: Custom theme (`system-cars-theme`)
@@ -177,6 +365,41 @@ Runs WordPress locally at http://localhost:8080
 - **Icons**: Use FontAwesome React components
 - **Responsive**: Mobile-first with Tailwind breakpoints (sm:, md:, lg:, xl:)
 
+### Asset Enqueuing in WordPress
+
+Los bloques se pueden registrar de dos formas:
+
+**1. Usando block.json (Recomendado - WordPress 5.8+):**
+```json
+{
+  "apiVersion": 3,
+  "name": "system-cars/styled-button",
+  "editorScript": "file:../../dist/styled-button-block.js",
+  "style": "file:../../dist/css/styled-button-style.css"
+}
+```
+WordPress carga automáticamente los archivos cuando se usa `register_block_type()` con el path al directorio del bloque.
+
+**2. Usando functions.php (Método manual):**
+```php
+function system_cars_block_editor_assets() {
+    wp_enqueue_script(
+        'system-cars-slider-block',
+        get_template_directory_uri() . '/dist/slider-block.js',
+        ['wp-blocks', 'wp-element', 'wp-block-editor'],
+        filemtime(get_template_directory() . '/dist/slider-block.js')
+    );
+}
+add_action('enqueue_block_editor_assets', 'system_cars_block_editor_assets');
+```
+
+**En este proyecto:**
+- `functions.php:49-66` registra todos los bloques usando `register_block_type()` con block.json
+- `functions.php:140-191` encola manualmente algunos scripts del editor (system_cars_block_editor_assets)
+- `functions.php:68-134` encola assets del frontend (sc_enqueue_frontend_assets)
+
+**NOTA IMPORTANTE**: Si un bloque está registrado en AMBOS lugares (block.json Y functions.php), puede causar que los scripts se carguen dos veces o que se use una versión cacheada. Revisar `functions.php:148` donde hay un comentario: `// 'styled-button-block' se carga desde block.json`
+
 ## Build Process
 
 The project uses **two build systems**:
@@ -240,6 +463,37 @@ Built assets are served to WordPress and enqueued in `functions.php`.
 
 ## Troubleshooting
 
+### ⚠️ WordPress Block Caching - IMPORTANTE
+
+**PROBLEMA CRÍTICO:** WordPress guarda el HTML de los bloques en la base de datos cuando guardas una página. Esto significa que:
+
+1. **Los bloques guardan HTML estático en la DB**: Cuando guardas una página, WordPress ejecuta la función `save()` del bloque y guarda el HTML resultante en `wp_posts.post_content`
+
+2. **Cambios en `save.jsx` NO se reflejan automáticamente**: Si modificas el componente `save.jsx`, las páginas existentes seguirán mostrando el HTML antiguo guardado en la DB
+
+3. **Necesitas actualizar cada página**: Después de cambiar un bloque, debes:
+   - Abrir cada página que usa ese bloque en el editor
+   - WordPress detectará que el HTML es diferente
+   - Guardar la página para regenerar el HTML con la nueva versión
+
+**Síntomas:**
+- Cambios en JSX no aparecen en el frontend aunque compilaste correctamente
+- El HTML renderizado no coincide con tu código de `save.jsx`
+- Los archivos compilados son correctos pero el sitio muestra código antiguo
+
+**Soluciones:**
+1. **Usar deprecated versions**: Añade versiones antiguas en el array `deprecated` del bloque para migración automática
+2. **Regenerar páginas**: Abre y guarda cada página en el editor
+3. **Eliminar y recrear bloques**: Como último recurso, elimina el bloque de la página y añádelo nuevamente
+
+**Ejemplo en styled-button-block:**
+- ✅ Código actualizado con clases Tailwind
+- ✅ Archivos compilados correctos
+- ❌ Páginas guardadas antes del cambio siguen mostrando HTML antiguo sin las clases Tailwind
+- 🔧 Solución: Abrir página en editor → WordPress detecta cambio → Guardar → HTML regenerado
+
+---
+
 ### SASS Color Functions
 All SASS color functions have been updated to the modern syntax using `color.adjust()` instead of deprecated `darken()` and `lighten()` functions.
 
@@ -256,6 +510,8 @@ background-color: color.adjust($black-color, $lightness: 15%);       // Aclarar
 3. Verify the CSS is enqueued in `functions.php`
 4. Clear WordPress cache if using caching plugins
 5. Hard refresh browser (Cmd+Shift+R / Ctrl+Shift+F5)
+6. **IMPORTANTE**: Check if WordPress is serving inline CSS (view page source and look for `<style>` tags in `<head>`)
+7. If using inline CSS, restart Docker containers: `docker-compose restart`
 
 ### Block Not Appearing in Editor
 1. Check block registration in block's `index.js`
@@ -282,6 +538,34 @@ background-color: color.adjust($black-color, $lightness: 15%);       // Aclarar
 - Check SCSS syntax in `style.scss` files
 - Verify variable imports: `@use "../../scss/variables" as *;`
 - Ensure `sass:color` is imported if using color functions
+
+---
+
+### WordPress Inline CSS vs External CSS Files
+
+**Problema:** WordPress puede servir CSS de bloques como inline CSS en el `<head>` en lugar de cargar archivos externos.
+
+**Cómo detectar:**
+1. Abrir página en el navegador
+2. Ver código fuente (View Page Source)
+3. Buscar `<style id="wp-block-library-inline-css">` o similar en el `<head>`
+4. Si encuentras los estilos del bloque inline en lugar de `<link>` tags, WordPress está usando inline CSS
+
+**Por qué pasa:**
+- WordPress optimiza cargando CSS crítico inline
+- Puede usar versiones cacheadas del CSS
+- Cambios en archivos CSS compilados no se reflejan hasta reiniciar WordPress
+
+**Solución:**
+1. Reiniciar contenedores Docker: `docker-compose restart`
+2. Verificar que el CSS está encolado correctamente en `functions.php`
+3. Verificar que `block.json` tiene la propiedad `style` correcta
+4. En desarrollo, desactivar plugins de optimización/caché si existen
+
+**Archivos a verificar:**
+- `themes/system-cars-theme/dist/css/[block-name].css` (archivo compilado)
+- `themes/system-cars-theme/blocks/[block-name]/block.json` (metadata)
+- `themes/system-cars-theme/functions.php` (enqueue functions)
 
 ## Quick Reference
 

@@ -1,28 +1,49 @@
 /**
  * themes/system-cars-theme/blocks/styled-button-block/edit.jsx
  */
-const { useBlockProps, InspectorControls, RichText, URLInput } = wp.blockEditor;
-const { PanelBody, ColorPicker, ToggleControl } = wp.components;
+const { useBlockProps, InspectorControls, RichText } = wp.blockEditor;
+const { PanelBody, SelectControl, ToggleControl, TextControl } = wp.components;
 const { createElement, Fragment } = wp.element;
 
 export default function Edit({ attributes, setAttributes }) {
-  const { text, url, gradientStart, gradientEnd, openInNewTab } = attributes;
+  const { text, url, buttonStyle, borderStyle, openInNewTab } = attributes;
 
   const blockProps = useBlockProps({
     className: 'styled-button-wrapper',
   });
 
-  const buttonStyle = {
-    background: `linear-gradient(90deg, ${gradientStart} 0%, ${gradientEnd} 100%)`,
-    color: '#fff',
-    padding: '27px 38px',
+  // Mapeo de colores desde variables SCSS
+  const styleColors = {
+    secondary: '#002060', // Azul
+    primary: '#ff0000',   // Rojo
+    tertiary: '#232225',  // Gris
+    white: '#ffffff',     // Blanco
+    black: '#000000',     // Negro
+  };
+
+  const backgroundColor = styleColors[buttonStyle] || styleColors.secondary;
+  const textColor = buttonStyle === 'white' ? '#000000' : '#ffffff';
+
+  // Determinar color del borde
+  let borderColor = 'transparent';
+  let borderWidth = '0px';
+
+  if (borderStyle !== 'none' && borderStyle !== 'transparent') {
+    borderColor = styleColors[borderStyle] || 'transparent';
+    borderWidth = '2px';
+  } else if (borderStyle === 'transparent') {
+    borderColor = 'transparent';
+    borderWidth = '2px';
+  }
+
+  const buttonStyles = {
+    backgroundColor: backgroundColor,
+    color: textColor,
     borderRadius: '0',
-    border: 'none',
+    border: `${borderWidth} solid ${borderColor}`,
     cursor: 'pointer',
     display: 'inline-block',
     textDecoration: 'none',
-    fontWeight: '600',
-    fontSize: '16px',
     transition: 'all 0.3s ease',
   };
 
@@ -39,10 +60,11 @@ export default function Edit({ attributes, setAttributes }) {
         PanelBody,
         { title: 'Configuración del Botón', initialOpen: true },
 
-        createElement(URLInput, {
+        createElement(TextControl, {
           label: 'URL',
           value: url,
           onChange: (newUrl) => setAttributes({ url: newUrl }),
+          placeholder: 'https://ejemplo.com',
         }),
 
         createElement(ToggleControl, {
@@ -54,18 +76,34 @@ export default function Edit({ attributes, setAttributes }) {
 
       createElement(
         PanelBody,
-        { title: 'Gradiente', initialOpen: true },
+        { title: 'Estilo del Botón', initialOpen: true },
 
-        createElement('p', { style: { marginBottom: '8px' } }, 'Color Inicial'),
-        createElement(ColorPicker, {
-          color: gradientStart,
-          onChangeComplete: (color) => setAttributes({ gradientStart: color.hex }),
+        createElement(SelectControl, {
+          label: 'Color del Botón',
+          value: buttonStyle,
+          options: [
+            { label: 'Azul (Secondary)', value: 'secondary' },
+            { label: 'Rojo (Primary)', value: 'primary' },
+            { label: 'Gris (Tertiary)', value: 'tertiary' },
+            { label: 'Blanco', value: 'white' },
+            { label: 'Negro', value: 'black' },
+          ],
+          onChange: (value) => setAttributes({ buttonStyle: value }),
         }),
 
-        createElement('p', { style: { marginBottom: '8px', marginTop: '16px' } }, 'Color Final'),
-        createElement(ColorPicker, {
-          color: gradientEnd,
-          onChangeComplete: (color) => setAttributes({ gradientEnd: color.hex }),
+        createElement(SelectControl, {
+          label: 'Borde',
+          value: borderStyle,
+          options: [
+            { label: 'Sin borde', value: 'none' },
+            { label: 'Transparente', value: 'transparent' },
+            { label: 'Azul (Secondary)', value: 'secondary' },
+            { label: 'Rojo (Primary)', value: 'primary' },
+            { label: 'Gris (Tertiary)', value: 'tertiary' },
+            { label: 'Blanco', value: 'white' },
+            { label: 'Negro', value: 'black' },
+          ],
+          onChange: (value) => setAttributes({ borderStyle: value }),
         })
       )
     ),
@@ -76,7 +114,11 @@ export default function Edit({ attributes, setAttributes }) {
       blockProps,
       createElement(
         'a',
-        { style: buttonStyle, href: url || '#' },
+        {
+          style: buttonStyles,
+          className: 'px-10 py-3 font-black capitalize text-base',
+          href: url || '#'
+        },
         createElement(RichText, {
           tagName: 'span',
           value: text,

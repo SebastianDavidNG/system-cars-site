@@ -1,36 +1,34 @@
 /**
  * themes/system-cars-theme/blocks/parallax-columns-block/edit.jsx
  */
-const { useBlockProps, InspectorControls, RichText, MediaUpload } = wp.blockEditor;
-const { PanelBody, Button, IconButton } = wp.components;
+const { useBlockProps, InspectorControls, InnerBlocks, MediaUpload } = wp.blockEditor;
+const { PanelBody, Button, RangeControl, ToggleControl } = wp.components;
 const { createElement, Fragment } = wp.element;
 
 export default function Edit({ attributes, setAttributes }) {
-  const { columns } = attributes;
+  const {
+    backgroundImage,
+    backgroundImageId,
+    minHeight,
+    parallax,
+    mobileOptimized
+  } = attributes;
 
   const blockProps = useBlockProps({
-    className: 'parallax-columns-block',
+    className: 'parallax-block-editor',
+    style: {
+      backgroundImage: backgroundImage ? `url(${backgroundImage})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+      minHeight: `${minHeight}px`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      position: 'relative',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      margin: 0,
+      padding: '40px 20px',
+    }
   });
-
-  const addColumn = () => {
-    const newColumns = [
-      ...columns,
-      { backgroundImage: '', content: '', title: '' },
-    ];
-    setAttributes({ columns: newColumns });
-  };
-
-  const removeColumn = (index) => {
-    const newColumns = columns.filter((_, i) => i !== index);
-    setAttributes({ columns: newColumns });
-  };
-
-  const updateColumn = (index, field, value) => {
-    const newColumns = columns.map((col, i) =>
-      i === index ? { ...col, [field]: value } : col
-    );
-    setAttributes({ columns: newColumns });
-  };
 
   return createElement(
     Fragment,
@@ -43,82 +41,93 @@ export default function Edit({ attributes, setAttributes }) {
 
       createElement(
         PanelBody,
-        { title: 'Columnas', initialOpen: true },
-        createElement(
+        { title: 'Imagen de Fondo', initialOpen: true },
+
+        createElement(MediaUpload, {
+          onSelect: (media) => {
+            setAttributes({
+              backgroundImage: media.url,
+              backgroundImageId: media.id
+            });
+          },
+          allowedTypes: ['image'],
+          value: backgroundImageId,
+          render: ({ open }) =>
+            createElement(
+              Button,
+              {
+                isPrimary: !backgroundImage,
+                isSecondary: !!backgroundImage,
+                onClick: open,
+                style: { marginBottom: '10px', width: '100%' }
+              },
+              backgroundImage ? 'Cambiar imagen' : 'Seleccionar imagen'
+            ),
+        }),
+
+        backgroundImage && createElement(
           Button,
-          { isPrimary: true, onClick: addColumn },
-          'Agregar Columna'
+          {
+            isDestructive: true,
+            onClick: () => setAttributes({ backgroundImage: '', backgroundImageId: 0 }),
+            style: { width: '100%' }
+          },
+          'Eliminar imagen'
         )
+      ),
+
+      createElement(
+        PanelBody,
+        { title: 'Configuración', initialOpen: true },
+
+        createElement(RangeControl, {
+          label: 'Altura (px)',
+          value: minHeight,
+          onChange: (value) => setAttributes({ minHeight: value }),
+          min: 100,
+          max: 1000,
+          step: 10,
+        }),
+
+        createElement(ToggleControl, {
+          label: 'Efecto parallax',
+          checked: parallax,
+          onChange: (value) => setAttributes({ parallax: value }),
+        }),
+
+        createElement(ToggleControl, {
+          label: 'Optimizado para móvil',
+          checked: mobileOptimized,
+          onChange: (value) => setAttributes({ mobileOptimized: value }),
+          help: 'Desactiva parallax en móviles',
+        })
       )
     ),
 
-    // Editor Preview
+    // Editor con InnerBlocks
     createElement(
       'div',
       blockProps,
 
-      columns.map((column, index) =>
-        createElement(
-          'div',
-          {
-            key: index,
-            className: 'parallax-column',
-            style: {
-              backgroundImage: column.backgroundImage
-                ? `url(${column.backgroundImage})`
-                : 'none',
-            },
-          },
-
-          // Remove button
-          createElement(IconButton, {
-            icon: 'trash',
-            label: 'Eliminar columna',
-            className: 'remove-column',
-            onClick: () => removeColumn(index),
-          }),
-
-          // Image Upload
-          createElement(MediaUpload, {
-            onSelect: (media) =>
-              updateColumn(index, 'backgroundImage', media.url),
-            allowedTypes: ['image'],
-            render: ({ open }) =>
-              createElement(
-                Button,
-                { isSecondary: true, onClick: open, className: 'upload-btn' },
-                column.backgroundImage ? 'Cambiar imagen' : 'Seleccionar imagen'
-              ),
-          }),
-
-          // Title
-          createElement(RichText, {
-            tagName: 'h3',
-            value: column.title,
-            onChange: (value) => updateColumn(index, 'title', value),
-            placeholder: 'Título de la columna...',
-          }),
-
-          // Content
-          createElement(RichText, {
-            tagName: 'div',
-            className: 'column-content',
-            value: column.content,
-            onChange: (value) => updateColumn(index, 'content', value),
-            placeholder: 'Contenido...',
-          })
-        )
-      ),
-
-      // Add button at the end
+      // Contenedor para InnerBlocks con z-index para estar sobre el fondo
       createElement(
         'div',
-        { className: 'add-column-wrapper' },
-        createElement(
-          Button,
-          { isPrimary: true, onClick: addColumn },
-          '+ Agregar Columna'
-        )
+        {
+          style: {
+            position: 'relative',
+            zIndex: 2,
+            width: '100%',
+          }
+        },
+        createElement(InnerBlocks, {
+          template: [
+            // Plantilla sugerida con un botón centrado
+            ['core/buttons', { layout: { type: 'flex', justifyContent: 'center' } }, [
+              ['system-cars/styled-button', {}]
+            ]]
+          ],
+          templateLock: false, // Permite agregar/eliminar bloques
+        })
       )
     )
   );

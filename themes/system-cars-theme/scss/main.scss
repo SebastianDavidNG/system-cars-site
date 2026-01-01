@@ -19,6 +19,19 @@ body {
     margin-bottom: 0!important;
 }
 
+// Parallax Columns Block - sin márgenes ni padding
+.parallax-columns-block,
+.wp-block-system-cars-parallax-columns {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+// Eliminar márgenes de elementos vecinos al parallax
+.parallax-columns-block + *,
+* + .parallax-columns-block {
+    margin-top: 0 !important;
+}
+
 header {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 
