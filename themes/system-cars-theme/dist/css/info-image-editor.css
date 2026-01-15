@@ -1,0 +1,47 @@
+.wp-block-system-cars-info-image .info-main-title,
+.wp-block-system-cars-info-image .info-main-description,
+.wp-block-system-cars-info-image .info-column-title,
+.wp-block-system-cars-info-image .info-column-description {
+  position: relative;
+  padding: 8px !important;
+  border: 2px dashed transparent;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  cursor: text;
+}
+.wp-block-system-cars-info-image .info-main-title:hover,
+.wp-block-system-cars-info-image .info-main-description:hover,
+.wp-block-system-cars-info-image .info-column-title:hover,
+.wp-block-system-cars-info-image .info-column-description:hover {
+  background-color: #f0f6fc;
+  border-color: #cce0f5;
+}
+.wp-block-system-cars-info-image .info-main-title:focus, .wp-block-system-cars-info-image .info-main-title.is-selected,
+.wp-block-system-cars-info-image .info-main-description:focus,
+.wp-block-system-cars-info-image .info-main-description.is-selected,
+.wp-block-system-cars-info-image .info-column-title:focus,
+.wp-block-system-cars-info-image .info-column-title.is-selected,
+.wp-block-system-cars-info-image .info-column-description:focus,
+.wp-block-system-cars-info-image .info-column-description.is-selected {
+  background-color: #f0f6fc !important;
+  border-color: #0073aa !important;
+  outline: none;
+}
+.wp-block-system-cars-info-image .info-main-title:empty::before,
+.wp-block-system-cars-info-image .info-main-description:empty::before,
+.wp-block-system-cars-info-image .info-column-title:empty::before,
+.wp-block-system-cars-info-image .info-column-description:empty::before {
+  color: #999;
+  opacity: 0.7;
+}
+.wp-block-system-cars-info-image .info-main-title:hover,
+.wp-block-system-cars-info-image .info-column-title:hover {
+  background-color: #fff9e6;
+  border-color: #ffe08a;
+}
+.wp-block-system-cars-info-image .info-main-title:focus, .wp-block-system-cars-info-image .info-main-title.is-selected,
+.wp-block-system-cars-info-image .info-column-title:focus,
+.wp-block-system-cars-info-image .info-column-title.is-selected {
+  background-color: #fff9e6 !important;
+  border-color: #f0a500 !important;
+}

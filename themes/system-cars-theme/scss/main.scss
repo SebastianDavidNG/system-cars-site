@@ -16,7 +16,8 @@ body {
   background-color: $white-color;
 }
 .wp-block-columns{
-    margin-bottom: 0!important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
 }
 
 // Parallax Columns Block - sin márgenes ni padding
@@ -69,6 +70,7 @@ header {
                 position: relative;
                 transition: all 0.2s ease;
                 padding-bottom: 5px;
+                text-decoration: none;
                 &::after {
                     content: "" !important;
                     display: block !important;

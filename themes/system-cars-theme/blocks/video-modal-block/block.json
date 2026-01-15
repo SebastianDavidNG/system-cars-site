@@ -1,11 +1,15 @@
 {
   "apiVersion": 3,
   "name": "system-cars/video-modal",
+  "version": "5.0.0",
   "title": "Video Modal",
   "category": "system-cars",
   "icon": "video-alt3",
-  "description": "Video que se abre en modal popup.",
-  "supports": { "html": false },
+  "description": "Video que se abre en modal popup. Soporta YouTube, Vimeo y archivos MP4.",
+  "supports": {
+    "html": false,
+    "align": true
+  },
   "textdomain": "system-cars-theme",
 
   "attributes": {
@@ -17,19 +21,12 @@
       "type": "string",
       "default": ""
     },
-    "title": {
+    "thumbnailAlt": {
       "type": "string",
-      "source": "html",
-      "selector": ".video-title"
-    },
-    "description": {
-      "type": "string",
-      "source": "html",
-      "selector": ".video-description"
+      "default": "Video Thumbnail"
     }
   },
 
   "editorScript": "file:../../dist/video-modal-block.js",
-  "script": "file:../../dist/video-modal-frontend.js",
   "style": "file:../../dist/css/video-modal-style.css"
 }

@@ -20,7 +20,7 @@ export default function Save({ attributes }) {
     'px-10',
     'py-3',
     'font-black',
-    'capitalize',
+    'uppercase',
     'text-base',
   ].filter(Boolean).join(' ');
 

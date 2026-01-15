@@ -8,8 +8,9 @@
 .parallax-columns-block {
   position: relative;
   width: 100%;
-  margin: 0 !important;
-  padding: 40px 20px !important;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 40px 20px;
   background-position: center center;
   background-repeat: no-repeat;
   overflow: hidden;
@@ -37,11 +38,7 @@
 }
 
 .wp-block-system-cars-parallax-columns {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.parallax-columns-block + *,
-* + .parallax-columns-block {
-  margin-top: 0 !important;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
 }

@@ -7,9 +7,13 @@
   cursor: pointer;
   display: inline-block;
   text-decoration: none;
+  text-transform: uppercase !important;
   transition: all 0.3s ease;
   border: none;
   color: #ffffff;
+}
+.styled-button.capitalize {
+  text-transform: uppercase !important;
 }
 .styled-button span {
   color: inherit;

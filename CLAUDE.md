@@ -3,21 +3,23 @@
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2025-12-31
+**Última actualización:** 2026-01-14
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
-**Working Directory:** `themes/system-cars-theme/` (todos los comandos npm se ejecutan desde aquí)
+**Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
+**Theme Location:** `wp-content/themes/system-cars-theme/`
 
 ## 🚧 Current Development Status
 
 ### Completed Blocks ✅
 - `slider-block/` - Slider de imágenes con Swiper.js (FUNCIONANDO)
 - `service-card/` - Tarjetas de servicios (FUNCIONANDO)
+- `styled-button-block/` - Botones con estilos personalizados usando Tailwind CSS (FUNCIONANDO)
+- `info-image-block/` - Bloque de imagen con información en columnas con controles de padding (FUNCIONANDO)
+- `parallax-columns-block/` - Bloque decorativo con imagen de fondo y efecto parallax (FUNCIONANDO)
 
 ### In Progress 🔨
-1. **styled-button-block** - Botones con estilos personalizados (DEBUGGING - Ver sección de problemas conocidos)
-2. **parallax-columns-block** - Columnas con efecto parallax (EN DESARROLLO)
-3. **video-modal-block** - Modal overlay con video embebido (EN DESARROLLO)
+1. **video-modal-block** - Modal overlay con video embebido YouTube/Vimeo/MP4 (EN DESARROLLO)
 
 ---
 
@@ -67,103 +69,162 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 
 ---
 
-### styled-button-block 🔨
-**Estado:** EN DEBUGGING - Problemas con caché de WordPress
-**Última actualización:** 2025-12-31
+### styled-button-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-07
 
 **Archivos:**
 - `blocks/styled-button-block/index.js` - Registro con versiones deprecated
 - `blocks/styled-button-block/edit.jsx` - Editor con Tailwind classes
 - `blocks/styled-button-block/save.jsx` - Guardado con Tailwind classes
-- `blocks/styled-button-block/style.scss` - Estilos base (sin padding/font-weight/font-size)
-- `blocks/styled-button-block/block.json` - Metadata (v2.1.0)
+- `blocks/styled-button-block/style.scss` - Estilos base
+- `blocks/styled-button-block/frontend.js` - JavaScript del frontend
+- `blocks/styled-button-block/block.json` - Metadata (v3.0.0)
 
-**Objetivo actual:**
-Migrar estilos de SCSS a Tailwind CSS classes:
-- ✅ Código actualizado: Tailwind classes añadidas (`px-10 py-3 font-black capitalize text-base`)
-- ✅ SCSS actualizado: Removido `padding`, `font-weight`, `font-size`
-- ✅ Archivos compilados correctamente
-- ❌ **PROBLEMA:** WordPress no está usando los nuevos archivos compilados
-
-**Cambios realizados:**
-1. `save.jsx:16-25` - Añadidas clases Tailwind al array `buttonClasses`
-2. `edit.jsx:106` - Añadidas clases Tailwind al className del anchor
-3. `style.scss:5-13` - Removidas propiedades: `padding`, `font-weight`, `font-size`
-4. `block.json:4` - Versión actualizada a "2.1.0"
-5. `index.js:10-62` - Añadida versión deprecated para migración
-
-**Build:**
-- JSX: `npm run dev` o `npm run build`
-- SCSS: No existe `npm run build:styled-button` - usar `npm run build` (Vite compila todo)
-- Output: `dist/styled-button-block.js` (7.86 KB), `dist/css/styled-button-style.css` (1.10 KB)
-
-**Características planeadas:**
+**Características:**
 - ✅ Múltiples estilos (primary, secondary, tertiary, white, black)
 - ✅ Bordes opcionales (transparent, secondary, primary, tertiary, white, black)
 - ✅ Links internos/externos
 - ✅ Opción "abrir en nueva pestaña"
-- ✅ Text editable con RichText
-- 🔨 Integración con Tailwind CSS (EN DEBUGGING)
-
-**PROBLEMA ACTUAL:**
-WordPress está sirviendo CSS inline en el `<head>` con valores antiguos:
-```css
-.styled-button {
-  padding: 27px 38px;      /* ← ANTIGUO, debería ser removido */
-  font-weight: 600;         /* ← ANTIGUO, debería ser removido */
-  font-size: 16px;          /* ← ANTIGUO, debería ser removido */
-}
-```
-
-Y el HTML renderizado NO incluye las clases de Tailwind:
-```html
-<!-- Actual (INCORRECTO): -->
-<a class="styled-button styled-button--secondary" href="#" target="_self">
-  <span>Botón</span>
-</a>
-
-<!-- Esperado (CORRECTO): -->
-<a class="styled-button styled-button--secondary px-10 py-3 font-black capitalize text-base" href="#" target="_self">
-  <span>Botón</span>
-</a>
-```
-
-**Intentos de solución:**
-1. ✅ Recompilar con `npm run build`
-2. ✅ Reiniciar contenedor Docker
-3. ✅ Añadir versión deprecated para migración
-4. ✅ Actualizar versión en block.json a 2.1.0
-5. ✅ Guardar página en WordPress Editor
-6. ❌ Los archivos compilados no se están cargando - aparece CSS inline cacheado
-
-**Próximos pasos sugeridos:**
-- Investigar por qué WordPress usa CSS inline en lugar de cargar el archivo compilado
-- Verificar si hay plugins de caché activos
-- Revisar cómo `functions.php` encola los assets del bloque
-- Posible solución: Eliminar completamente el bloque de la base de datos y recrearlo
-
----
-
-### parallax-columns-block 🔨
-**Estado:** EN DESARROLLO
-**Archivos:**
-- `blocks/parallax-columns-block/index.js`
-- `blocks/parallax-columns-block/edit.jsx`
-- `blocks/parallax-columns-block/save.jsx`
-- `blocks/parallax-columns-block/frontend.js`
-- `blocks/parallax-columns-block/style.scss`
-- `blocks/parallax-columns-block/block.json`
-
-**Características planeadas:**
-- 2-4 columnas configurables
-- Background images con parallax effect
-- Velocidad parallax ajustable
-- Overlay de color opcional
+- ✅ Texto editable con RichText
+- ✅ Estilos con Tailwind CSS: `px-10 py-3 font-black uppercase text-lg`
+- ✅ Texto en mayúsculas con `text-transform: uppercase`
 
 **Build:**
 - JSX: `npm run dev` o `npm run build`
-- SCSS: `npm run build:blocks`
-- Output: `dist/parallax-columns-block.js`, `dist/parallax-columns-frontend.js`, `dist/css/parallax-columns-style.css`
+- Output: `dist/styled-button-block.js` (7.86 KB), `dist/styled-button-frontend.js`, `dist/css/styled-button-style.css` (1.21 KB)
+
+**Solución implementada:**
+- Problema de caché resuelto usando versiones deprecated para migración automática
+- Versión actualizada a 3.0.0 para forzar actualización
+- Clases Tailwind correctamente aplicadas: `uppercase text-lg`
+- CSS SCSS solo maneja colores y transiciones, spacing viene de Tailwind
+
+---
+
+### parallax-columns-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-07
+
+**Archivos:**
+- `blocks/parallax-columns-block/index.js` - Registro del bloque
+- `blocks/parallax-columns-block/edit.jsx` - Componente del editor
+- `blocks/parallax-columns-block/save.jsx` - Componente de guardado
+- `blocks/parallax-columns-block/frontend.js` - Efecto parallax en frontend
+- `blocks/parallax-columns-block/style.scss` - Estilos del bloque
+- `blocks/parallax-columns-block/block.json` - Metadata (v2.0.0)
+
+**Características:**
+- ✅ Imagen de fondo con efecto parallax
+- ✅ Altura mínima configurable
+- ✅ Parallax activable/desactivable
+- ✅ Optimización para mobile
+- ✅ **Controles de spacing nativos de WordPress:**
+  - Margin-top y margin-bottom configurables
+  - Sin margin lateral (imagen siempre de lado a lado)
+  - Sin padding configurable (el bloque tiene padding fijo interno)
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- Output: `dist/parallax-columns-block.js` (4.81 KB), `dist/parallax-columns-frontend.js` (2.46 KB), `dist/css/parallax-columns-style.css` (0.93 KB)
+
+**Controles nativos de WordPress:**
+```json
+"supports": {
+  "spacing": {
+    "margin": ["top", "bottom"],  // Solo margin vertical
+    "padding": false
+  }
+}
+```
+
+---
+
+### info-image-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-07
+
+**Archivos:**
+- `blocks/info-image-block/index.js` - Registro del bloque
+- `blocks/info-image-block/edit.jsx` - Componente del editor con controles de padding
+- `blocks/info-image-block/save.jsx` - Componente de guardado
+- `blocks/info-image-block/style.scss` - Estilos del bloque
+- `blocks/info-image-block/editor.scss` - Estilos del editor
+- `blocks/info-image-block/block.json` - Metadata
+
+**Estructura HTML:**
+```html
+<div class="info-image-block">
+  <!-- Top Section (Título y descripción principal) -->
+  <div class="info-top-section text-left max-md:text-center">
+    <h2 class="info-main-title">Título Principal</h2>
+    <p class="info-main-description">Descripción principal</p>
+  </div>
+
+  <!-- Columns Section (Imagen izquierda + Contenido derecha) -->
+  <div class="info-columns-section">
+    <div class="info-column-left">
+      <img class="info-image" src="..." alt="...">
+    </div>
+    <div class="info-column-right text-left max-md:text-center">
+      <h4 class="info-column-title">Título de Columna</h4>
+      <p class="info-column-description">Descripción de columna</p>
+    </div>
+  </div>
+</div>
+```
+
+**Características:**
+- ✅ Sección superior con título (H2) y descripción principal
+- ✅ Layout de 2 columnas con CSS Grid (desktop) / 1 columna (mobile)
+- ✅ Columna izquierda: imagen desde WordPress Media Library
+- ✅ Columna derecha: título (H4) y descripción
+- ✅ **Alineación responsive con Tailwind CSS:**
+  - Desktop: `text-left` (textos alineados a la izquierda)
+  - Mobile: `max-md:text-center` (textos centrados)
+- ✅ **Controles de padding personalizados (WordPress BoxControl):**
+  - "Espaciado - Sección Superior": controla padding del título y descripción principal
+  - "Espaciado - Columna Derecha": controla padding del contenido de la columna derecha
+  - **La imagen NO se ve afectada** por estos controles (siempre pegada al borde)
+- ✅ Editor con hover states para facilitar edición de textos
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- Output: `dist/info-image-block.js` (9.12 KB), `dist/css/info-image-style.css` (2.51 KB), `dist/css/info-image-editor.css` (2.09 KB)
+
+**Controles de Spacing:**
+Los controles de padding son **específicos por sección**, NO afectan a todo el bloque:
+
+**Atributos personalizados:**
+```json
+"topSectionPadding": {
+  "type": "object",
+  "default": { "top": "0px", "right": "0px", "bottom": "0px", "left": "0px" }
+},
+"columnRightPadding": {
+  "type": "object",
+  "default": { "top": "0px", "right": "0px", "bottom": "0px", "left": "0px" }
+}
+```
+
+**Aplicación en save.jsx:**
+```jsx
+<div
+  className="info-top-section text-left max-md:text-center"
+  style={{
+    paddingTop: topSectionPadding?.top || '0px',
+    paddingRight: topSectionPadding?.right || '0px',
+    paddingBottom: topSectionPadding?.bottom || '0px',
+    paddingLeft: topSectionPadding?.left || '0px'
+  }}
+>
+```
+
+**Ventajas de este enfoque:**
+- Imagen siempre pegada al borde izquierdo (sin padding)
+- Control fino de spacing solo en textos
+- Usa BoxControl nativo de WordPress (mismo UI que otros bloques)
+- Valores aplicados con inline styles para máxima flexibilidad
 
 ---
 
@@ -201,6 +262,46 @@ Y el HTML renderizado NO incluye las clases de Tailwind:
 - **Icons**: FontAwesome
 - **Slider**: Swiper.js
 - **Local Development**: Docker (see docker-compose.yml)
+- **Theme Configuration**: theme.json (WordPress FSE - Full Site Editing)
+
+## Theme Configuration (theme.json)
+
+El proyecto utiliza `theme.json` para configurar características globales del tema según el estándar de WordPress Full Site Editing (FSE).
+
+**Ubicación:** `themes/system-cars-theme/theme.json`
+
+**Características configuradas:**
+
+### Spacing Presets
+Valores predefinidos para margin y padding que aparecen en todos los bloques con soporte de spacing:
+
+| Preset | Slug | Tamaño | Uso |
+|--------|------|--------|-----|
+| Extra pequeño | `xs` | 0.5rem (8px) | Espacios mínimos |
+| Pequeño | `small` | 1rem (16px) | Espacios reducidos |
+| Mediano | `medium` | 1.5rem (24px) | Espacios estándar |
+| Grande | `large` | 2rem (32px) | Espacios generosos |
+| Extra grande | `xl` | 3rem (48px) | Separaciones grandes |
+| 2X grande | `2xl` | 4rem (64px) | Separaciones muy grandes |
+
+**Unidades soportadas:** `px`, `em`, `rem`, `%`, `vh`, `vw`
+
+### Color Palette
+Paleta de colores del tema System Cars:
+- **Primary:** `#ff0000` (Rojo)
+- **Secondary:** `#002060` (Azul oscuro)
+- **Tertiary:** `#232225` (Gris oscuro)
+- **White:** `#ffffff`
+- **Black:** `#000000`
+
+### Typography
+Tamaños de fuente predefinidos:
+- **Pequeño:** 0.875rem
+- **Mediano:** 1rem
+- **Grande:** 1.25rem
+- **Extra grande:** 1.75rem
+
+**Nota:** Estos valores se sincronizan automáticamente con WordPress y están disponibles en todos los bloques que soporten estas características.
 
 ## File Structure
 ```
@@ -219,13 +320,14 @@ Y el HTML renderizado NO incluye las clases de Tailwind:
 
 ## Development Commands
 
-### Compile Block JavaScript/JSX (React Components)
+**IMPORTANTE:** Todos los comandos se ejecutan desde la **raíz del proyecto**, NO desde el directorio del tema.
 
-When editing JSX files like `edit.jsx`, `save.jsx`, `frontend.jsx`, or block `index.js` files:
+### Compile Everything (JS + SCSS)
+
+Vite compila tanto JavaScript/JSX como SCSS en un solo comando:
 
 **Development Mode (Recommended while editing):**
 ```bash
-cd wp-content/themes/system-cars-theme
 npm run dev
 ```
 - Watches for file changes and recompiles automatically
@@ -234,62 +336,31 @@ npm run dev
 
 **Production Build:**
 ```bash
-cd wp-content/themes/system-cars-theme
 npm run build
 ```
-- Compiles and optimizes all JSX/JS for production
-- Minifies code and generates optimized bundles
-- Run before deployment
+- Compiles and optimizes all JSX/JS and SCSS for production
+- Output goes directly to `wp-content/themes/system-cars-theme/dist/`
+- Files are immediately available for Docker/OrbStack
 
-**Blocks with JSX compiled by Vite:**
-- `slider-block/` - `index.js`, `edit.jsx`, `save.jsx`, `slider-frontend.js`
-- `service-card/` - `index.js` (includes edit/save)
-- `video-modal-block/` - `index.js`, `edit.jsx`, `save.jsx`, `modal.jsx`, `frontend.jsx`
-- `parallax-columns-block/` - `index.js`, `edit.jsx`, `save.jsx`, `frontend.jsx`
-- `styled-button-block/` - `index.js`, `edit.jsx`
+**Blocks compiled by Vite:**
+- `slider-block/` - `index.js`, `edit.jsx`, `save.jsx`, `slider-frontend.js`, `style.scss`
+- `service-card/` - `index.js`, `style.scss`, `editor.scss`
+- `video-modal-block/` - `index.js`, `edit.jsx`, `save.jsx`, `frontend.js`, `style.scss`
+- `parallax-columns-block/` - `index.js`, `edit.jsx`, `save.jsx`, `frontend.js`, `style.scss`
+- `styled-button-block/` - `index.js`, `edit.jsx`, `frontend.js`, `style.scss`
+- `info-image-block/` - `index.js`, `edit.jsx`, `save.jsx`, `style.scss`, `editor.scss`
 
-All compiled JS files are output to: `dist/[block-name].js`
+**Output:**
+- JS files: `wp-content/themes/system-cars-theme/dist/[block-name].js`
+- CSS files: `wp-content/themes/system-cars-theme/dist/css/[block-name]-style.css`
 
-### Compile Block Styles (SASS)
-
-The theme has custom Gutenberg blocks with SASS styles that need to be compiled separately.
-
-**Compile all block styles:**
-```bash
-cd wp-content/themes/system-cars-theme
-npm run build:blocks
-```
-
-**Compile individual blocks:**
-```bash
-npm run build:car-block          # Car block styles
-npm run build:slider-block       # Slider block styles
-npm run build:service-card       # Service card styles
-npm run build:parallax-columns   # Parallax columns styles
-npm run build:styled-button      # Styled button styles
-npm run build:video-modal        # Video modal styles
-```
-
-**Compile everything (main SCSS + all blocks):**
-```bash
-npm run build:all
-```
-
-**Available Blocks:**
-- `car-block/` - Car display block
-- `slider-block/` - Image slider with Swiper.js
-- `service-card/` - Service card component
-- `parallax-columns-block/` - Parallax columns layout
-- `styled-button-block/` - Styled button component
-- `video-modal-block/` - Video modal popup
-
-All compiled CSS files are output to: `dist/css/[block-name].css`
-
-### Docker
+### Docker / OrbStack
 ```bash
 docker-compose up
 ```
 Runs WordPress locally at http://localhost:8080
+
+**NOTA:** Los archivos compilados van directamente a `wp-content/` que es el volumen montado por Docker, por lo que los cambios se reflejan inmediatamente sin necesidad de copiar archivos.
 
 ## Coding Guidelines
 
@@ -310,6 +381,11 @@ Runs WordPress locally at http://localhost:8080
 - SASS is available for complex custom styles
 - Follow mobile-first responsive design
 - Use PostCSS for CSS processing
+- **Tailwind safelist** (`tailwind.config.js`): Contiene clases que deben estar siempre disponibles:
+  - Grid columns: `grid`, `grid-cols-12`, `col-span-*`, `md:col-span-*`
+  - Text sizes: `text-xs` a `text-3xl` con variantes `md:` y `lg:`
+  - Text alignment: `text-left`, `text-center`, `text-right`, `max-md:text-center`
+  - Custom heights: `h-[350px]`, `md:h-[300px]`, `lg:h-[400px]`
 
 ### Git Workflow
 - Main branch: `main`
@@ -402,64 +478,47 @@ add_action('enqueue_block_editor_assets', 'system_cars_block_editor_assets');
 
 ## Build Process
 
-The project uses **two build systems**:
+El proyecto usa **Vite** como único sistema de build, configurado en `vite.config.js` en la raíz del proyecto.
 
-### 1. Vite (Theme Level - JavaScript/JSX)
-Located in theme folder, configured in `vite.config.js`:
-- Process React/JSX files for blocks (`edit.jsx`, `save.jsx`, `frontend.jsx`)
-- Bundle JavaScript modules (`index.js`, `slider-frontend.js`, etc.)
-- Handle WordPress externals (React, WordPress packages)
-- Generate optimized production assets with code splitting
-- Output: `dist/[block-name].js`
+### Vite (Unified Build System)
 
-**Run from:** Theme directory (`wp-content/themes/system-cars-theme`)
+**Ubicación:** `vite.config.js` en la raíz del proyecto
+**Output:** `wp-content/themes/system-cars-theme/dist/`
+
+**Características:**
+- Compila React/JSX para bloques (`edit.jsx`, `save.jsx`, `frontend.js`)
+- Compila SCSS a CSS (con PostCSS y Tailwind)
+- Bundle JavaScript modules
+- Maneja WordPress externals (React, WordPress packages)
+- Output directo a `wp-content/` para sincronización inmediata con Docker/OrbStack
+
+**Run from:** Raíz del proyecto
 **Commands:**
 - `npm run dev` - Development mode with file watching
-- `npm run build` - Production build with optimization
+- `npm run build` - Production build
 
-**Configured inputs** (`vite.config.js:45-55`):
-- main.js
-- sliderBlock, sliderFrontend
-- serviceCard
-- videoModalBlock, videoModalBlockFront
-- parallaxColumnsBlock, parallaxColumnsBlockFront
-- styledButtonBlock
+**Inputs configurados** (`vite.config.js`):
+- main.js, car-block, service-card, slider-block, slider-frontend
+- styled-button-block, styled-button-frontend, styled-button-style
+- info-image-block, info-image-style, info-image-editor
+- parallax-columns-block, parallax-columns-frontend, parallax-columns-style
+- video-modal-block, video-modal-frontend, video-modal-style
 
-### 2. SASS Compiler (Theme Level)
-Located in theme folder, configured in `package.json` scripts:
-- Compile block-specific SCSS files
-- Process main theme SCSS
-- Apply Tailwind CSS via PostCSS
-- Direct SCSS → CSS compilation without bundling
-- Output: `dist/css/[filename].css`
+### Workflow Simplificado
 
-**Run from:** Theme directory (`wp-content/themes/system-cars-theme`)
-**Commands:** `npm run build:blocks` or `npm run build:all`
+| You're editing... | Command to use | Output |
+|------------------|----------------|--------|
+| Any `.jsx`, `.js`, or `.scss` file | `npm run build` | `wp-content/themes/system-cars-theme/dist/` |
+| Active development | `npm run dev` | Watch mode, auto-recompile |
 
-### When to Use Each:
-
-| You're editing... | Command to use | What it does |
-|------------------|----------------|--------------|
-| `edit.jsx`, `save.jsx`, `index.js` | `npm run dev` | Vite watches JSX/JS files and recompiles |
-| `style.scss`, `editor.scss` | `npm run build:blocks` | SASS compiles styles to CSS |
-| Both JSX and SCSS | Run both commands in separate terminals | Both systems work independently |
-| Final deployment | `npm run build` (Vite) + `npm run build:all` (SASS) | Production-optimized builds |
-
-**Important:** Both systems run from `wp-content/themes/system-cars-theme/`
-
-Built assets are served to WordPress and enqueued in `functions.php`.
+**Un solo comando compila todo.** No hay necesidad de comandos separados para JS y SCSS.
 
 ## Questions to Ask Before Starting Work:
 
 1. Is this a theme file, plugin, or core WordPress modification?
-2. Do changes require rebuilding assets?
-   - JSX/JS changes? → `npm run dev` or `npm run build`
-   - SCSS changes? → `npm run build:blocks`
+2. Do changes require rebuilding? → Run `npm run build` from project root
 3. Will this affect existing WordPress functionality or custom blocks?
 4. Should this be tested in both development and production modes?
-5. Are you editing block code that needs compilation?
-   - Block JSX files? → Start `npm run dev` in theme directory
-   - Block SCSS files? → Run `npm run build:blocks` in theme directory
 
 ## Troubleshooting
 
@@ -571,59 +630,40 @@ background-color: color.adjust($black-color, $lightness: 15%);       // Aclarar
 
 ### Command Cheat Sheet
 
-All commands run from: `cd wp-content/themes/system-cars-theme`
+All commands run from: **project root** (NOT from theme directory)
 
 ```bash
 # Development (watching for changes)
-npm run dev                    # Watch and compile JSX/JS files
-npm run dev &                  # Run in background
-# (Run npm run build:blocks separately if editing SCSS)
+npm run dev                    # Watch and compile everything (JS + SCSS)
 
-# Production builds
-npm run build                  # Compile JSX/JS for production
-npm run build:blocks           # Compile all block SCSS
-npm run build:all              # Compile main.scss + all block SCSS
+# Production build
+npm run build                  # Compile everything for production
 
-# Individual block SCSS compilation
-npm run build:car-block
-npm run build:slider-block
-npm run build:service-card
-npm run build:parallax-columns
-npm run build:styled-button
-npm run build:video-modal
-
-# Main theme SCSS
-npm run build:scss             # Compile main.scss only
+# Docker/OrbStack
+docker-compose up              # Start WordPress at http://localhost:8080
 ```
 
-### File Types & Their Commands
+### File Types & Output
 
-| File Type | Example | Command | Output |
-|-----------|---------|---------|--------|
-| Block JSX | `blocks/slider-block/edit.jsx` | `npm run dev` | `dist/sliderBlock.js` |
-| Block JS | `blocks/slider-block/index.js` | `npm run dev` | `dist/sliderBlock.js` |
-| Block SCSS | `blocks/slider-block/style.scss` | `npm run build:slider-block` | `dist/css/slider-block.css` |
-| Main JS | `js/main.js` | `npm run dev` | `dist/main.js` |
-| Main SCSS | `scss/main.scss` | `npm run build:scss` | `dist/css/main.css` |
+| File Type | Example | Output |
+|-----------|---------|--------|
+| Block JSX | `blocks/slider-block/edit.jsx` | `wp-content/.../dist/slider-block.js` |
+| Block JS | `blocks/slider-block/index.js` | `wp-content/.../dist/slider-block.js` |
+| Block SCSS | `blocks/slider-block/style.scss` | `wp-content/.../dist/css/slider-block.css` |
+| Main JS | `js/main.js` | `wp-content/.../dist/main.js` |
+
+**Un solo comando (`npm run build`) compila todo.**
 
 ### Typical Development Workflow
 
-**Working on a block (JSX + SCSS):**
 ```bash
-cd wp-content/themes/system-cars-theme
-
-# Terminal 1: Watch JSX files
+# Terminal 1: Watch and auto-compile
 npm run dev
 
-# Terminal 2: Compile SCSS when needed
-npm run build:blocks
+# That's it! Changes sync automatically to Docker/OrbStack
 ```
 
 **Before committing/deploying:**
 ```bash
-cd wp-content/themes/system-cars-theme
-
-# Build everything for production
-npm run build          # JavaScript/JSX
-npm run build:all      # All SCSS (main + blocks)
+npm run build
 ```

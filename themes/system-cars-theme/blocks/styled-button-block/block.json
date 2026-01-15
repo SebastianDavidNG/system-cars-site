@@ -1,7 +1,7 @@
 {
   "apiVersion": 3,
   "name": "system-cars/styled-button",
-  "version": "2.1.0",
+  "version": "3.0.0",
   "title": "Styled Button",
   "category": "system-cars",
   "icon": "button",
@@ -33,5 +33,6 @@
   },
 
   "editorScript": "file:../../dist/styled-button-block.js",
+  "script": "file:../../dist/styled-button-frontend.js",
   "style": "file:../../dist/css/styled-button-style.css"
 }

@@ -128,10 +128,66 @@ function sc_enqueue_frontend_assets() {
         wp_script_add_data( 'system-cars-slider-frontend', 'type', 'module' );
     }
 
-    // NOTA: Los otros scripts frontend (parallax-columns-frontend.js, video-modal-frontend.js)
-    // y estilos (styled-button-style.css) se cargan automáticamente desde block.json cuando el bloque está presente
+    // NOTA: parallax-columns-frontend.js se carga automáticamente desde block.json
+
+    // video-modal-frontend.js - siempre cargar para asegurar que funcione
+    $video_modal_frontend = get_template_directory() . '/dist/video-modal-frontend.js';
+    if ( file_exists( $video_modal_frontend ) ) {
+        wp_enqueue_script(
+            'system-cars-video-modal-frontend',
+            get_template_directory_uri() . '/dist/video-modal-frontend.js',
+            [],
+            filemtime( $video_modal_frontend ),
+            true
+        );
+    }
 }
-add_action('wp_enqueue_scripts', 'sc_enqueue_frontend_assets');
+add_action('wp_enqueue_scripts', 'sc_enqueue_frontend_assets', 999);
+
+/**
+ * Encolar video-modal-frontend.js cuando el bloque está presente
+ * Usando render_block para mayor confiabilidad
+ */
+function system_cars_enqueue_video_modal_script($block_content, $block) {
+    if ('system-cars/video-modal' === $block['blockName']) {
+        $script_path = get_template_directory() . '/dist/video-modal-frontend.js';
+
+        if (file_exists($script_path)) {
+            wp_enqueue_script(
+                'system-cars-video-modal-frontend',
+                get_template_directory_uri() . '/dist/video-modal-frontend.js',
+                [],
+                filemtime($script_path),
+                true
+            );
+        }
+    }
+    return $block_content;
+}
+add_filter('render_block', 'system_cars_enqueue_video_modal_script', 10, 2);
+
+/**
+ * LIMPIEZA DE CACHÉ - YA SE EJECUTÓ, COMENTADO PARA NO EJECUTAR NUEVAMENTE
+ * IMPORTANTE: Esta función ya se ejecutó y limpió la caché
+ */
+/*
+function system_cars_clear_block_cache() {
+    // Limpiar todos los transients de WordPress
+    global $wpdb;
+    $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_transient_%'");
+    $wpdb->query("DELETE FROM {$wpdb->options} WHERE option_name LIKE '_site_transient_%'");
+
+    // Limpiar caché de bloques específicamente
+    wp_cache_flush();
+
+    // Forzar regeneración de metadatos de bloques
+    delete_option('wp_theme_files_patterns-system-cars-theme');
+
+    // Solo ejecutar una vez, luego se auto-desactiva
+    remove_action('init', 'system_cars_clear_block_cache');
+}
+add_action('init', 'system_cars_clear_block_cache', 1);
+*/
 
 /**
  * Carga scripts y estilos para el Block Editor

@@ -9,11 +9,17 @@
   cursor: pointer;
   display: inline-block;
   text-decoration: none;
+  text-transform: uppercase !important;
   transition: all 0.3s ease;
   border: none;
 
   // Color de texto por defecto
   color: $white-color;
+
+  // Sobrescribir clase capitalize de Tailwind
+  &.capitalize {
+    text-transform: uppercase !important;
+  }
 
   span {
     color: inherit;

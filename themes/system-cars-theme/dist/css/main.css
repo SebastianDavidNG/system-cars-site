@@ -5,6 +5,7 @@ body {
 }
 
 .wp-block-columns {
+  margin-top: 0 !important;
   margin-bottom: 0 !important;
 }
 
@@ -60,6 +61,7 @@ header .nav-menu li a {
   position: relative;
   transition: all 0.2s ease;
   padding-bottom: 5px;
+  text-decoration: none;
 }
 
 header .nav-menu li a::after {

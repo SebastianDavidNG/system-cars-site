@@ -1,106 +1,116 @@
 @use "../../scss/variables" as *;
 
+// Block styles (usa Tailwind para la mayoría de los estilos)
 .video-modal-block {
-  margin-bottom: 2rem;
+  // Sin hover effect
+}
 
-  .video-thumbnail {
-    position: relative;
-    background-size: cover;
-    background-position: center center;
-    min-height: 400px;
+// Global modal overlay (creado dinámicamente por JS)
+.video-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(250, 250, 250, 0.85);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  transition: opacity 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  &.active {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    opacity: 1;
+    animation: fadeIn 0.25s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  // Close button (estilo Magnific Popup)
+  .mfp-close {
+    position: absolute;
+    top: 40px;
+    right: 40px;
+    background: transparent;
+    border: none;
     cursor: pointer;
-    transition: transform 0.3s ease;
+    padding: 0;
+    width: 44px;
+    height: 44px;
+    z-index: 10001;
 
-    &:hover {
-      transform: scale(1.02);
-
-      .play-button {
-        transform: scale(1.1);
-      }
+    // Ocultar el span interno con el ×
+    .mfp-close-icon {
+      display: none;
     }
 
-    .placeholder {
-      background: #f0f0f0;
-      color: #666;
-      padding: 40px;
-      text-align: center;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+    // Las dos líneas que forman la X
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 24px;
+      height: 2px;
+      background-color: #000;
+      opacity: 0.65;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      transform-origin: center center;
     }
 
-    .play-button {
-      position: relative;
-      z-index: 2;
-      transition: transform 0.3s ease;
-      filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-    }
-  }
-
-  .video-info {
-    padding: 20px 0;
-
-    .video-title {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-      color: $secondary-color;
+    // Línea 1: rotada 45°
+    &::before {
+      transform: translate(-50%, -50%) rotate(45deg);
     }
 
-    .video-description {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #666;
-
-      p {
-        margin-bottom: 0.5rem;
-      }
+    // Línea 2: rotada -45°
+    &::after {
+      transform: translate(-50%, -50%) rotate(-45deg);
     }
-  }
 
-  // Modal styles
-  .video-modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.9);
-    z-index: 9999;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
+    // Hover: rotar cada línea 90° adicionales (efecto de X rotando)
+    &:hover::before {
+      transform: translate(-50%, -50%) rotate(135deg);
+      opacity: 1;
+    }
+
+    &:hover::after {
+      transform: translate(-50%, -50%) rotate(45deg);
+      opacity: 1;
+    }
   }
 
   .video-modal-content {
     position: relative;
     width: 100%;
-    max-width: 900px;
+    max-width: 1000px;
     background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: zoomIn 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    transform: scale(0.95);
+    opacity: 0;
 
-    .modal-close {
-      position: absolute;
-      top: -40px;
-      right: 0;
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 40px;
-      cursor: pointer;
-      line-height: 1;
-      padding: 0;
-      width: 40px;
-      height: 40px;
-      transition: transform 0.2s ease;
-
-      &:hover {
-        transform: scale(1.2);
+    @keyframes zoomIn {
+      from {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+      to {
+        transform: scale(1);
+        opacity: 1;
       }
     }
 
@@ -109,6 +119,7 @@
       padding-bottom: 56.25%; // 16:9 aspect ratio
       height: 0;
       overflow: hidden;
+      background: #000;
 
       iframe,
       video {
@@ -123,13 +134,17 @@
 
   // Responsive
   @media (max-width: 768px) {
-    .video-thumbnail {
-      min-height: 300px;
-    }
+    padding: 10px;
 
-    .video-info {
-      .video-title {
-        font-size: 1.5rem;
+    .mfp-close {
+      top: 15px;
+      right: 15px;
+      width: 36px;
+      height: 36px;
+
+      &::before,
+      &::after {
+        width: 20px;
       }
     }
 

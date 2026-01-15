@@ -12,8 +12,9 @@
 .parallax-columns-block {
   position: relative;
   width: 100%;
-  margin: 0 !important;
-  padding: 40px 20px !important;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 40px 20px;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -51,14 +52,9 @@
   }
 }
 
-// Asegurar que no haya márgenes
+// Asegurar que no haya márgenes laterales
 .wp-block-system-cars-parallax-columns {
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-// Eliminar márgenes de elementos vecinos
-.parallax-columns-block + *,
-* + .parallax-columns-block {
-  margin-top: 0 !important;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
 }

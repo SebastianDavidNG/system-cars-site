@@ -116,7 +116,7 @@ export default function Edit({ attributes, setAttributes }) {
         'a',
         {
           style: buttonStyles,
-          className: 'px-10 py-3 font-black capitalize text-base',
+          className: 'px-10 py-3 font-black uppercase text-base',
           href: url || '#'
         },
         createElement(RichText, {

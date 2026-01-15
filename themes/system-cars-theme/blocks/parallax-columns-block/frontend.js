@@ -85,23 +85,40 @@
   }
 
   // Re-inicializar si hay cambios dinámicos en el DOM
+  // Usar try-catch para evitar errores que rompan otros scripts
   if (window.MutationObserver) {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1 && node.querySelector) {
-            const parallaxBlocks = node.querySelectorAll ? node.querySelectorAll('.parallax-columns-block[data-parallax="true"]') : [];
-            if (parallaxBlocks.length > 0 || (node.classList && node.classList.contains('parallax-columns-block'))) {
-              initParallax();
-            }
-          }
-        });
-      });
-    });
+    try {
+      // Esperar a que document.body esté disponible
+      const observeBody = () => {
+        if (!document.body) {
+          // Si body no está disponible, reintentar después
+          setTimeout(observeBody, 100);
+          return;
+        }
 
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1 && node.querySelector) {
+                const parallaxBlocks = node.querySelectorAll ? node.querySelectorAll('.parallax-columns-block[data-parallax="true"]') : [];
+                if (parallaxBlocks.length > 0 || (node.classList && node.classList.contains('parallax-columns-block'))) {
+                  initParallax();
+                }
+              }
+            });
+          });
+        });
+
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      };
+
+      observeBody();
+    } catch (error) {
+      // Silenciar errores para no romper otros scripts
+      console.warn('Parallax MutationObserver error:', error);
+    }
   }
 })();

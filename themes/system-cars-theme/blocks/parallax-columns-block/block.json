@@ -1,13 +1,17 @@
 {
   "apiVersion": 3,
   "name": "system-cars/parallax-columns",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "title": "Parallax Background",
   "category": "system-cars",
   "icon": "format-image",
   "description": "Bloque decorativo con imagen de fondo y efecto parallax.",
   "supports": {
-    "html": false
+    "html": false,
+    "spacing": {
+      "margin": ["top", "bottom"],
+      "padding": false
+    }
   },
   "textdomain": "system-cars-theme",
 

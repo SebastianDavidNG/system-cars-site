@@ -1,0 +1,50 @@
+// Estilos solo para el editor de WordPress
+.wp-block-system-cars-info-image {
+  // Mejorar visualización de campos editables
+  .info-main-title,
+  .info-main-description,
+  .info-column-title,
+  .info-column-description {
+    position: relative;
+    padding: 8px !important;
+    border: 2px dashed transparent;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    cursor: text;
+
+    // Indicador visual sutil cuando no está en foco
+    &:hover {
+      background-color: #f0f6fc;
+      border-color: #cce0f5;
+    }
+
+    // Cuando está en foco (editando)
+    &:focus,
+    &.is-selected {
+      background-color: #f0f6fc !important;
+      border-color: #0073aa !important;
+      outline: none;
+    }
+
+    // Placeholder más visible
+    &:empty::before {
+      color: #999;
+      opacity: 0.7;
+    }
+  }
+
+  // Estilo adicional para títulos
+  .info-main-title,
+  .info-column-title {
+    &:hover {
+      background-color: #fff9e6;
+      border-color: #ffe08a;
+    }
+
+    &:focus,
+    &.is-selected {
+      background-color: #fff9e6 !important;
+      border-color: #f0a500 !important;
+    }
+  }
+}

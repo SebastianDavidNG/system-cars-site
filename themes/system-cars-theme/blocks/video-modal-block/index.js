@@ -1,10 +1,15 @@
-import './style.scss';
-import edit from './edit.jsx';
-import save from './save.jsx';
+/**
+ * themes/system-cars-theme/blocks/video-modal-block/index.js
+ * Registro del bloque Video Modal con versiones deprecated
+ */
+import Edit from './edit.jsx';
+import Save from './save.jsx';
+import deprecated from './deprecated.js';
 
 const { registerBlockType } = wp.blocks;
 
 registerBlockType('system-cars/video-modal', {
-  edit,
-  save,
+  edit: Edit,
+  save: Save,
+  deprecated: deprecated
 });

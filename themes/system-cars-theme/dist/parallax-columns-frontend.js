@@ -47,21 +47,32 @@
     initParallax();
   }
   if (window.MutationObserver) {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1 && node.querySelector) {
-            const parallaxBlocks = node.querySelectorAll ? node.querySelectorAll('.parallax-columns-block[data-parallax="true"]') : [];
-            if (parallaxBlocks.length > 0 || node.classList && node.classList.contains("parallax-columns-block")) {
-              initParallax();
-            }
-          }
+    try {
+      const observeBody = () => {
+        if (!document.body) {
+          setTimeout(observeBody, 100);
+          return;
+        }
+        const observer = new MutationObserver((mutations) => {
+          mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+              if (node.nodeType === 1 && node.querySelector) {
+                const parallaxBlocks = node.querySelectorAll ? node.querySelectorAll('.parallax-columns-block[data-parallax="true"]') : [];
+                if (parallaxBlocks.length > 0 || node.classList && node.classList.contains("parallax-columns-block")) {
+                  initParallax();
+                }
+              }
+            });
+          });
         });
-      });
-    });
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+      };
+      observeBody();
+    } catch (error) {
+      console.warn("Parallax MutationObserver error:", error);
+    }
   }
 })();
