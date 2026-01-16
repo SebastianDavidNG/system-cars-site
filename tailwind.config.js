@@ -1,6 +1,6 @@
 module.exports = {
     content: [
-        './themes/system-cars-theme/**/*.{php,js,jsx,scss}',
+        './wp-content/themes/system-cars-theme/**/*.{php,js,jsx,scss}',
     ],
     safelist: [
         // Grid columns clases para service-card

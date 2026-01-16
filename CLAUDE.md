@@ -3,7 +3,7 @@
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-14
+**Última actualización:** 2026-01-15
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -17,9 +17,13 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 - `styled-button-block/` - Botones con estilos personalizados usando Tailwind CSS (FUNCIONANDO)
 - `info-image-block/` - Bloque de imagen con información en columnas con controles de padding (FUNCIONANDO)
 - `parallax-columns-block/` - Bloque decorativo con imagen de fondo y efecto parallax (FUNCIONANDO)
+- `video-modal-block/` - Modal overlay con video embebido YouTube/Vimeo/MP4 (FUNCIONANDO)
 
-### In Progress 🔨
-1. **video-modal-block** - Modal overlay con video embebido YouTube/Vimeo/MP4 (EN DESARROLLO)
+### Estilos Globales del Theme ✅
+- **Fuente:** Arial, Helvetica, sans-serif
+- **Links:** Sin underline (`text-decoration: none`)
+- **Navegación:** `.nav-menu li a` con `font-weight: bold`
+- **Tailwind CSS:** Cargado globalmente via `dist/css/style.css`
 
 ---
 
@@ -228,27 +232,66 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 
 ---
 
-### video-modal-block 🔨
-**Estado:** EN DESARROLLO
-**Archivos:**
-- `blocks/video-modal-block/index.js`
-- `blocks/video-modal-block/edit.jsx`
-- `blocks/video-modal-block/save.jsx`
-- `blocks/video-modal-block/frontend.jsx`
-- `blocks/video-modal-block/style.scss`
-- `blocks/video-modal-block/block.json`
+### video-modal-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-15
 
-**Características planeadas:**
-- Modal overlay responsive
-- Thumbnail clickable con play button
-- Soporte YouTube/Vimeo
-- Close button accesible
-- Lazy loading del video
+**Archivos:**
+- `blocks/video-modal-block/index.js` - Registro del bloque
+- `blocks/video-modal-block/edit.jsx` - Componente del editor
+- `blocks/video-modal-block/save.jsx` - Componente de guardado
+- `blocks/video-modal-block/frontend.js` - Lógica del modal en frontend
+- `blocks/video-modal-block/style.scss` - Estilos del bloque y modal
+- `blocks/video-modal-block/block.json` - Metadata del bloque
+
+**Características:**
+- ✅ Modal overlay responsive con fondo semi-transparente
+- ✅ Thumbnail clickable con play button SVG
+- ✅ Soporte YouTube/Vimeo/MP4
+- ✅ Close button con animación de rotación (::before/::after formando X)
+- ✅ Cierre con click fuera del modal o tecla Escape
+- ✅ Animaciones de entrada (fadeIn + zoomIn)
 
 **Build:**
-- JSX: `npm run dev` o `npm run build`
-- SCSS: `npm run build:blocks`
+- Comando: `npm run build` (desde raíz del proyecto)
 - Output: `dist/video-modal-block.js`, `dist/video-modal-frontend.js`, `dist/css/video-modal-style.css`
+
+---
+
+## 🎨 CSS Global del Theme
+
+### Archivos CSS Principales
+| Archivo | Descripción | Tamaño |
+|---------|-------------|--------|
+| `dist/css/style.css` | Tailwind CSS completo (base, components, utilities) | ~26 KB |
+| `dist/css/main.css` | Estilos SCSS personalizados (header, footer, nav, etc.) | ~4 KB |
+
+### style.css (Tailwind)
+**Ubicación fuente:** `scss/style.css`
+**Contenido:**
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+Este archivo se compila con PostCSS y genera todas las clases de Tailwind usadas en los templates PHP.
+
+### main.css (SCSS personalizado)
+**Ubicación fuente:** `scss/main.scss`
+**Contiene:**
+- Estilos globales del body (font-family: Arial)
+- Reset de links (text-decoration: none)
+- Estilos del header y navegación
+- Estilos del footer
+- Estilos de WooCommerce personalizados
+
+### Carga de CSS (functions.php)
+Los CSS se cargan en este orden:
+1. Google Fonts (Roboto Condensed - legacy)
+2. Font Awesome 6.6.0
+3. `style.css` (Tailwind)
+4. `main.css` (SCSS personalizado)
+5. Swiper CSS (para slider-block)
 
 ---
 
