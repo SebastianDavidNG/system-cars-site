@@ -27,6 +27,7 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'wp-content/themes/system-cars-theme/js/main.js'),
         style: path.resolve(__dirname, 'wp-content/themes/system-cars-theme/scss/style.css'),
+        'main-style': path.resolve(__dirname, 'wp-content/themes/system-cars-theme/scss/main.scss'),
         'car-block':        path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/car-block/index.js'),
         'service-card':     path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/service-card/index.js'),
         'slider-block':     path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/slider-block/index.js'),
