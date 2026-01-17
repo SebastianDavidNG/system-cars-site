@@ -3,7 +3,7 @@
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-15
+**Última actualización:** 2026-01-17
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -255,6 +255,156 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 **Build:**
 - Comando: `npm run build` (desde raíz del proyecto)
 - Output: `dist/video-modal-block.js`, `dist/video-modal-frontend.js`, `dist/css/video-modal-style.css`
+
+---
+
+## 🛒 WooCommerce - Páginas Personalizadas
+
+### Shop Page (Tienda) ✅
+**URL:** http://localhost:8080/tienda/
+**Última actualización:** 2026-01-16
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/archive-product.php` - Template de la tienda
+- `wp-content/themes/system-cars-theme/woocommerce/content-product.php` - Template de cada producto
+- `wp-content/themes/system-cars-theme/js/quick-view.js` - JavaScript del modal Quick View
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (shop-layout, shop-filter, price-slider, product-card, quick-view-modal)
+
+**Características implementadas:**
+
+#### Layout Sidebar + Productos
+- Grid de 2 columnas: sidebar (280px) + área de productos
+- Responsive: 1 columna en móvil, 2 columnas en desktop
+- Productos en grid de 3 columnas (2 en tablet, 1 en móvil)
+
+#### Filtro de Precio
+- Slider de doble rango (min/max)
+- Inputs numéricos sincronizados con el slider
+- Barra de rango visual con color primario
+- Botón "Filtrar" y link "Limpiar filtros"
+- Filtrado real via `pre_get_posts` hook en `functions.php`
+
+#### Filtro de Categorías
+- Lista de categorías con contador de productos
+- Links a páginas de categoría
+- Estado activo para categoría actual
+
+#### Product Cards
+- Imagen con efecto zoom en hover (scale 1.1)
+- Overlay con botones al hacer hover
+- Badge de descuento (porcentaje calculado)
+- Botón "Añadir al carrito" con AJAX
+- Botón "Vista Rápida" que abre modal
+- Info: categoría, título, precio
+
+**CSS importante para grid de WooCommerce:**
+```scss
+// Eliminar ::before de WooCommerce que interfiere con CSS Grid
+.shop-content ul.products {
+    &::before,
+    &::after {
+        display: none !important;
+        content: none !important;
+    }
+}
+```
+
+---
+
+### Quick View Modal ✅
+**Última actualización:** 2026-01-16
+
+**Características:**
+- ✅ Modal con overlay oscuro (cierra al hacer clic)
+- ✅ Botón X con animación de rotación (mismo estilo que video-modal)
+- ✅ Spinner de carga mientras carga el producto via AJAX
+- ✅ Galería con thumbnails clickeables
+- ✅ Transición suave al cambiar imagen (fade + scale)
+- ✅ Navegación infinita entre thumbnails
+- ✅ Categoría, título, precio y descripción corta
+- ✅ Selector de cantidad (+/-)
+- ✅ Botón "Añadir al carrito" con feedback visual
+- ✅ Link "Ver detalles completos"
+- ✅ Cierra con tecla ESC
+- ✅ Responsive
+
+**AJAX Endpoints (functions.php):**
+- `sc_quick_view_product` - Obtiene HTML del producto
+- `sc_quick_view_add_to_cart` - Añade producto al carrito
+
+**Clases CSS principales:**
+- `.quick-view-modal` - Contenedor del modal
+- `.quick-view-modal__overlay` - Fondo oscuro
+- `.quick-view-modal__container` - Contenido del modal
+- `.quick-view-modal__close` - Botón cerrar (X con ::before/::after)
+- `.quick-view-product` - Grid de producto (imagen + info)
+- `.quick-view-product__gallery` - Galería con thumbnails
+- `.quick-view-product__info` - Información del producto
+
+---
+
+### Cart Page (Carrito) ✅
+**URL:** http://localhost:8080/carrito/
+**Última actualización:** 2026-01-17
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/woocommerce/cart/cart.php` - Template personalizado del carrito
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (clase `.sc-cart` y relacionadas)
+
+**Estructura HTML:**
+```html
+<div class="sc-cart">
+    <form class="woocommerce-cart-form">
+        <div class="sc-cart__layout">
+            <!-- Columna izquierda: Items del carrito -->
+            <div class="sc-cart__items">
+                <div class="sc-cart__header">...</div>
+                <div class="sc-cart__item">...</div>
+                <div class="sc-cart__actions">...</div>
+            </div>
+
+            <!-- Columna derecha: Totales -->
+            <div class="sc-cart__totals">
+                <div class="cart-collaterals">...</div>
+            </div>
+        </div>
+    </form>
+</div>
+```
+
+**Características implementadas:**
+- ✅ Layout de 2 columnas (items + totales) en desktop
+- ✅ Layout de 1 columna en móvil
+- ✅ Header con columnas: Producto, Precio, Cantidad, Subtotal, Eliminar
+- ✅ Items con imagen, nombre, categoría, precio, cantidad editable, subtotal
+- ✅ Botón eliminar (×) con hover rojo
+- ✅ Sección de cupón con input y botón "Aplicar"
+- ✅ Botón "Actualizar carrito"
+- ✅ Totales del carrito (subtotal, envío, total)
+
+**Clases CSS principales:**
+- `.sc-cart` - Contenedor principal
+- `.sc-cart__layout` - Grid de 2 columnas
+- `.sc-cart__items` - Columna de productos
+- `.sc-cart__header` - Encabezados de columnas
+- `.sc-cart__item` - Cada producto en el carrito
+- `.sc-cart__item-product` - Imagen + detalles del producto
+- `.sc-cart__item-price` - Precio unitario
+- `.sc-cart__item-quantity` - Selector de cantidad
+- `.sc-cart__item-subtotal` - Subtotal del item
+- `.sc-cart__item-remove` - Botón eliminar
+- `.sc-cart__actions` - Cupón + actualizar
+- `.sc-cart__totals` - Columna de totales
+
+**Configuración importante:**
+- La página del carrito debe usar el template `default` de WordPress (NO `archive-product.php`)
+- El contenido de la página debe ser el shortcode `[woocommerce_cart]`
+- El template se activa automáticamente cuando WooCommerce detecta el shortcode
+
+**Base de datos:**
+- Page ID: 69
+- `post_content`: `[woocommerce_cart]`
+- `_wp_page_template`: `default`
 
 ---
 
