@@ -349,10 +349,22 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 
 **Archivos:**
 - `wp-content/themes/system-cars-theme/woocommerce/cart/cart.php` - Template personalizado del carrito
-- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (clase `.sc-cart` y relacionadas)
+- `wp-content/themes/system-cars-theme/index.php` - Template base que incluye el page header para páginas WooCommerce
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (`.sc-cart`, `.sc-page-header`)
 
 **Estructura HTML:**
 ```html
+<!-- Page Header (generado en index.php) -->
+<section class="sc-page-header">
+    <h1 class="sc-page-header__title">Carrito</h1>
+    <nav class="sc-page-header__breadcrumbs">
+        <a href="/">Inicio</a>
+        <span class="breadcrumb-separator"></span>
+        <span class="breadcrumb-current">Carrito</span>
+    </nav>
+</section>
+
+<!-- Cart Content -->
 <div class="sc-cart">
     <form class="woocommerce-cart-form">
         <div class="sc-cart__layout">
@@ -373,6 +385,7 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 ```
 
 **Características implementadas:**
+- ✅ Page header full-width con título y breadcrumbs (fondo azul oscuro)
 - ✅ Layout de 2 columnas (items + totales) en desktop
 - ✅ Layout de 1 columna en móvil
 - ✅ Header con columnas: Producto, Precio, Cantidad, Subtotal, Eliminar
@@ -380,7 +393,7 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 - ✅ Botón eliminar (×) con hover rojo
 - ✅ Sección de cupón con input y botón "Aplicar"
 - ✅ Botón "Actualizar carrito"
-- ✅ Totales del carrito (subtotal, envío, total)
+- ✅ Totales del carrito (subtotal, envío, total) - width: 100%
 
 **Clases CSS principales:**
 - `.sc-cart` - Contenedor principal
@@ -396,15 +409,63 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 - `.sc-cart__actions` - Cupón + actualizar
 - `.sc-cart__totals` - Columna de totales
 
+**Override de WooCommerce:**
+```scss
+// Override WooCommerce default cart_totals width
+.woocommerce .cart-collaterals .cart_totals,
+.woocommerce-page .cart-collaterals .cart_totals {
+    width: 100% !important;
+    float: none;
+}
+```
+
 **Configuración importante:**
 - La página del carrito debe usar el template `default` de WordPress (NO `archive-product.php`)
 - El contenido de la página debe ser el shortcode `[woocommerce_cart]`
 - El template se activa automáticamente cuando WooCommerce detecta el shortcode
+- El page header se genera automáticamente en `index.php` para páginas WooCommerce (cart, checkout, my-account)
 
 **Base de datos:**
 - Page ID: 69
 - `post_content`: `[woocommerce_cart]`
 - `_wp_page_template`: `default`
+
+---
+
+### WooCommerce Page Header ✅
+**Última actualización:** 2026-01-17
+
+Sección de header full-width que se muestra en páginas de WooCommerce (/tienda, /carrito, /finalizar-compra, /mi-cuenta).
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/archive-product.php` - Header para /tienda
+- `wp-content/themes/system-cars-theme/index.php` - Header para otras páginas WooCommerce
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos `.sc-page-header`
+
+**Estructura HTML:**
+```html
+<section class="sc-page-header">
+    <h1 class="sc-page-header__title">Título de Página</h1>
+    <nav class="sc-page-header__breadcrumbs">
+        <a href="/">Inicio</a>
+        <span class="breadcrumb-separator"></span>
+        <span class="breadcrumb-current">Página Actual</span>
+    </nav>
+</section>
+```
+
+**Estilos:**
+- Fondo: `$secondary-color` (#002060) con gradiente sutil
+- Título: blanco, uppercase, centrado, 2rem (mobile) / 2.5rem (desktop)
+- Breadcrumbs: blanco semi-transparente, separadores con "/"
+- Padding: 3rem (mobile) / 4rem (desktop)
+
+**Clases CSS:**
+- `.sc-page-header` - Contenedor principal full-width
+- `.sc-page-header__title` - Título de la página (H1)
+- `.sc-page-header__breadcrumbs` - Navegación de breadcrumbs
+- `.breadcrumb-separator` - Separador "/" entre items
+- `.breadcrumb-current` - Item actual (sin link)
 
 ---
 
