@@ -469,6 +469,76 @@ Sección de header full-width que se muestra en páginas de WooCommerce (/tienda
 
 ---
 
+### Checkout Page ✅
+**URL:** http://localhost:8080/checkout/
+**Última actualización:** 2026-01-17
+
+**Configuración para desarrollo local:**
+- `woocommerce_force_ssl_checkout` debe estar en `no` para evitar error SSL en localhost
+- Comando para desactivar SSL checkout:
+```sql
+UPDATE wp_options SET option_value='no' WHERE option_name='woocommerce_force_ssl_checkout';
+```
+
+**Base de datos:**
+- Page ID: 70
+- Slug: `checkout`
+- Usa WooCommerce Blocks (no shortcode clásico)
+
+**Comportamiento:**
+- Redirige a /carrito/ si el carrito está vacío
+- Muestra page header con breadcrumbs (Inicio / Checkout)
+- Formulario de checkout con datos de facturación y envío
+
+**Nota producción:** En producción, reactivar `woocommerce_force_ssl_checkout` a `yes` para seguridad en pagos.
+
+---
+
+### Custom Translations (Traducciones) ✅
+**Última actualización:** 2026-01-17
+
+Sistema de traducciones personalizadas para textos de WooCommerce que no están traducidos.
+
+**Archivo:** `wp-content/themes/system-cars-theme/functions.php`
+
+**Implementación dual:**
+
+1. **Filtro PHP** (`gettext`) - Para traducciones en templates PHP:
+```php
+function sc_custom_translations( $translated_text, $text, $domain ) {
+    $translations = [
+        'Add coupons' => 'Agregar cupones',
+        'Add a coupon' => 'Agregar un cupón',
+        'There are no payment methods available...' => 'No hay métodos de pago disponibles...',
+    ];
+    // ...
+}
+add_filter( 'gettext', 'sc_custom_translations', 20, 3 );
+```
+
+2. **JavaScript** - Para WooCommerce Blocks (React):
+```php
+function sc_woocommerce_blocks_custom_translations() {
+    // Inyecta script con wp.i18n.setLocaleData
+    // Usa MutationObserver para contenido dinámico
+}
+add_action( 'wp_footer', 'sc_woocommerce_blocks_custom_translations', 999 );
+```
+
+**Traducciones actuales:**
+| Original (EN) | Traducción (ES) |
+|--------------|-----------------|
+| Add coupons | Agregar cupones |
+| Add a coupon | Agregar un cupón |
+| There are no payment methods available... | No hay métodos de pago disponibles... |
+| No registered Payment Methods | No hay métodos de pago registrados |
+
+**Para agregar nuevas traducciones:**
+1. Agregar al array `$translations` en `sc_custom_translations()` (PHP)
+2. Agregar al objeto en `sc_woocommerce_blocks_custom_translations()` (JS)
+
+---
+
 ## 🎨 CSS Global del Theme
 
 ### Archivos CSS Principales
