@@ -594,6 +594,95 @@ transition: background-color 0.3s ease, border-color 0.3s ease;
 
 ---
 
+### Mobile Menu Animation ✅
+**Última actualización:** 2026-01-19
+
+Menú móvil fullscreen con animaciones estilo referencia (detailx.ancorathemes.com).
+
+**Archivos:**
+- `header.php` - Estructura HTML del menú móvil
+- `js/menu-mobile.js` - Lógica de toggle con clase `is-open`
+- `scss/main.scss` - Estilos de animación (`#mobile-menu`)
+
+**Características:**
+- ✅ **Overlay fade-in** - El menú aparece con fade suave (0.4s)
+- ✅ **Menu items staggered** - Cada item aparece con delay escalonado (0.08s entre cada uno)
+- ✅ **Close button animado** - Botón X con `::before/::after` y rotación en hover (mismo estilo que video-modal)
+- ✅ **Body scroll lock** - Clase `mobile-menu-open` en body para bloquear scroll
+- ✅ **Cierre con ESC** - Tecla Escape cierra el menú
+- ✅ **Cierre al click en link** - Navegación automática cierra el menú
+
+**Estructura CSS:**
+```scss
+#mobile-menu {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+
+    &.is-open {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    // Staggered animation for menu items
+    .menu-item {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+
+        @for $i from 1 through 10 {
+            &:nth-child(#{$i}) {
+                transition-delay: #{$i * 0.08}s;
+            }
+        }
+    }
+
+    &.is-open .menu-item {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+```
+
+**Close Button (mismo estilo que video-modal):**
+```scss
+.mobile-menu-close {
+    // X formada con ::before y ::after
+    &::before,
+    &::after {
+        content: '';
+        width: 28px;
+        height: 2px;
+        background-color: #000;
+        transition: transform 0.3s ease;
+    }
+
+    &::before { transform: translate(-50%, -50%) rotate(45deg); }
+    &::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+    // Hover: rotación 90° adicional
+    &:hover::before { transform: translate(-50%, -50%) rotate(135deg); }
+    &:hover::after { transform: translate(-50%, -50%) rotate(45deg); }
+}
+```
+
+---
+
+### Info Bar (Barra Superior) ✅
+**Última actualización:** 2026-01-19
+
+Barra de información con horarios, teléfonos y dirección.
+
+**Ubicación:** `header.php` (líneas 12-78)
+
+**Comportamiento responsive:**
+- **Mobile:** Oculta (`hidden`)
+- **Desktop (md+):** Visible (`md:block`)
+
+**Clases:** `hidden md:block w-full bg-tertiary text-white text-sm py-2 px-4 md:px-0`
+
+---
+
 ## 🎨 CSS Global del Theme
 
 ### Archivos CSS Principales
