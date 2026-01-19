@@ -409,6 +409,13 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 - `.sc-cart__actions` - Cupón + actualizar
 - `.sc-cart__totals` - Columna de totales
 
+**Estilos Cart Totals (actualizado 2026-01-17):**
+- Contenedor con borde 2px azul oscuro ($secondary-color)
+- Header "Total del carrito" con fondo azul oscuro y texto blanco
+- Tabla con filas alternadas (gris claro #fafafa / blanco)
+- Fila Total con fondo #f3f4f6 y precio en rojo ($primary-color)
+- Botón "Finalizar compra" con flecha → animada en hover
+
 **Override de WooCommerce:**
 ```scss
 // Override WooCommerce default cart_totals width
