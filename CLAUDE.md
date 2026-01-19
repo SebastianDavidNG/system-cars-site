@@ -3,7 +3,7 @@
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-17
+**Última actualización:** 2026-01-19
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -31,6 +31,7 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 
 ### slider-block ✅
 **Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-19
 **Archivos:**
 - `blocks/slider-block/index.js` - Registro del bloque
 - `blocks/slider-block/edit.jsx` - Componente del editor
@@ -46,9 +47,30 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 - Auto-play opcional
 - Imágenes cargadas desde WordPress Media Library
 
+**Button Hover Animation (actualizado 2026-01-19):**
+El botón del slider (`.slide-button`) tiene una animación de fade suave en hover:
+```scss
+.slide-button {
+    background-color: transparent;
+
+    /* Smooth fade transition for hover */
+    transition:
+        opacity 0.8s ease 0.7s,
+        transform 0.8s ease 0.7s,
+        background-color 0.3s ease,
+        border-color 0.3s ease;
+
+    &:hover {
+        background-color: $tertiary-color; /* #232225 */
+        border-color: $tertiary-color;
+    }
+}
+```
+- Efecto: El fondo cambia de transparente a gris oscuro (#232225) con transición fade de 0.3s
+- Similar al comportamiento del sitio de referencia (detailx.ancorathemes.com)
+
 **Build:**
 - JSX: `npm run dev` o `npm run build`
-- SCSS: `npm run build:blocks`
 - Output: `dist/slider-block.js`, `dist/slider-frontend.js`, `dist/css/slider-block.css`
 
 ---
@@ -345,7 +367,7 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 
 ### Cart Page (Carrito) ✅
 **URL:** http://localhost:8080/carrito/
-**Última actualización:** 2026-01-17
+**Última actualización:** 2026-01-19
 
 **Archivos:**
 - `wp-content/themes/system-cars-theme/woocommerce/cart/cart.php` - Template personalizado del carrito
@@ -440,7 +462,7 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 ---
 
 ### WooCommerce Page Header ✅
-**Última actualización:** 2026-01-17
+**Última actualización:** 2026-01-19
 
 Sección de header full-width que se muestra en páginas de WooCommerce (/tienda, /carrito, /finalizar-compra, /mi-cuenta).
 
@@ -478,7 +500,7 @@ Sección de header full-width que se muestra en páginas de WooCommerce (/tienda
 
 ### Checkout Page ✅
 **URL:** http://localhost:8080/checkout/
-**Última actualización:** 2026-01-17
+**Última actualización:** 2026-01-19
 
 **Configuración para desarrollo local:**
 - `woocommerce_force_ssl_checkout` debe estar en `no` para evitar error SSL en localhost
@@ -502,7 +524,7 @@ UPDATE wp_options SET option_value='no' WHERE option_name='woocommerce_force_ssl
 ---
 
 ### Custom Translations (Traducciones) ✅
-**Última actualización:** 2026-01-17
+**Última actualización:** 2026-01-19
 
 Sistema de traducciones personalizadas para textos de WooCommerce que no están traducidos.
 
@@ -543,6 +565,32 @@ add_action( 'wp_footer', 'sc_woocommerce_blocks_custom_translations', 999 );
 **Para agregar nuevas traducciones:**
 1. Agregar al array `$translations` en `sc_custom_translations()` (PHP)
 2. Agregar al objeto en `sc_woocommerce_blocks_custom_translations()` (JS)
+
+---
+
+### Hover Animations (Fade Effect) ✅
+**Última actualización:** 2026-01-19
+
+Animaciones de hover consistentes con efecto fade suave en todo el theme, basadas en el sitio de referencia (detailx.ancorathemes.com).
+
+**Elementos con animación fade:**
+
+| Elemento | Ubicación | Clase CSS | Transición |
+|----------|-----------|-----------|------------|
+| Slider Button | `blocks/slider-block/style.scss` | `.slide-button` | `background-color 0.3s ease, border-color 0.3s ease` |
+| Botón Tienda | `scss/main.scss` | `.btn-tienda` | `background-color 0.3s ease, border-color 0.3s ease` |
+| Redes Sociales Footer | `scss/main.scss` | `.footer-social a` | `background-color 0.3s ease` |
+
+**Implementación:**
+```scss
+/* Transición fade suave para hover */
+transition: background-color 0.3s ease, border-color 0.3s ease;
+```
+
+**Archivos modificados:**
+- `blocks/slider-block/style.scss` - Botón del slider
+- `scss/main.scss` - `.btn-tienda` y `.footer-social a`
+- `footer.php` - Agregada clase `footer-social` al contenedor de redes sociales
 
 ---
 
