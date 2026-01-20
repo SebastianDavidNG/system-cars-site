@@ -31,7 +31,7 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 
 ### slider-block ✅
 **Estado:** COMPLETADO Y FUNCIONANDO
-**Última actualización:** 2026-01-19
+**Última actualización:** 2026-01-20
 **Archivos:**
 - `blocks/slider-block/index.js` - Registro del bloque
 - `blocks/slider-block/edit.jsx` - Componente del editor
@@ -42,32 +42,58 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 
 **Características:**
 - Slider responsive con Swiper.js
-- Navegación con flechas
-- Paginación
-- Auto-play opcional
+- Navegación con flechas (Font Awesome)
+- Paginación numerada (01, 02, 03...)
+- Auto-play (5 segundos)
+- Efecto fade entre slides
 - Imágenes cargadas desde WordPress Media Library
 
-**Button Hover Animation (actualizado 2026-01-19):**
-El botón del slider (`.slide-button`) tiene una animación de fade suave en hover:
+**Altura Responsive (actualizado 2026-01-20):**
+El slider ocupa el viewport completo menos la altura del header:
 ```scss
-.slide-button {
-    background-color: transparent;
+.wp-block-system-cars-slider-block {
+    --header-height: 85px; /* Mobile */
 
-    /* Smooth fade transition for hover */
-    transition:
-        opacity 0.8s ease 0.7s,
-        transform 0.8s ease 0.7s,
-        background-color 0.3s ease,
-        border-color 0.3s ease;
+    /* Mobile: Full viewport minus header */
+    height: calc(100svh - var(--header-height));
 
-    &:hover {
-        background-color: $tertiary-color; /* #232225 */
-        border-color: $tertiary-color;
+    /* Tablet */
+    @screen md {
+        --header-height: 130px; /* Header + info bar */
+    }
+
+    /* Desktop */
+    @screen lg {
+        height: 80vh;
+        min-height: 600px;
     }
 }
 ```
+- **Mobile:** `calc(100svh - 85px)` - viewport completo menos header
+- **Tablet:** `calc(100svh - 130px)` - viewport menos header + info bar
+- **Desktop:** `80vh` con `min-height: 600px`
+
+**Paginación Numerada (actualizado 2026-01-20):**
+Bullets numerados estilo referencia (detailx.ancorathemes.com):
+```javascript
+pagination: {
+    el: paginationEl,
+    clickable: true,
+    renderBullet: function (index, className) {
+        const num = String(index + 1).padStart(2, '0');
+        return `<span class="${className}">${num}</span>`;
+    },
+}
+```
+- Formato: `01`, `02`, `03`...
+- Color: blanco semi-transparente (50% opacity)
+- Active/Hover: blanco sólido con underline animado
+- Posición: centrado en la parte inferior
+
+**Button Hover Animation:**
+El botón del slider (`.slide-button`) tiene una animación de fade suave en hover:
 - Efecto: El fondo cambia de transparente a gris oscuro (#232225) con transición fade de 0.3s
-- Similar al comportamiento del sitio de referencia (detailx.ancorathemes.com)
+- Similar al comportamiento del sitio de referencia
 
 **Build:**
 - JSX: `npm run dev` o `npm run build`
