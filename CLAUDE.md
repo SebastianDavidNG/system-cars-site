@@ -88,7 +88,28 @@ pagination: {
 - Formato: `01`, `02`, `03`...
 - Color: blanco semi-transparente (50% opacity)
 - Active/Hover: blanco sólido con underline animado
-- Posición: centrado en la parte inferior
+- Posición: `--swiper-pagination-bottom: 50px` (mobile), `60px` (tablet), `70px` (desktop)
+
+**Flechas de Navegación (actualizado 2026-01-20):**
+```scss
+.swiper-button-prev,
+.swiper-button-next {
+    background: rgba(255, 255, 255, 0.15);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.swiper-button-prev::before,
+.swiper-button-next::before {
+    @apply text-lg; // md: text-xl
+    font-weight: 600;
+}
+```
+- Background semi-transparente con hover más sutil
+- Iconos más pequeños y con font-weight reducido
 
 **Button Hover Animation:**
 El botón del slider (`.slide-button`) tiene una animación de fade suave en hover:
