@@ -32,6 +32,7 @@ export default defineConfig({
         'service-card':     path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/service-card/index.js'),
         'slider-block':     path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/slider-block/index.js'),
         'slider-frontend':  path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/slider-block/slider-frontend.js'),
+        'slider-block-style': path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/slider-block/style.scss'),
         'slider-block-editor':      path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/slider-block/slider-block-editor.scss'),
         'service-card-editor':      path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/service-card/editor.scss'),
         'service-card-style': path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/service-card/style.scss'),

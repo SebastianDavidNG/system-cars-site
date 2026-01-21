@@ -3,7 +3,7 @@
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-19
+**Última actualización:** 2026-01-20
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -110,6 +110,26 @@ pagination: {
 ```
 - Background semi-transparente con hover más sutil
 - Iconos más pequeños y con font-weight reducido
+- **Posicionamiento:** 20px (mobile), 40px (tablet), 70px (desktop) desde los bordes
+
+**IMPORTANTE - Posicionamiento de Flechas via JavaScript:**
+Swiper.js aplica estilos inline por defecto que sobrescriben el CSS. Para mantener la posición personalizada, se fuerza via JavaScript en `slider-frontend.js`:
+```javascript
+// Force arrow positions after Swiper initialization
+const isDesktop = window.innerWidth >= 1024;
+const isTablet = window.innerWidth >= 768;
+const arrowOffset = isDesktop ? '70px' : (isTablet ? '40px' : '20px');
+
+if (prevBtn) {
+    prevBtn.style.left = arrowOffset;
+    prevBtn.style.right = 'auto';
+}
+if (nextBtn) {
+    nextBtn.style.right = arrowOffset;
+    nextBtn.style.left = 'auto';
+}
+```
+También incluye listener para `resize` para actualizar la posición al cambiar el tamaño de la ventana.
 
 **Button Hover Animation:**
 El botón del slider (`.slide-button`) tiene una animación de fade suave en hover:
