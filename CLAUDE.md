@@ -590,6 +590,38 @@ UPDATE wp_options SET option_value='no' WHERE option_name='woocommerce_force_ssl
 
 ---
 
+### My Account Page ✅
+**URL:** http://localhost:8080/my-account/
+**Última actualización:** 2026-01-20
+
+**Estilos ubicados en:** `wp-content/themes/system-cars-theme/scss/main.scss`
+
+**Características del formulario de login:**
+- Ancho máximo: 500px centrado
+- Fondo blanco con borde sutil (#e5e7eb) y sombra
+- Título centrado con línea roja debajo (border-bottom: 2px solid $primary-color)
+- Inputs con padding generoso y estados de focus (box-shadow azul)
+- Botón de submit rojo a ancho completo con hover oscuro
+- Checkbox "Recuérdame" estilizado
+- Link "¿Olvidaste tu contraseña?" centrado
+
+**Clases CSS principales:**
+- `.woocommerce-account` - Body class de la página
+- `.woocommerce-form-login` - Formulario de login
+- `.woocommerce-form-register` - Formulario de registro
+- `.woocommerce-form-login__rememberme` - Checkbox recuérdame
+- `.woocommerce-LostPassword` - Link recuperar contraseña
+
+**Para usuarios logueados:**
+- `.woocommerce-MyAccount-navigation` - Navegación horizontal con botones pill
+- `.woocommerce-MyAccount-content` - Área de contenido con borde
+
+**Estilos responsive:**
+- Mobile: formulario ocupa ancho completo con padding
+- Desktop: max-width 500px centrado, padding 2.5rem
+
+---
+
 ### Custom Translations (Traducciones) ✅
 **Última actualización:** 2026-01-19
 
