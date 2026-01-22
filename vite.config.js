@@ -48,6 +48,7 @@ export default defineConfig({
         'video-modal-block': path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/video-modal-block/index.js'),
         'video-modal-frontend': path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/video-modal-block/frontend.js'),
         'video-modal-style': path.resolve(__dirname, 'wp-content/themes/system-cars-theme/blocks/video-modal-block/style.scss'),
+        'wishlist': path.resolve(__dirname, 'wp-content/themes/system-cars-theme/js/wishlist.js'),
       },
       output: {
         format: 'es',

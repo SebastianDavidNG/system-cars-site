@@ -351,13 +351,14 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 
 ### Shop Page (Tienda) ✅
 **URL:** http://localhost:8080/tienda/
-**Última actualización:** 2026-01-16
+**Última actualización:** 2026-01-20
 
 **Archivos:**
 - `wp-content/themes/system-cars-theme/archive-product.php` - Template de la tienda
 - `wp-content/themes/system-cars-theme/woocommerce/content-product.php` - Template de cada producto
 - `wp-content/themes/system-cars-theme/js/quick-view.js` - JavaScript del modal Quick View
-- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (shop-layout, shop-filter, price-slider, product-card, quick-view-modal)
+- `wp-content/themes/system-cars-theme/js/wishlist.js` - JavaScript de lista de deseos (localStorage)
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (shop-layout, shop-filter, price-slider, product-card, wishlist, pagination)
 
 **Características implementadas:**
 
@@ -365,6 +366,42 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 - Grid de 2 columnas: sidebar (280px) + área de productos
 - Responsive: 1 columna en móvil, 2 columnas en desktop
 - Productos en grid de 3 columnas (2 en tablet, 1 en móvil)
+- **Orden del sidebar:** Categorías primero, Filtro de precio segundo
+
+#### Filtro de Categorías (AJAX - actualizado 2026-01-20)
+Filtrado sin recargar la página, similar a la referencia (detailx):
+- **"Todos los productos"** - opción para mostrar todos
+- Lista de categorías con contador de productos
+- Click filtra productos via AJAX (sin reload)
+- Estado activo visual en categoría seleccionada
+- Loading spinner mientras carga
+
+**AJAX Endpoint:** `sc_filter_products_by_category` en `functions.php`
+
+```javascript
+// Click en categoría -> AJAX request
+fetch(ajaxUrl, {
+    method: 'POST',
+    body: FormData({ action: 'sc_filter_products_by_category', category: slug })
+})
+.then(response => response.json())
+.then(data => {
+    productsGrid.innerHTML = data.data.html;
+});
+```
+
+**Loading State:**
+```scss
+.shop-content {
+    position: relative;
+    &__loading {
+        position: absolute;
+        inset: 0;
+        background-color: rgba($white-color, 0.8);
+        // Spinner con animación
+    }
+}
+```
 
 #### Filtro de Precio
 - Slider de doble rango (min/max)
@@ -373,18 +410,64 @@ Los controles de padding son **específicos por sección**, NO afectan a todo el
 - Botón "Filtrar" y link "Limpiar filtros"
 - Filtrado real via `pre_get_posts` hook en `functions.php`
 
-#### Filtro de Categorías
-- Lista de categorías con contador de productos
-- Links a páginas de categoría
-- Estado activo para categoría actual
-
-#### Product Cards
+#### Product Cards (actualizado 2026-01-20)
 - Imagen con efecto zoom en hover (scale 1.1)
 - Overlay con botones al hacer hover
-- Badge de descuento (porcentaje calculado)
+- **Badges en esquina superior izquierda:**
+  - `product-card__badge--sale` - Rojo con porcentaje de descuento (-15%, -34%, etc.)
+  - `product-card__badge--new` - Azul para productos nuevos (últimos 30 días)
+- **Wishlist heart icon en esquina superior derecha:**
+  - Círculo blanco con corazón outline
+  - Hover: scale + corazón rojo
+  - Active: corazón relleno rojo
+  - Animación de pulso al toggle
+  - Datos guardados en localStorage (`sc_wishlist`)
 - Botón "Añadir al carrito" con AJAX
 - Botón "Vista Rápida" que abre modal
 - Info: categoría, título, precio
+
+#### Wishlist Notification Modal (nuevo 2026-01-20)
+Notificación que aparece al agregar/quitar productos de la lista de deseos:
+- Posición: esquina superior derecha
+- Animación: slide-in desde la derecha
+- Icono: corazón rojo (agregado) o gris (eliminado)
+- Auto-hide después de 3 segundos
+- Botón cerrar (X)
+
+```scss
+.wishlist-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    // Slide animation
+    transform: translateX(calc(100% + 40px));
+    &.is-visible { transform: translateX(0); }
+}
+```
+
+#### Pagination (actualizado 2026-01-20)
+Estilo similar a página de referencia (detailx):
+- Botones cuadrados 44x44px
+- Border: 1px solid #D9D9DE
+- Hover: fade a `$secondary-color` (azul oscuro)
+- Active: `$primary-color` (rojo)
+- Sin border en contenedor ul
+
+```scss
+.woocommerce-pagination ul.page-numbers li .page-numbers {
+    border: 1px solid #D9D9DE;
+    background-color: transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    &:hover {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+    }
+    &.current {
+        background-color: $primary-color;
+        border-color: $primary-color;
+    }
+}
+```
 
 **CSS importante para grid de WooCommerce:**
 ```scss
