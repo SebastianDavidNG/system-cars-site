@@ -1,9 +1,14 @@
+---
+description: 
+alwaysApply: true
+---
+
 # Claude Instructions for System Cars Site
 
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-22 (Galería Single Product con fade transition)
+**Última actualización:** 2026-01-23 (Cart quantity +/- buttons)
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -685,7 +690,7 @@ function goToImage(index) {
 
 ### Cart Page (Carrito) ✅
 **URL:** http://localhost:8080/carrito/
-**Última actualización:** 2026-01-19
+**Última actualización:** 2026-01-23
 
 **Archivos:**
 - `wp-content/themes/system-cars-theme/woocommerce/cart/cart.php` - Template personalizado del carrito
@@ -730,6 +735,7 @@ function goToImage(index) {
 - ✅ Layout de 1 columna en móvil
 - ✅ Header con columnas: Producto, Precio, Cantidad, Subtotal, Eliminar
 - ✅ Items con imagen, nombre, categoría, precio, cantidad editable, subtotal
+- ✅ **Botones +/- para cantidad** (similar a Quick View y referencia https://detailx.ancorathemes.com/cart/)
 - ✅ Botón eliminar (×) con hover rojo
 - ✅ Sección de cupón con input y botón "Aplicar"
 - ✅ Botón "Actualizar carrito"
@@ -748,6 +754,83 @@ function goToImage(index) {
 - `.sc-cart__item-remove` - Botón eliminar
 - `.sc-cart__actions` - Cupón + actualizar
 - `.sc-cart__totals` - Columna de totales
+
+**Botones +/- para Cantidad (actualizado 2026-01-23):**
+
+Similar a la referencia https://detailx.ancorathemes.com/cart/ y el modal Quick View.
+
+**JavaScript** (en `cart.php` líneas 199-281):
+```javascript
+function initCartQuantity() {
+    const quantityContainers = document.querySelectorAll('.sc-cart__item-quantity .quantity');
+
+    quantityContainers.forEach(function(container) {
+        if (container.classList.contains('sc-cart-qty-processed')) return;
+
+        const input = container.querySelector('input.qty');
+        if (!input) return;
+
+        // Mark and style container
+        container.classList.add('sc-cart-qty-processed', 'sc-cart-qty');
+
+        // Create +/- buttons
+        const minusBtn = document.createElement('button');
+        minusBtn.className = 'sc-cart-qty__btn sc-cart-qty__btn--minus';
+        minusBtn.innerHTML = '<i class="fa-solid fa-minus"></i>';
+
+        const plusBtn = document.createElement('button');
+        plusBtn.className = 'sc-cart-qty__btn sc-cart-qty__btn--plus';
+        plusBtn.innerHTML = '<i class="fa-solid fa-plus"></i>';
+
+        container.insertBefore(minusBtn, input);
+        container.appendChild(plusBtn);
+
+        // Event listeners dispatch 'change' event for WooCommerce
+    });
+}
+
+// Re-initialize after AJAX cart updates
+jQuery(document.body).on('updated_cart_totals', initCartQuantity);
+```
+
+**CSS** (en `main.scss`):
+```scss
+// Container cuando JS añade la clase
+.sc-cart__item-quantity .quantity.sc-cart-qty {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    background: $white-color;
+}
+
+// Botones +/-
+.sc-cart-qty__btn {
+    width: 40px;
+    height: 40px;
+    background: $white-color;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: $secondary-color;
+        i { color: $white-color; }
+    }
+
+    &--minus { border-right: 1px solid #e5e7eb; }
+    &--plus { border-left: 1px solid #e5e7eb; }
+}
+```
+
+**Clases CSS de cantidad:**
+- `.sc-cart-qty` - Contenedor con inline-flex
+- `.sc-cart-qty-processed` - Marca para evitar doble procesamiento
+- `.sc-cart-qty__btn` - Botones +/-
+- `.sc-cart-qty__btn--minus` - Botón decrementar
+- `.sc-cart-qty__btn--plus` - Botón incrementar
+- `.sc-cart-qty__input` - Input de cantidad
 
 **Estilos Cart Totals (actualizado 2026-01-17):**
 - Contenedor con borde 2px azul oscuro ($secondary-color)
