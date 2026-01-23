@@ -3,7 +3,7 @@
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-20
+**Última actualización:** 2026-01-22 (Galería Single Product con fade transition)
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -410,7 +410,7 @@ fetch(ajaxUrl, {
 - Botón "Filtrar" y link "Limpiar filtros"
 - Filtrado real via `pre_get_posts` hook en `functions.php`
 
-#### Product Cards (actualizado 2026-01-20)
+#### Product Cards (actualizado 2026-01-22)
 - Imagen con efecto zoom en hover (scale 1.1)
 - Overlay con botones al hacer hover
 - **Badges en esquina superior izquierda:**
@@ -422,9 +422,36 @@ fetch(ajaxUrl, {
   - Active: corazón relleno rojo
   - Animación de pulso al toggle
   - Datos guardados en localStorage (`sc_wishlist`)
-- Botón "Añadir al carrito" con AJAX
-- Botón "Vista Rápida" que abre modal
+- **Botones unificados en overlay (actualizado 2026-01-22):**
+  - "Leer Más" / "Añadir al carrito": fondo blanco, texto azul (#002060)
+  - "Vista Rápida": fondo azul (#002060), texto blanco
+  - Ambos: mismo padding (0.75rem 1.5rem), font-size (0.8rem), font-weight (700), uppercase
+  - Hover: fondo rojo ($primary-color) en ambos
+  - **IMPORTANTE:** Los estilos usan `!important` para sobrescribir estilos de WooCommerce
 - Info: categoría, título, precio
+
+**Clases CSS de botones:**
+```scss
+.product-card__btn {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    background-color: $white-color !important;  // Default: blanco
+    color: $secondary-color !important;
+
+    &.quick-view-btn {
+        background-color: $secondary-color !important;  // Vista Rápida: azul
+        color: $white-color !important;
+    }
+
+    &:hover {
+        background-color: $primary-color !important;  // Hover: rojo
+    }
+}
+```
+
+**Template:** `woocommerce/content-product.php` - Los botones solo usan clases CSS (sin Tailwind inline) para evitar conflictos de especificidad.
 
 #### Wishlist Notification Modal (nuevo 2026-01-20)
 Notificación que aparece al agregar/quitar productos de la lista de deseos:
@@ -480,6 +507,147 @@ Estilo similar a página de referencia (detailx):
     }
 }
 ```
+
+---
+
+### Single Product Page ✅
+**URL:** http://localhost:8080/producto/[slug]/
+**Última actualización:** 2026-01-22
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/woocommerce/single-product.php` - Template personalizado
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (`.sc-single-product`, `.sc-product-gallery`, `.woocommerce-tabs`)
+
+**Estructura HTML:**
+```html
+<!-- Page Header (azul) -->
+<section class="sc-page-header">
+    <h1>Nombre del Producto</h1>
+    <nav>Inicio / Tienda / Categoría / Producto</nav>
+</section>
+
+<!-- Main Content -->
+<main class="sc-single-product">
+    <div class="sc-single-product__main">
+        <!-- Galería (izquierda) -->
+        <div class="sc-single-product__gallery">
+            <div class="sc-product-gallery" id="product-gallery">
+                <div class="sc-product-gallery__main">
+                    <div class="sc-product-gallery__viewer">
+                        <img id="main-gallery-image" src="..." />
+                    </div>
+                    <button class="sc-gallery-nav sc-gallery-nav--prev">...</button>
+                    <button class="sc-gallery-nav sc-gallery-nav--next">...</button>
+                    <button class="sc-product-gallery__zoom-btn">...</button>
+                </div>
+                <div class="sc-product-gallery__thumbs" id="gallery-thumbs">...</div>
+            </div>
+        </div>
+
+        <!-- Info (derecha) -->
+        <div class="sc-single-product__info">
+            <a class="sc-single-product__category">Categoría</a>
+            <h1 class="sc-single-product__title">Título</h1>
+            <div class="sc-single-product__price">$99.00</div>
+            <div class="sc-single-product__short-description">...</div>
+            <div class="sc-single-product__add-to-cart">...</div>
+            <div class="sc-single-product__meta">SKU, Categorías, Tags</div>
+            <button class="sc-single-product__wishlist">...</button>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="sc-single-product__tabs">
+        <div class="woocommerce-tabs">...</div>
+    </div>
+
+    <!-- Related Products -->
+    <section class="related products">...</section>
+</main>
+```
+
+**Características implementadas:**
+- ✅ Page header con breadcrumbs (fondo azul, igual que otras páginas WooCommerce)
+- ✅ Layout 2 columnas: galería izquierda + info derecha
+- ✅ **Galería simple (sin Swiper)** - JavaScript vanilla para máxima compatibilidad
+- ✅ Flechas de navegación (prev/next) con hover rojo
+- ✅ Icono de zoom en imagen principal (magnifying glass)
+- ✅ **Transición fade suave** entre imágenes (opacity + scale)
+- ✅ Thumbnails clickeables con borde activo
+- ✅ Lightbox con navegación (flechas + teclado)
+- ✅ Categoría como link encima del título
+- ✅ Título, precio (con soporte para precios en oferta)
+- ✅ Descripción corta del producto
+- ✅ **Campo de cantidad con botones +/-** estilo profesional
+- ✅ **Botón añadir al carrito** con icono de flecha
+- ✅ Meta info: SKU, categorías, etiquetas
+- ✅ Botón de wishlist con localStorage (integrado con wishlist.js)
+- ✅ Tabs: Descripción, Información adicional, Reseñas
+- ✅ Formulario de reseñas con estrellas
+- ✅ Productos relacionados en grid responsive
+
+**Galería de Producto (actualizado 2026-01-22):**
+
+La galería usa **JavaScript vanilla** (sin Swiper) para evitar conflictos de dimensiones:
+
+```javascript
+// Transición fade al cambiar imagen
+function goToImage(index) {
+    // Step 1: Fade out (opacity 0, scale 0.98)
+    mainImage.style.opacity = '0';
+    mainImage.style.transform = 'scale(0.98)';
+
+    // Step 2: Preload nueva imagen
+    setTimeout(() => {
+        const newImg = new Image();
+        newImg.onload = function() {
+            mainImage.src = galleryData[index].large;
+
+            // Step 3: Fade in (opacity 1, scale 1)
+            mainImage.style.opacity = '1';
+            mainImage.style.transform = 'scale(1)';
+        };
+        newImg.src = galleryData[index].large;
+    }, 250);
+}
+```
+
+**CSS de transición:**
+```scss
+.sc-product-gallery__image {
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+    will-change: opacity, transform;
+}
+```
+
+**Clases CSS principales:**
+- `.sc-single-product` - Contenedor principal
+- `.sc-single-product__main` - Grid 2 columnas
+- `.sc-single-product__gallery` - Columna de galería
+- `.sc-single-product__info` - Columna de información
+- `.sc-product-gallery` - Galería de imágenes
+- `.sc-product-gallery__main` - Contenedor imagen principal
+- `.sc-product-gallery__viewer` - Wrapper de imagen con min-height
+- `.sc-product-gallery__image` - Imagen principal (con transición fade)
+- `.sc-gallery-nav` - Flechas de navegación (prev/next)
+- `.sc-product-gallery__zoom-btn` - Botón zoom (abre lightbox)
+- `.sc-product-gallery__thumbs` - Contenedor de thumbnails (flex)
+- `.sc-product-gallery__thumb` - Cada thumbnail (is-active para activo)
+- `.sc-quantity` - Campo de cantidad con +/- botones
+- `.sc-add-to-cart-btn` - Botón añadir al carrito con flecha
+- `.sc-single-product__wishlist` - Botón de wishlist (is-active, is-animating)
+- `.sc-lightbox` - Modal lightbox con navegación
+- `.woocommerce-tabs` - Contenedor de tabs (overrides de WooCommerce)
+
+**JavaScript incluido en template:**
+- Galería simple con navegación por flechas y thumbnails
+- Transición fade suave entre imágenes (preload + opacity animation)
+- Lightbox con navegación (flechas + teclado ESC, ←, →)
+- Campo de cantidad con botones +/-
+- Integración con wishlist (localStorage)
+- Animación de pulso al toggle wishlist
+
+**Nota técnica:** Se probó Swiper.js pero causaba conflictos de dimensiones (slides con width de millones de pixels). La solución JavaScript vanilla es más estable y compatible.
 
 ---
 
