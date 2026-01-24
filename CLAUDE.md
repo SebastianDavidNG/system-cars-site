@@ -8,7 +8,7 @@ alwaysApply: true
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-23 (Cart quantity +/- buttons)
+**Última actualización:** 2026-01-24 (Quick View modal - Variable products support)
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -517,11 +517,13 @@ Estilo similar a página de referencia (detailx):
 
 ### Single Product Page ✅
 **URL:** http://localhost:8080/producto/[slug]/
-**Última actualización:** 2026-01-22
+**Última actualización:** 2026-01-24
 
 **Archivos:**
 - `wp-content/themes/system-cars-theme/woocommerce/single-product.php` - Template personalizado
-- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (`.sc-single-product`, `.sc-product-gallery`, `.woocommerce-tabs`)
+- `wp-content/themes/system-cars-theme/woocommerce/single-product/add-to-cart/variable.php` - Template para productos variables
+- `wp-content/themes/system-cars-theme/woocommerce/single-product/add-to-cart/variation-add-to-cart-button.php` - Botón add-to-cart para variaciones
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (`.sc-single-product`, `.sc-product-gallery`, `.woocommerce-tabs`, `.sc-variations-table`)
 
 **Estructura HTML:**
 ```html
@@ -590,6 +592,42 @@ Estilo similar a página de referencia (detailx):
 - ✅ Tabs: Descripción, Información adicional, Reseñas
 - ✅ Formulario de reseñas con estrellas
 - ✅ Productos relacionados en grid responsive
+- ✅ **Soporte para productos variables** (variaciones con selectores dropdown)
+
+**Productos Variables (actualizado 2026-01-24):**
+
+El template detecta automáticamente si el producto es variable y muestra los selectores de variación:
+
+**Características:**
+- ✅ Detecta tipo de producto (`$product->is_type('variable')`)
+- ✅ Productos simples: formulario personalizado con botones +/-
+- ✅ Productos variables: usa templates de WooCommerce con estilos personalizados
+- ✅ Tabla de variaciones estilizada (`.sc-variations-table`)
+- ✅ Selectores dropdown con flecha personalizada
+- ✅ Botón "Limpiar" para resetear selecciones
+- ✅ Precio se actualiza al seleccionar variación
+- ✅ Botón deshabilitado hasta seleccionar todas las opciones
+- ✅ Botones +/- para cantidad (agregados via JavaScript en `functions.php`)
+
+**Templates de WooCommerce personalizados:**
+```
+woocommerce/single-product/add-to-cart/
+├── variable.php                    # Tabla de variaciones
+└── variation-add-to-cart-button.php # Cantidad + botón
+```
+
+**JavaScript para botones +/- (en functions.php):**
+```php
+add_action( 'wp_footer', 'sc_variable_product_quantity_buttons', 100 );
+```
+Este script agrega dinámicamente los botones +/- al input de cantidad de WooCommerce.
+
+**CSS (en main.scss):**
+- `.sc-variations-table` - Tabla de variaciones (layout flex)
+- `.sc-variations-table th.label` - Etiqueta del atributo
+- `.sc-variations-table td.value select` - Dropdown estilizado
+- `.sc-variation-add-to-cart` - Wrapper del botón add-to-cart
+- `.sc-qty-btn` - Botones +/- agregados via JS
 
 **Galería de Producto (actualizado 2026-01-22):**
 
@@ -657,7 +695,7 @@ function goToImage(index) {
 ---
 
 ### Quick View Modal ✅
-**Última actualización:** 2026-01-16
+**Última actualización:** 2026-01-24
 
 **Características:**
 - ✅ Modal con overlay oscuro (cierra al hacer clic)
@@ -672,10 +710,69 @@ function goToImage(index) {
 - ✅ Link "Ver detalles completos"
 - ✅ Cierra con tecla ESC
 - ✅ Responsive
+- ✅ **Soporte para productos variables** (selección de variaciones)
+
+**Soporte para Productos Variables (actualizado 2026-01-24):**
+
+El Quick View modal ahora soporta productos variables (productos con variaciones como Marca, Talla, Color, etc.):
+
+**Características de productos variables:**
+- ✅ Detecta automáticamente si el producto es variable
+- ✅ Muestra selectores dropdown para cada atributo de variación
+- ✅ Botón deshabilitado hasta seleccionar todas las variaciones
+- ✅ Actualiza precio dinámicamente según variación seleccionada
+- ✅ Actualiza imagen del producto si la variación tiene imagen propia
+- ✅ Muestra "Combinación no disponible" si la combinación no existe
+- ✅ Muestra "Agotado" si la variación está sin stock
+- ✅ Botón "Limpiar" para resetear selecciones
+- ✅ Envía `variation_id` y atributos al agregar al carrito
+
+**Archivos modificados:**
+- `functions.php` - `sc_quick_view_product()`: Genera HTML con selectores de variación
+- `functions.php` - `sc_quick_view_add_to_cart()`: Acepta `variation_id` y atributos
+- `js/quick-view.js` - Nueva función `initVariations()` y `findMatchingVariation()`
+- `scss/main.scss` - Estilos para `.quick-view-variation` y `.quick-view-product__variations`
+
+**Estructura HTML para productos variables:**
+```html
+<div class="quick-view-product" data-product-type="variable">
+    <!-- Gallery -->
+    <div class="quick-view-product__gallery">...</div>
+
+    <div class="quick-view-product__info">
+        <!-- Variaciones -->
+        <div class="quick-view-product__variations"
+             data-product-id="123"
+             data-variations='[{"variation_id":456,"attributes":{...},"price_html":"..."}]'>
+
+            <div class="quick-view-variation">
+                <label class="quick-view-variation__label">Marca</label>
+                <select class="quick-view-variation__select" data-attribute="attribute_pa_marca">
+                    <option value="">Seleccionar Marca</option>
+                    <option value="samsung">Samsung</option>
+                </select>
+            </div>
+
+            <a class="quick-view-variation__reset">Limpiar</a>
+        </div>
+
+        <!-- Cantidad y botón -->
+        <div class="quick-view-product__actions">
+            <div class="quick-view-product__quantity">...</div>
+            <button class="quick-view-add-to-cart"
+                    data-product-id="123"
+                    data-variation-id=""
+                    disabled>
+                Seleccionar opciones
+            </button>
+        </div>
+    </div>
+</div>
+```
 
 **AJAX Endpoints (functions.php):**
-- `sc_quick_view_product` - Obtiene HTML del producto
-- `sc_quick_view_add_to_cart` - Añade producto al carrito
+- `sc_quick_view_product` - Obtiene HTML del producto (incluye variaciones para productos variables)
+- `sc_quick_view_add_to_cart` - Añade producto al carrito (acepta `variation_id` y `variation[]` para productos variables)
 
 **Clases CSS principales:**
 - `.quick-view-modal` - Contenedor del modal
@@ -685,6 +782,11 @@ function goToImage(index) {
 - `.quick-view-product` - Grid de producto (imagen + info)
 - `.quick-view-product__gallery` - Galería con thumbnails
 - `.quick-view-product__info` - Información del producto
+- `.quick-view-product__variations` - Contenedor de selectores de variación
+- `.quick-view-variation` - Fila de variación (label + select)
+- `.quick-view-variation__label` - Etiqueta del atributo
+- `.quick-view-variation__select` - Dropdown de opciones
+- `.quick-view-variation__reset` - Link para limpiar selecciones
 
 ---
 
