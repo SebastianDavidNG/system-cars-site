@@ -8,7 +8,7 @@ alwaysApply: true
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-24 (Quick View modal - Variable products support)
+**Última actualización:** 2026-01-24 (Mini Cart Dropdown + Quick View en Related Products)
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -591,7 +591,7 @@ Estilo similar a página de referencia (detailx):
 - ✅ Botón de wishlist con localStorage (integrado con wishlist.js)
 - ✅ Tabs: Descripción, Información adicional, Reseñas
 - ✅ Formulario de reseñas con estrellas
-- ✅ Productos relacionados en grid responsive
+- ✅ Productos relacionados en grid responsive con **Quick View funcional**
 - ✅ **Soporte para productos variables** (variaciones con selectores dropdown)
 
 **Productos Variables (actualizado 2026-01-24):**
@@ -711,6 +711,7 @@ function goToImage(index) {
 - ✅ Cierra con tecla ESC
 - ✅ Responsive
 - ✅ **Soporte para productos variables** (selección de variaciones)
+- ✅ **Funciona en Productos Relacionados** del single product page
 
 **Soporte para Productos Variables (actualizado 2026-01-24):**
 
@@ -774,6 +775,23 @@ El Quick View modal ahora soporta productos variables (productos con variaciones
 - `sc_quick_view_product` - Obtiene HTML del producto (incluye variaciones para productos variables)
 - `sc_quick_view_add_to_cart` - Añade producto al carrito (acepta `variation_id` y `variation[]` para productos variables)
 
+**Script Loading (functions.php:356-374):**
+El script `quick-view.js` se carga en las siguientes páginas:
+- ✅ Shop page (`is_shop()`)
+- ✅ Product category pages (`is_product_category()`)
+- ✅ Product tag pages (`is_product_tag()`)
+- ✅ Single product pages (`is_product()`) - Para Productos Relacionados
+
+```php
+function sc_enqueue_quick_view_scripts() {
+    // Load on shop, category, tag, and single product pages (for Related Products)
+    if ( ! is_shop() && ! is_product_category() && ! is_product_tag() && ! is_product() ) {
+        return;
+    }
+    // ...
+}
+```
+
 **Clases CSS principales:**
 - `.quick-view-modal` - Contenedor del modal
 - `.quick-view-modal__overlay` - Fondo oscuro
@@ -787,6 +805,135 @@ El Quick View modal ahora soporta productos variables (productos con variaciones
 - `.quick-view-variation__label` - Etiqueta del atributo
 - `.quick-view-variation__select` - Dropdown de opciones
 - `.quick-view-variation__reset` - Link para limpiar selecciones
+
+---
+
+### Mini Cart Dropdown ✅
+**Última actualización:** 2026-01-24
+
+Dropdown que muestra el contenido del carrito al hacer clic en el icono del carrito en el header.
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/header.php` - Estructura HTML del dropdown (líneas 114-142)
+- `wp-content/themes/system-cars-theme/functions.php` - Funciones PHP y AJAX endpoints
+- `wp-content/themes/system-cars-theme/js/mini-cart.js` - JavaScript del dropdown
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (`.sc-mini-cart-*`)
+
+**Características:**
+- ✅ Click en icono del carrito abre el dropdown
+- ✅ Lista de productos con thumbnails, nombre, cantidad y precio
+- ✅ Botón X para eliminar productos individuales
+- ✅ Subtotal del carrito
+- ✅ Botones "Ver Carrito" y "Finalizar Compra"
+- ✅ Estado vacío con icono y link a la tienda
+- ✅ Se actualiza automáticamente al añadir/eliminar productos (via WooCommerce fragments)
+- ✅ Cierra con click fuera del dropdown o tecla ESC
+- ✅ Animación suave de apertura (fade + slide)
+- ✅ Flecha decorativa apuntando al icono
+
+**Estructura HTML:**
+```html
+<div class="sc-mini-cart-wrapper relative">
+    <!-- Trigger button -->
+    <button class="sc-mini-cart-trigger">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-icon-count">3</span>
+    </button>
+
+    <!-- Dropdown -->
+    <div class="sc-mini-cart">
+        <div class="sc-mini-cart__header">
+            <span class="sc-mini-cart__title">Tu Carrito</span>
+            <button class="sc-mini-cart__close">×</button>
+        </div>
+        <div class="sc-mini-cart__content">
+            <!-- Items del carrito -->
+            <div class="sc-mini-cart__items">
+                <div class="sc-mini-cart__item">
+                    <div class="sc-mini-cart__item-image">...</div>
+                    <div class="sc-mini-cart__item-details">...</div>
+                    <button class="sc-mini-cart__item-remove">×</button>
+                </div>
+            </div>
+            <!-- Footer con subtotal y botones -->
+            <div class="sc-mini-cart__footer">
+                <div class="sc-mini-cart__subtotal">...</div>
+                <div class="sc-mini-cart__buttons">
+                    <a class="sc-mini-cart__btn--cart">Ver Carrito</a>
+                    <a class="sc-mini-cart__btn--checkout">Finalizar Compra</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+**Funciones PHP (functions.php):**
+- `sc_render_mini_cart_content()` - Renderiza el HTML del contenido del carrito
+- `sc_ajax_get_mini_cart()` - AJAX endpoint para refrescar el contenido
+- `sc_ajax_remove_cart_item()` - AJAX endpoint para eliminar productos
+- `sc_enqueue_mini_cart_scripts()` - Encola el script mini-cart.js
+- `sc_mini_cart_fragments()` - Actualiza el mini-cart via WooCommerce fragments
+
+**AJAX Endpoints:**
+- `sc_get_mini_cart` - Obtiene HTML del carrito actualizado
+- `sc_remove_cart_item` - Elimina un producto del carrito
+
+**Integración con WooCommerce:**
+El mini-cart se actualiza automáticamente usando el sistema de fragments de WooCommerce:
+```php
+add_filter( 'woocommerce_add_to_cart_fragments', 'sc_mini_cart_fragments' );
+```
+Esto asegura que cuando se añade un producto (desde la tienda, Quick View, o producto individual), el mini-cart se actualiza sin necesidad de recargar la página.
+
+**Clases CSS principales:**
+- `.sc-mini-cart-wrapper` - Contenedor con position: relative
+- `.sc-mini-cart-trigger` - Botón que activa el dropdown
+- `.sc-mini-cart` - El dropdown (hidden por defecto)
+- `.sc-mini-cart.is-open` - Clase cuando está abierto
+- `.sc-mini-cart__header` - Header con título y botón cerrar
+- `.sc-mini-cart__content` - Contenido scrolleable
+- `.sc-mini-cart__items` - Lista de productos
+- `.sc-mini-cart__item` - Cada producto (imagen, detalles, remove)
+- `.sc-mini-cart__footer` - Subtotal y botones
+- `.sc-mini-cart__empty` - Estado cuando el carrito está vacío
+
+**Estilos destacados:**
+```scss
+.sc-mini-cart {
+    position: absolute;
+    top: calc(100% + 15px);
+    right: 0;
+    width: 320px;
+    background: $white-color;
+    border-radius: 8px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+
+    &.is-open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    // Flecha decorativa
+    &::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        right: 12px;
+        width: 14px;
+        height: 14px;
+        background: $white-color;
+        border-left: 1px solid #e5e7eb;
+        border-top: 1px solid #e5e7eb;
+        transform: rotate(45deg);
+    }
+}
+```
 
 ---
 
