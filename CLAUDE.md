@@ -830,6 +830,7 @@ Dropdown que muestra el contenido del carrito al hacer clic en el icono del carr
 - ✅ Cierra con click fuera del dropdown o tecla ESC
 - ✅ Animación suave de apertura (fade + slide)
 - ✅ Flecha decorativa apuntando al icono
+- ✅ **Sin flash de contenido desordenado** - Contenido PHP se muestra inmediatamente sin AJAX innecesario
 
 **Estructura HTML:**
 ```html
@@ -931,6 +932,38 @@ Esto asegura que cuando se añade un producto (desde la tienda, Quick View, o pr
         border-left: 1px solid #e5e7eb;
         border-top: 1px solid #e5e7eb;
         transform: rotate(45deg);
+    }
+}
+```
+
+**Optimización - Sin Flash de Contenido:**
+
+El mini-cart evita el "flash" de contenido desordenado usando las siguientes técnicas:
+
+1. **No refresca al abrir:** El contenido PHP ya está renderizado correctamente, no se hace AJAX innecesario
+2. **Flag `needsRefresh`:** Solo refresca via AJAX cuando el contenido cambió (después de añadir/eliminar productos)
+3. **WooCommerce Fragments:** Actualiza el contenido automáticamente cuando se añaden productos
+4. **CSS Loading State:** Si hay que refrescar, el contenido se oculta con `opacity: 0` y aparece con fade suave
+
+```javascript
+// Solo refresca si el contenido fue marcado como necesitando actualización
+if (needsRefresh) {
+    refreshMiniCart();
+    needsRefresh = false;
+}
+```
+
+```scss
+// Loading state - contenido oculto durante carga
+&__content {
+    &.is-loading > * {
+        opacity: 0;
+        visibility: hidden;
+    }
+    &.is-loaded > * {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.2s ease;
     }
 }
 ```
