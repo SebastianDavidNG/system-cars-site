@@ -907,7 +907,7 @@ Esto asegura que cuando se añade un producto (desde la tienda, Quick View, o pr
     right: 0;
     width: 320px;
     background: $white-color;
-    border-radius: 8px;
+    border-radius: 0;  // Bordes rectos
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
     opacity: 0;
     visibility: hidden;
@@ -932,6 +932,14 @@ Esto asegura que cuando se añade un producto (desde la tienda, Quick View, o pr
         border-left: 1px solid #e5e7eb;
         border-top: 1px solid #e5e7eb;
         transform: rotate(45deg);
+    }
+
+    // Subtotal - ambos textos bold y color secundario
+    &__subtotal {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+        color: $secondary-color;
     }
 }
 ```
