@@ -8,7 +8,7 @@ alwaysApply: true
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-24 (Mini Cart Dropdown + Quick View en Related Products)
+**Última actualización:** 2026-01-26 (SC Excel Products Plugin)
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -1246,6 +1246,108 @@ UPDATE wp_options SET option_value='no' WHERE option_name='woocommerce_force_ssl
 
 ---
 
+## 🔌 Custom Plugins
+
+### SC Excel Products ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-26
+**Ubicación:** `wp-content/plugins/sc-excel-products/`
+
+Plugin personalizado para exportar e importar productos de WooCommerce mediante archivos Excel (.xlsx).
+
+**Estructura del plugin:**
+```
+sc-excel-products/
+├── sc-excel-products.php          # Archivo principal
+├── composer.json                   # Dependencias (PhpSpreadsheet)
+├── composer.lock
+├── vendor/                         # PhpSpreadsheet instalado
+├── includes/
+│   ├── class-admin-page.php        # Página de administración
+│   ├── class-exporter.php          # Lógica de exportación
+│   ├── class-importer.php          # Lógica de importación
+│   └── class-product-handler.php   # Manejo de productos WooCommerce
+├── templates/
+│   └── admin-page.php              # Template de la interfaz
+└── assets/
+    ├── css/admin.css               # Estilos de la página admin
+    └── js/admin.js                 # JavaScript (dropzone, progreso, etc.)
+```
+
+**Acceso:** WooCommerce → Excel Inventario
+
+**Características:**
+- ✅ Exportación de todos los productos a Excel (.xlsx)
+- ✅ Productos simples, variables y variaciones incluidos
+- ✅ Importación con creación y actualización de productos
+- ✅ Detección automática por ID o SKU
+- ✅ Vista previa antes de importar
+- ✅ Barra de progreso durante importación
+- ✅ Reporte detallado de resultados
+- ✅ Interfaz moderna con drag & drop
+
+**Columnas del Excel:**
+| Columna | Campo | Descripción |
+|---------|-------|-------------|
+| A | ID | ID del producto (vacío para nuevos) |
+| B | Tipo | simple / variable / variation |
+| C | SKU | Código único |
+| D | Parent SKU | SKU del padre (solo variaciones) |
+| E | Nombre | Título del producto |
+| F | Descripción | Descripción completa |
+| G | Descripción corta | Extracto |
+| H | Precio regular | Precio sin descuento |
+| I | Precio oferta | Precio con descuento |
+| J | Stock | Cantidad disponible |
+| K | Gestionar stock | yes / no |
+| L | Estado stock | instock / outofstock / onbackorder |
+| M | Categorías | Separadas por pipe: "Cat1 \| Cat2" |
+| N | Etiquetas | Separadas por pipe |
+| O | Imagen principal | URL de imagen destacada |
+| P | Galería | URLs separadas por pipe |
+| Q-AB | Atributos 1-3 | nombre, valores, visible, variación |
+| AC-AF | Dimensiones | Peso, largo, ancho, alto |
+| AG | Estado | publish / draft / private |
+
+**Flujo de uso:**
+
+**Exportar:**
+1. Ir a WooCommerce → Excel Inventario
+2. Click en "Descargar Excel"
+3. Se descarga `productos-YYYY-MM-DD.xlsx`
+
+**Importar:**
+1. Modificar el Excel exportado o crear uno nuevo
+2. Ir a WooCommerce → Excel Inventario
+3. Arrastrar archivo o click para seleccionar
+4. Ver vista previa de cambios
+5. Click en "Importar Productos"
+6. Ver reporte de resultados
+
+**Dependencias:**
+- PhpSpreadsheet 1.29+ (instalado via Composer)
+- WooCommerce 7.0+
+- PHP 7.4+
+
+**Para reinstalar dependencias:**
+```bash
+docker exec system-cars-site-wordpress-1 bash -c "cd /var/www/html/wp-content/plugins/sc-excel-products && curl -sS https://getcomposer.org/installer | php && php composer.phar install --no-dev --optimize-autoloader && rm composer.phar"
+```
+
+**AJAX Endpoints (functions en clase Importer/Exporter):**
+- `sc_export_products` - Genera y descarga el archivo Excel
+- `sc_import_products` - Procesa el archivo subido
+- `sc_import_preview` - Muestra vista previa antes de importar
+
+**Clases PHP:**
+- `SC_Excel_Products\SC_Excel_Products` - Clase principal singleton
+- `SC_Excel_Products\Admin_Page` - Página de administración
+- `SC_Excel_Products\Exporter` - Lógica de exportación con PhpSpreadsheet
+- `SC_Excel_Products\Importer` - Lógica de importación con validación
+- `SC_Excel_Products\Product_Handler` - Manejo de productos WooCommerce (CRUD)
+
+---
+
 ### Custom Translations (Traducciones) ✅
 **Última actualización:** 2026-01-19
 
@@ -1501,7 +1603,9 @@ Tamaños de fuente predefinidos:
 │   ├── themes/
 │   │   └── system-cars-theme/    # Main custom theme
 │   ├── plugins/                   # WordPress plugins
-│   │   └── advanced-custom-fields/
+│   │   ├── advanced-custom-fields/
+│   │   ├── woocommerce/
+│   │   └── sc-excel-products/    # Custom Excel import/export plugin
 │   └── uploads/                   # Media uploads
 ├── vite.config.js                 # Vite build configuration
 ├── tailwind.config.js             # Tailwind CSS configuration
