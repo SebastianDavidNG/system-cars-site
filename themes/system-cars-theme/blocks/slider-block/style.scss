@@ -144,7 +144,7 @@
   /* dark overlay for better contrast */
   .swiper-slide::before {
     content: '';
-    @apply absolute inset-0 bg-black opacity-30 z-0;
+    @apply absolute inset-0 bg-black opacity-70 z-0;
   }
 
   /* slide counter “1 / N” */

@@ -8,7 +8,7 @@ alwaysApply: true
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-26 (SC Excel Products Plugin)
+**Última actualización:** 2026-01-27 (Slider block ajustes + limpieza de duplicados)
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -30,13 +30,17 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 - **Navegación:** `.nav-menu li a` con `font-weight: bold`
 - **Tailwind CSS:** Cargado globalmente via `dist/css/style.css`
 
+### Mantenimiento del Proyecto (2026-01-27) ✅
+- **Limpieza de archivos duplicados:** Eliminados 117 archivos con sufijo " 2" que eran duplicados innecesarios (archivos de configuración, idiomas, temas, plugins, uploads)
+- **Limpieza de bloques duplicados:** Eliminados directorios de bloques con sufijo " 2" (car-block 2, info-image-block 2, parallax-columns-block 2, service-card 2, slider-block 2, styled-button-block 2, video-modal-block 2)
+
 ---
 
 ## 📦 Detalles de Bloques
 
 ### slider-block ✅
 **Estado:** COMPLETADO Y FUNCIONANDO
-**Última actualización:** 2026-01-20
+**Última actualización:** 2026-01-27
 **Archivos:**
 - `blocks/slider-block/index.js` - Registro del bloque
 - `blocks/slider-block/edit.jsx` - Componente del editor
@@ -77,6 +81,26 @@ El slider ocupa el viewport completo menos la altura del header:
 - **Mobile:** `calc(100svh - 85px)` - viewport completo menos header
 - **Tablet:** `calc(100svh - 130px)` - viewport menos header + info bar
 - **Desktop:** `80vh` con `min-height: 600px`
+
+**Texto del Slide (actualizado 2026-01-27):**
+```scss
+.slide-text {
+    font-size: 2.25rem; /* Mobile */
+    @screen md { font-size: 3.75rem; } /* Tablet */
+    @screen lg {
+        font-size: 5rem; /* Desktop */
+        line-height: 1;
+    }
+}
+```
+
+**Overlay Oscuro (actualizado 2026-01-27):**
+```scss
+.swiper-slide::before {
+    @apply absolute inset-0 bg-black opacity-70 z-0;
+}
+```
+- Overlay con opacity de 0.7 (70%) para mejor contraste del texto
 
 **Paginación Numerada (actualizado 2026-01-20):**
 Bullets numerados estilo referencia (detailx.ancorathemes.com):
