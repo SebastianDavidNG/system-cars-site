@@ -8,7 +8,7 @@ alwaysApply: true
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-27 (Slider block ajustes + limpieza de duplicados)
+**Última actualización:** 2026-01-27 (Revisión y limpieza de SCSS)
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -33,6 +33,11 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 ### Mantenimiento del Proyecto (2026-01-27) ✅
 - **Limpieza de archivos duplicados:** Eliminados 117 archivos con sufijo " 2" que eran duplicados innecesarios (archivos de configuración, idiomas, temas, plugins, uploads)
 - **Limpieza de bloques duplicados:** Eliminados directorios de bloques con sufijo " 2" (car-block 2, info-image-block 2, parallax-columns-block 2, service-card 2, slider-block 2, styled-button-block 2, video-modal-block 2)
+- **Revisión SCSS completa:**
+  - Actualizado `main.scss` de `@import` a `@use` (sintaxis moderna de SASS)
+  - Limpieza de archivos basura en `dist/` (archivos con números como "slider-block 3.css")
+  - Corregido patrón de Tailwind para excluir `node_modules` del tema
+  - Agregadas propiedades CSS estándar (`appearance`) junto a vendor prefixes (`-webkit-appearance`, `-moz-appearance`)
 
 ---
 
@@ -167,7 +172,7 @@ El botón del slider (`.slide-button`) tiene una animación de fade suave en hov
 
 **Build:**
 - JSX: `npm run dev` o `npm run build`
-- Output: `dist/slider-block.js`, `dist/slider-frontend.js`, `dist/css/slider-block.css`
+- Output: `dist/slider-block.js`, `dist/slider-frontend.js`, `dist/css/slider-block-style.css`
 
 ---
 
@@ -1538,7 +1543,7 @@ Barra de información con horarios, teléfonos y dirección.
 | Archivo | Descripción | Tamaño |
 |---------|-------------|--------|
 | `dist/css/style.css` | Tailwind CSS completo (base, components, utilities) | ~26 KB |
-| `dist/css/main.css` | Estilos SCSS personalizados (header, footer, nav, etc.) | ~4 KB |
+| `dist/css/main-style.css` | Estilos SCSS personalizados (header, footer, nav, WooCommerce, etc.) | ~82 KB |
 
 ### style.css (Tailwind)
 **Ubicación fuente:** `scss/style.css`
@@ -1550,7 +1555,7 @@ Barra de información con horarios, teléfonos y dirección.
 ```
 Este archivo se compila con PostCSS y genera todas las clases de Tailwind usadas en los templates PHP.
 
-### main.css (SCSS personalizado)
+### main-style.css (SCSS personalizado)
 **Ubicación fuente:** `scss/main.scss`
 **Contiene:**
 - Estilos globales del body (font-family: Arial)
@@ -1564,7 +1569,7 @@ Los CSS se cargan en este orden:
 1. Google Fonts (Roboto Condensed - legacy)
 2. Font Awesome 6.6.0
 3. `style.css` (Tailwind)
-4. `main.css` (SCSS personalizado)
+4. `main-style.css` (SCSS personalizado)
 5. Swiper CSS (para slider-block)
 
 ---
@@ -1872,14 +1877,30 @@ El proyecto usa **Vite** como único sistema de build, configurado en `vite.conf
 
 ---
 
-### SASS Color Functions
-All SASS color functions have been updated to the modern syntax using `color.adjust()` instead of deprecated `darken()` and `lighten()` functions.
+### SASS Modern Syntax ✅
+El proyecto usa la sintaxis moderna de SASS:
 
-**Modern syntax used:**
+**Imports con @use (no @import):**
+```scss
+// main.scss
+@use 'sass:color';
+@use "variables" as *;
+@use "mixins" as *;
+```
+
+**Color functions modernas:**
 ```scss
 @use "sass:color";
 background-color: color.adjust($secondary-color, $lightness: -10%);  // Oscurecer
 background-color: color.adjust($black-color, $lightness: 15%);       // Aclarar
+```
+
+**Vendor prefixes con propiedad estándar:**
+```scss
+// Siempre incluir la propiedad estándar junto al vendor prefix
+-webkit-appearance: none;
+-moz-appearance: textfield;
+appearance: none;  // ← Propiedad estándar
 ```
 
 ### Styles Not Updating
@@ -1968,7 +1989,7 @@ docker-compose up              # Start WordPress at http://localhost:8080
 |-----------|---------|--------|
 | Block JSX | `blocks/slider-block/edit.jsx` | `wp-content/.../dist/slider-block.js` |
 | Block JS | `blocks/slider-block/index.js` | `wp-content/.../dist/slider-block.js` |
-| Block SCSS | `blocks/slider-block/style.scss` | `wp-content/.../dist/css/slider-block.css` |
+| Block SCSS | `blocks/slider-block/style.scss` | `wp-content/.../dist/css/slider-block-style.css` |
 | Main JS | `js/main.js` | `wp-content/.../dist/main.js` |
 
 **Un solo comando (`npm run build`) compila todo.**
