@@ -8,7 +8,7 @@ alwaysApply: true
 ## Project Overview
 System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
 
-**Última actualización:** 2026-01-27 (Revisión y limpieza de SCSS)
+**Última actualización:** 2026-01-29 (Corrección plugin SC Excel Products + limpieza SCSS)
 **Docker Container:** `system-cars-site-wordpress-1`
 **Local URL:** http://localhost:8080
 **Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
@@ -30,14 +30,18 @@ System Cars is a WordPress site with a custom theme built using modern web devel
 - **Navegación:** `.nav-menu li a` con `font-weight: bold`
 - **Tailwind CSS:** Cargado globalmente via `dist/css/style.css`
 
-### Mantenimiento del Proyecto (2026-01-27) ✅
-- **Limpieza de archivos duplicados:** Eliminados 117 archivos con sufijo " 2" que eran duplicados innecesarios (archivos de configuración, idiomas, temas, plugins, uploads)
-- **Limpieza de bloques duplicados:** Eliminados directorios de bloques con sufijo " 2" (car-block 2, info-image-block 2, parallax-columns-block 2, service-card 2, slider-block 2, styled-button-block 2, video-modal-block 2)
+### Mantenimiento del Proyecto (2026-01-29) ✅
+- **Corrección plugin SC Excel Products:**
+  - Corregida verificación de WooCommerce (ahora usa hook `plugins_loaded` con prioridad 20)
+  - Agregada compatibilidad con HPOS (High-Performance Order Storage) de WooCommerce
+  - Corregida URL del plugin de `.com` a `.co`
+- **Limpieza de archivos duplicados:** Eliminados 117 archivos con sufijo " 2" que eran duplicados innecesarios
+- **Limpieza de bloques duplicados:** Eliminados directorios de bloques con sufijo " 2"
 - **Revisión SCSS completa:**
   - Actualizado `main.scss` de `@import` a `@use` (sintaxis moderna de SASS)
   - Limpieza de archivos basura en `dist/` (archivos con números como "slider-block 3.css")
   - Corregido patrón de Tailwind para excluir `node_modules` del tema
-  - Agregadas propiedades CSS estándar (`appearance`) junto a vendor prefixes (`-webkit-appearance`, `-moz-appearance`)
+  - Agregadas propiedades CSS estándar (`appearance`) junto a vendor prefixes
 
 ---
 
@@ -1279,8 +1283,9 @@ UPDATE wp_options SET option_value='no' WHERE option_name='woocommerce_force_ssl
 
 ### SC Excel Products ✅
 **Estado:** COMPLETADO Y FUNCIONANDO
-**Última actualización:** 2026-01-26
+**Última actualización:** 2026-01-29
 **Ubicación:** `wp-content/plugins/sc-excel-products/`
+**URL:** https://systemcars.co
 
 Plugin personalizado para exportar e importar productos de WooCommerce mediante archivos Excel (.xlsx).
 
@@ -1314,6 +1319,7 @@ sc-excel-products/
 - ✅ Barra de progreso durante importación
 - ✅ Reporte detallado de resultados
 - ✅ Interfaz moderna con drag & drop
+- ✅ Compatible con WooCommerce HPOS (High-Performance Order Storage)
 
 **Columnas del Excel:**
 | Columna | Campo | Descripción |
