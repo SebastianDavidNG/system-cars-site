@@ -1,0 +1,62 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/info-image",
+  "title": "Info Image Block",
+  "category": "system-cars",
+  "icon": "align-pull-left",
+  "description": "Bloque de imagen con información en columnas.",
+  "supports": {
+    "html": false,
+    "align": true
+  },
+  "textdomain": "system-cars-theme",
+
+  "attributes": {
+    "mainTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "mainDescription": {
+      "type": "string",
+      "default": ""
+    },
+    "imageUrl": {
+      "type": "string",
+      "default": ""
+    },
+    "imageAlt": {
+      "type": "string",
+      "default": ""
+    },
+    "columnTitle": {
+      "type": "string",
+      "default": ""
+    },
+    "columnDescription": {
+      "type": "string",
+      "default": ""
+    },
+    "topSectionPadding": {
+      "type": "object",
+      "default": {
+        "top": "0px",
+        "right": "0px",
+        "bottom": "0px",
+        "left": "0px"
+      }
+    },
+    "columnRightPadding": {
+      "type": "object",
+      "default": {
+        "top": "0px",
+        "right": "0px",
+        "bottom": "0px",
+        "left": "0px"
+      }
+    }
+  },
+
+  "editorScript": "file:../../dist/info-image-block.js",
+  "editorStyle": "file:../../dist/css/info-image-editor.css",
+  "style": "file:../../dist/css/info-image-style.css"
+}

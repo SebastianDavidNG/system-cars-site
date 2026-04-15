@@ -1,0 +1,19 @@
+.service-card {
+  @apply border border-gray-200 bg-white flex flex-col items-center justify-center;
+  
+  &__icon {
+    @apply w-12 h-12 mb-4;
+  }
+
+  h3 {
+    @apply text-xl font-semibold mb-2;
+  }
+
+  p {
+    @apply text-sm text-gray-600;
+  }
+
+  &__arrow {
+    @apply text-primary font-bold;
+  }
+}

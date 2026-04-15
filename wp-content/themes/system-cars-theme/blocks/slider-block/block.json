@@ -1,0 +1,30 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/slider-block",
+  "title": "Slider Block",
+  "category": "system-cars",
+  "icon": "images-alt2",
+  "description": "Un bloque de slider personalizado.",
+  "supports": { "html": false },
+  "textdomain": "system-cars-theme",
+
+  "attributes": {
+    "slides": {
+      "type": "array",
+      "default": [],
+      "source": "query",
+      "selector": ".swiper-slide",
+      "query": {
+        "image":      { "type": "string", "source": "attribute", "selector": "img", "attribute": "src" },
+        "text":       { "type": "string", "source": "html",      "selector": ".slide-text" },
+        "buttonText": { "type": "string", "source": "html",      "selector": ".slide-button" },
+        "buttonLink": { "type": "string", "source": "attribute", "selector": ".slide-button", "attribute": "href" }
+      }
+    }
+  },
+
+  "editorScript": "file:../../dist/slider-block.js",
+  "editorStyle":  "file:../../dist/css/slider-block-editor.css",
+
+  "style":  "file:../../dist/css/slider-block-style.css"
+}

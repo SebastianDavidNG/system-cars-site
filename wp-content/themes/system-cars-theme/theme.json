@@ -1,0 +1,106 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/theme.json",
+  "version": 2,
+  "settings": {
+    "appearanceTools": true,
+    "spacing": {
+      "units": ["px", "em", "rem", "%", "vh", "vw"],
+      "padding": true,
+      "margin": true,
+      "blockGap": true,
+      "spacingScale": {
+        "steps": 0
+      },
+      "spacingSizes": [
+        {
+          "name": "Extra pequeño",
+          "slug": "xs",
+          "size": "0.5rem"
+        },
+        {
+          "name": "Pequeño",
+          "slug": "small",
+          "size": "1rem"
+        },
+        {
+          "name": "Mediano",
+          "slug": "medium",
+          "size": "1.5rem"
+        },
+        {
+          "name": "Grande",
+          "slug": "large",
+          "size": "2rem"
+        },
+        {
+          "name": "Extra grande",
+          "slug": "xl",
+          "size": "3rem"
+        },
+        {
+          "name": "2X grande",
+          "slug": "2xl",
+          "size": "4rem"
+        }
+      ]
+    },
+    "color": {
+      "palette": [
+        {
+          "name": "Primary",
+          "slug": "primary",
+          "color": "#ff0000"
+        },
+        {
+          "name": "Secondary",
+          "slug": "secondary",
+          "color": "#002060"
+        },
+        {
+          "name": "Tertiary",
+          "slug": "tertiary",
+          "color": "#232225"
+        },
+        {
+          "name": "White",
+          "slug": "white",
+          "color": "#ffffff"
+        },
+        {
+          "name": "Black",
+          "slug": "black",
+          "color": "#000000"
+        }
+      ]
+    },
+    "typography": {
+      "fontSizes": [
+        {
+          "name": "Pequeño",
+          "slug": "small",
+          "size": "0.875rem"
+        },
+        {
+          "name": "Mediano",
+          "slug": "medium",
+          "size": "1rem"
+        },
+        {
+          "name": "Grande",
+          "slug": "large",
+          "size": "1.25rem"
+        },
+        {
+          "name": "Extra grande",
+          "slug": "x-large",
+          "size": "1.75rem"
+        }
+      ]
+    }
+  },
+  "styles": {
+    "spacing": {
+      "blockGap": "1.5rem"
+    }
+  }
+}

@@ -1,0 +1,88 @@
+@use "../../scss/_variables.scss" as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.bg-card {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease-in-out;
+
+    // Card con link - tiene animación hover
+    &.card-item {
+        cursor: pointer;
+
+        // Contenido de la card
+        .card-content {
+            position: relative;
+            z-index: 2;
+            transition: all 0.4s ease-in-out;
+        }
+
+        // Icono
+        .card-icon {
+            transition: transform 0.4s ease-in-out;
+        }
+
+        // Título y descripción
+        .card-title,
+        .card-description {
+            transition: transform 0.4s ease-in-out;
+        }
+
+        // Flecha
+        .card-arrow-link {
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+
+        // Imagen de fondo hover (oculta por defecto)
+        .card-bg-hover {
+            opacity: 0;
+            transform: scale(1.1);
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+        }
+
+        // Hover effects
+        &:hover {
+            // Mostrar imagen de fondo con zoom
+            .card-bg-hover {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            // Icono permanece visible, solo se desplaza ligeramente
+            .card-icon {
+                transform: translateY(-5px);
+            }
+
+            // Desplazar título y descripción hacia arriba
+            .card-title {
+                transform: translateY(-10px);
+            }
+
+            .card-description {
+                transform: translateY(-5px);
+            }
+
+            // Mostrar flecha
+            .card-arrow-link {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    }
+
+    // Card sin link - no tiene animación, centrado
+    &:not(.card-item) {
+        .card-content {
+            text-align: center;
+
+            @media (min-width: 768px) {
+                text-align: start;
+            }
+        }
+    }
+}

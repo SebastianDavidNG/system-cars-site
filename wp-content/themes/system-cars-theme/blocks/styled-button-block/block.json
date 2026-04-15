@@ -1,0 +1,38 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/styled-button",
+  "version": "3.0.0",
+  "title": "Styled Button",
+  "category": "system-cars",
+  "icon": "button",
+  "description": "Botón estilizado con colores personalizables.",
+  "supports": { "html": false },
+  "textdomain": "system-cars-theme",
+
+  "attributes": {
+    "text": {
+      "type": "string",
+      "default": "Botón"
+    },
+    "url": {
+      "type": "string",
+      "default": ""
+    },
+    "openInNewTab": {
+      "type": "boolean",
+      "default": false
+    },
+    "buttonStyle": {
+      "type": "string",
+      "default": "secondary"
+    },
+    "borderStyle": {
+      "type": "string",
+      "default": "none"
+    }
+  },
+
+  "editorScript": "file:../../dist/styled-button-block.js",
+  "script": "file:../../dist/styled-button-frontend.js",
+  "style": "file:../../dist/css/styled-button-style.css"
+}

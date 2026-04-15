@@ -1,0 +1,98 @@
+module.exports = {
+    content: [
+        './themes/system-cars-theme/**/*.{php,js,jsx,scss}',
+    ],
+    safelist: [
+        // Grid columns clases para service-card
+        'grid',
+        'grid-cols-12',
+        'col-span-12',
+        'md:col-span-1',
+        'md:col-span-2',
+        'md:col-span-3',
+        'md:col-span-4',
+        'md:col-span-5',
+        'md:col-span-6',
+        'md:col-span-7',
+        'md:col-span-8',
+        'md:col-span-9',
+        'md:col-span-10',
+        'md:col-span-11',
+        'md:col-span-12',
+        // Altura fija para service-card
+        'h-[350px]',
+        'md:h-[300px]',
+        'lg:h-[400px]',
+        // Tamaños responsive
+        'w-14',
+        'h-14',
+        'md:w-[75px]',
+        'md:h-[75px]',
+        // Text sizes
+        'text-xs',
+        'text-sm',
+        'text-base',
+        'text-lg',
+        'text-xl',
+        'text-2xl',
+        'text-3xl',
+        // Responsive text sizes
+        'md:text-xs',
+        'md:text-sm',
+        'md:text-base',
+        'md:text-lg',
+        'md:text-xl',
+        'md:text-2xl',
+        'md:text-3xl',
+        // Large breakpoint text sizes
+        'lg:text-xs',
+        'lg:text-sm',
+        'lg:text-base',
+        'lg:text-lg',
+        'lg:text-xl',
+        'lg:text-2xl',
+        'lg:text-3xl',
+        // Text alignment
+        'text-left',
+        'text-center',
+        'text-right',
+        'max-md:text-center',
+        'max-md:text-left',
+        'max-md:text-right',
+        // Video modal block
+        'relative',
+        'group',
+        'w-full',
+        'h-auto',
+        'cursor-pointer',
+        'absolute',
+        'inset-0',
+        'flex',
+        'items-center',
+        'justify-center',
+        'pointer-events-none',
+        'w-20',
+        'h-20',
+        'md:w-24',
+        'md:h-24',
+        'drop-shadow-lg',
+        'transition-transform',
+        'transition-colors',
+        'duration-300',
+        'group-hover:scale-110',
+        'group-hover:fill-[#ff0000]',
+    ],
+    theme: {
+        extend: {
+            colors: {
+                primary:   '#ff0000',
+                secondary: '#002060',
+                tertiary:  '#232225',
+                white:     '#ffffff',
+                black:     '#000000'
+            }
+        }
+    },
+    variants: {},
+    plugins: [],
+};

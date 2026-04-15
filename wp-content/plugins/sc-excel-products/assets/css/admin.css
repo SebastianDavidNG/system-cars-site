@@ -1,0 +1,480 @@
+/**
+ * SC Excel Products - Admin Styles
+ */
+
+/* Wrap */
+.sc-excel-products-wrap {
+    max-width: 1200px;
+}
+
+.sc-excel-products-wrap h1 {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.sc-excel-products-wrap h1 .dashicons {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+}
+
+/* Stats */
+.sc-excel-stats {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.sc-excel-stat {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px 30px;
+    text-align: center;
+    min-width: 150px;
+}
+
+.sc-excel-stat--total {
+    background: #002060;
+    border-color: #002060;
+}
+
+.sc-excel-stat--total .sc-excel-stat__number,
+.sc-excel-stat--total .sc-excel-stat__label {
+    color: #fff;
+}
+
+.sc-excel-stat__number {
+    display: block;
+    font-size: 32px;
+    font-weight: 600;
+    color: #1d2327;
+    line-height: 1.2;
+}
+
+.sc-excel-stat__label {
+    display: block;
+    font-size: 13px;
+    color: #646970;
+    margin-top: 5px;
+}
+
+/* Sections */
+.sc-excel-sections {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 1200px) {
+    .sc-excel-sections {
+        grid-template-columns: 1fr;
+    }
+}
+
+.sc-excel-section {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+}
+
+.sc-excel-section__header {
+    padding: 15px 20px;
+    border-bottom: 1px solid #c3c4c7;
+    background: #f6f7f7;
+}
+
+.sc-excel-section__header h2 {
+    margin: 0;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sc-excel-section__header .dashicons {
+    color: #002060;
+}
+
+.sc-excel-section__content {
+    padding: 20px;
+}
+
+.sc-excel-section__content p {
+    margin-top: 0;
+}
+
+.sc-excel-section__content ul {
+    margin: 15px 0;
+    padding-left: 20px;
+}
+
+.sc-excel-section__content ul li {
+    margin-bottom: 5px;
+}
+
+.sc-excel-section__note {
+    background: #f0f6fc;
+    border-left: 4px solid #72aee6;
+    padding: 10px 15px;
+    margin: 15px 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+}
+
+.sc-excel-section__note .dashicons {
+    color: #72aee6;
+    margin-top: 2px;
+}
+
+/* Buttons */
+.button-hero {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 25px !important;
+    height: auto !important;
+}
+
+.button-hero .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+#sc-export-btn {
+    background: #002060;
+    border-color: #002060;
+}
+
+#sc-export-btn:hover,
+#sc-export-btn:focus {
+    background: #001540;
+    border-color: #001540;
+}
+
+/* Dropzone */
+.sc-excel-dropzone {
+    border: 2px dashed #c3c4c7;
+    border-radius: 4px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin: 20px 0;
+}
+
+.sc-excel-dropzone:hover,
+.sc-excel-dropzone.dragover {
+    border-color: #002060;
+    background: #f0f6fc;
+}
+
+.sc-excel-dropzone__content .dashicons {
+    font-size: 48px;
+    width: 48px;
+    height: 48px;
+    color: #c3c4c7;
+    margin-bottom: 10px;
+}
+
+.sc-excel-dropzone:hover .dashicons,
+.sc-excel-dropzone.dragover .dashicons {
+    color: #002060;
+}
+
+.sc-excel-dropzone__content p {
+    margin: 10px 0 5px;
+    font-size: 14px;
+    color: #1d2327;
+}
+
+.sc-excel-dropzone__formats {
+    font-size: 12px;
+    color: #646970;
+}
+
+/* File Info */
+.sc-excel-file-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f0f6fc;
+    border: 1px solid #72aee6;
+    border-radius: 4px;
+    padding: 15px;
+    margin: 20px 0;
+}
+
+.sc-excel-file-info .dashicons {
+    color: #002060;
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+}
+
+.sc-excel-file-info__name {
+    flex: 1;
+    font-weight: 500;
+}
+
+.sc-excel-file-info__remove {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #d63638;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.sc-excel-file-info__remove:hover {
+    background: #d63638;
+    color: #fff;
+}
+
+/* Preview */
+.sc-excel-preview {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f6f7f7;
+    border-radius: 4px;
+}
+
+.sc-excel-preview h3 {
+    margin-top: 0;
+}
+
+.sc-excel-preview__summary {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.sc-excel-preview__summary span {
+    background: #fff;
+    padding: 8px 15px;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.sc-excel-preview__summary .count {
+    font-weight: 600;
+    color: #002060;
+}
+
+.sc-excel-preview__table-wrapper {
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+}
+
+.sc-excel-preview__table-wrapper table {
+    margin: 0;
+}
+
+.sc-excel-preview .action-create {
+    color: #00a32a;
+    font-weight: 500;
+}
+
+.sc-excel-preview .action-update {
+    color: #dba617;
+    font-weight: 500;
+}
+
+.sc-excel-preview .type-variation {
+    color: #646970;
+    font-style: italic;
+}
+
+/* Import Actions */
+.sc-excel-import-actions {
+    margin: 20px 0;
+    text-align: center;
+}
+
+/* Progress */
+.sc-excel-progress {
+    margin: 20px 0;
+    text-align: center;
+}
+
+.sc-excel-progress__bar {
+    height: 20px;
+    background: #dcdcde;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.sc-excel-progress__fill {
+    height: 100%;
+    background: linear-gradient(90deg, #002060, #0073aa);
+    border-radius: 10px;
+    transition: width 0.3s ease;
+    width: 0%;
+}
+
+.sc-excel-progress__text {
+    color: #646970;
+    font-size: 13px;
+}
+
+/* Results */
+.sc-excel-results {
+    margin: 20px 0;
+    padding: 20px;
+    background: #f6f7f7;
+    border-radius: 4px;
+}
+
+.sc-excel-results h3 {
+    margin-top: 0;
+}
+
+.sc-excel-results__summary {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.sc-excel-results__summary .result-item {
+    background: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-align: center;
+    min-width: 100px;
+}
+
+.sc-excel-results__summary .result-item.created {
+    border-left: 4px solid #00a32a;
+}
+
+.sc-excel-results__summary .result-item.updated {
+    border-left: 4px solid #dba617;
+}
+
+.sc-excel-results__summary .result-item.skipped {
+    border-left: 4px solid #72aee6;
+}
+
+.sc-excel-results__summary .result-item.errors {
+    border-left: 4px solid #d63638;
+}
+
+.sc-excel-results__summary .result-number {
+    display: block;
+    font-size: 24px;
+    font-weight: 600;
+    color: #1d2327;
+}
+
+.sc-excel-results__summary .result-label {
+    display: block;
+    font-size: 12px;
+    color: #646970;
+}
+
+.sc-excel-results__messages {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 12px;
+    font-family: monospace;
+}
+
+.sc-excel-results__messages p {
+    margin: 5px 0;
+    padding: 5px;
+    border-radius: 2px;
+}
+
+.sc-excel-results__messages p.success {
+    background: #edfaef;
+    color: #00a32a;
+}
+
+.sc-excel-results__messages p.error {
+    background: #fcf0f1;
+    color: #d63638;
+}
+
+/* Format Info */
+.sc-excel-format-info {
+    background: #fff;
+    border: 1px solid #c3c4c7;
+    border-radius: 4px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.sc-excel-format-info h3 {
+    margin-top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sc-excel-format-info h3 .dashicons {
+    color: #002060;
+}
+
+.sc-excel-format-table {
+    margin: 15px 0;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.sc-excel-format-tip {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    background: #fcf9e8;
+    border-left: 4px solid #dba617;
+    padding: 10px 15px;
+    margin: 15px 0 0;
+}
+
+.sc-excel-format-tip .dashicons {
+    color: #dba617;
+}
+
+/* Loading State */
+.sc-excel-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 782px) {
+    .sc-excel-stats {
+        flex-direction: column;
+    }
+
+    .sc-excel-stat {
+        min-width: auto;
+    }
+
+    .sc-excel-preview__summary {
+        flex-direction: column;
+    }
+
+    .sc-excel-results__summary {
+        flex-direction: column;
+    }
+
+    .sc-excel-results__summary .result-item {
+        min-width: auto;
+    }
+}

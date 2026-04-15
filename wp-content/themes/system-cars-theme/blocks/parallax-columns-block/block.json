@@ -1,0 +1,44 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/parallax-columns",
+  "version": "2.0.1",
+  "title": "Parallax Background",
+  "category": "system-cars",
+  "icon": "format-image",
+  "description": "Bloque decorativo con imagen de fondo y efecto parallax.",
+  "supports": {
+    "html": false,
+    "spacing": {
+      "margin": ["top", "bottom"],
+      "padding": false
+    }
+  },
+  "textdomain": "system-cars-theme",
+
+  "attributes": {
+    "backgroundImage": {
+      "type": "string",
+      "default": ""
+    },
+    "backgroundImageId": {
+      "type": "number",
+      "default": 0
+    },
+    "minHeight": {
+      "type": "number",
+      "default": 300
+    },
+    "parallax": {
+      "type": "boolean",
+      "default": true
+    },
+    "mobileOptimized": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+
+  "editorScript": "file:../../dist/parallax-columns-block.js",
+  "script": "file:../../dist/parallax-columns-frontend.js",
+  "style": "file:../../dist/css/parallax-columns-style.css"
+}

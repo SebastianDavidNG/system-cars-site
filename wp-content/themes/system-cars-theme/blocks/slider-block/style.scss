@@ -1,0 +1,257 @@
+@use "../../scss/_variables.scss" as *;
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wp-block-system-cars-slider-block {
+  /* CSS variable set dynamically by JS (slider-frontend.js measures real header height) */
+  --header-height: 0px;
+
+  /* full-width viewport hack */
+  @apply relative overflow-hidden;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+
+  /* Fill exactly the viewport below the header, at any resolution */
+  height: calc(100dvh - var(--header-height));
+  min-height: 300px; /* safety fallback */
+
+  .swiper {
+    @apply w-full h-full;
+  }
+
+  .swiper-wrapper {
+    @apply flex;
+  }
+
+  .swiper-slide {
+    @apply relative flex-shrink-0 w-full h-full;
+  }
+
+  .swiper-slide img {
+    @apply w-full h-full object-cover;
+  }
+
+  /* center overlay content */
+  .slide-content {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+      text-white text-center p-4 md:p-8 z-10 pointer-events-none;
+  }
+
+  /* animated title */
+  .slide-text {
+    @apply font-bold mb-4 uppercase;
+    font-size: 2.25rem; /* Mobile */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+    @screen md {
+      font-size: 3.75rem; /* Tablet */
+    }
+    @screen lg {
+      font-size: 5rem; /* Desktop */
+      line-height: 1;
+    }
+
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+  }
+
+  /* animated button with fade effect */
+  .slide-button {
+    @apply inline-block mt-4 px-6 py-3 border-2 border-white font-bold text-white text-lg uppercase;
+    background-color: transparent;
+    opacity: 0;
+    transform: translateY(20px);
+    pointer-events: none;
+
+    /* Smooth fade transition for hover */
+    transition:
+      opacity 0.8s ease 0.7s,
+      transform 0.8s ease 0.7s,
+      background-color 0.3s ease,
+      border-color 0.3s ease;
+
+    &:hover {
+      background-color: $tertiary-color; /* #232225 */
+      border-color: $tertiary-color;
+    }
+  }
+
+  /* trigger animations on active slide */
+  .swiper-slide-active {
+    .slide-text,
+    .slide-button {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+  }
+
+  /* Font Awesome arrows */
+  .swiper-button-prev,
+  .swiper-button-next {
+    @apply flex items-center justify-center w-[50px] h-[50px];
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    z-index: 10;
+    pointer-events: auto;
+    transition: background-color 0.3s ease;
+
+    @screen md {
+      @apply w-[65px] h-[65px];
+    }
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+  }
+
+  .swiper-button-prev::before,
+  .swiper-button-next::before {
+    @apply text-lg;
+    font-family: "Font Awesome 6 Free";
+    font-weight: 600;
+    @screen md {
+      @apply text-xl;
+    }
+  }
+  .swiper-button-prev::after,
+  .swiper-button-next::after {
+    display: none;
+  }
+  .swiper-button-prev::before {
+    content: "\f177"; /* fa-chevron-left */
+  }
+  .swiper-button-next::before {
+    content: "\f178"; /* fa-chevron-right */
+  }
+
+  .swiper-button-prev {
+    left: 20px !important;
+    @screen md {
+      left: 40px !important;
+    }
+    @screen lg {
+      left: 70px !important;
+    }
+  }
+  .swiper-button-next {
+    right: 20px !important;
+    @screen md {
+      right: 40px !important;
+    }
+    @screen lg {
+      right: 70px !important;
+    }
+  }
+
+  /* hide arrows when only one slide */
+  &[data-slide-count="1"] .swiper-button-prev,
+  &[data-slide-count="1"] .swiper-button-next {
+    @apply hidden;
+  }
+
+  /* always visible on hover for 2+ slides */
+  &[data-slide-count="2"] .swiper-button-prev,
+  &[data-slide-count="2"] .swiper-button-next,
+  &[data-slide-count="3"] .swiper-button-prev,
+  &[data-slide-count="3"] .swiper-button-next,
+  &[data-slide-count="4"] .swiper-button-prev,
+  &[data-slide-count="4"] .swiper-button-next {
+    @apply opacity-100;
+  }
+  .swiper:hover .swiper-button-prev,
+  .swiper:hover .swiper-button-next {
+    @apply opacity-100;
+  }
+
+  /* dark overlay for better contrast */
+  .swiper-slide::before {
+    content: '';
+    @apply absolute inset-0 bg-black opacity-50 z-0;
+  }
+
+  /* slide counter "1 / N" - DEPRECATED, using numbered pagination now */
+  .slide-counter {
+    @apply hidden;
+  }
+
+  /* Numbered pagination (01, 02, 03...) */
+  /* Override Swiper default pagination position */
+  --swiper-pagination-bottom: 50px;
+
+  @screen md {
+    --swiper-pagination-bottom: 60px;
+  }
+
+  @screen lg {
+    --swiper-pagination-bottom: 70px;
+  }
+
+  .swiper-pagination,
+  .swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+    @apply absolute left-0 right-0 flex justify-center items-center gap-4 z-20;
+    bottom: var(--swiper-pagination-bottom, 80px) !important;
+
+    @screen md {
+      @apply gap-6;
+    }
+  }
+
+  .swiper-pagination-bullet {
+    @apply relative cursor-pointer;
+    width: auto;
+    height: auto;
+    background: transparent;
+    border-radius: 0;
+    opacity: 1;
+
+    /* Number text */
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: rgba($white-color, 0.5);
+    padding: 0 4px 8px;
+    transition: color 0.3s ease;
+
+    @screen md {
+      font-size: 18px;
+      padding: 0 6px 10px;
+    }
+
+    /* Underline */
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: rgba($white-color, 0.3);
+      transform: scaleX(0);
+      transition: transform 0.3s ease, background-color 0.3s ease;
+    }
+
+    /* Hover state */
+    &:hover {
+      color: rgba($white-color, 0.8);
+
+      &::after {
+        transform: scaleX(1);
+        background-color: rgba($white-color, 0.5);
+      }
+    }
+
+    /* Active state */
+    &-active {
+      color: $white-color;
+
+      &::after {
+        transform: scaleX(1);
+        background-color: $white-color;
+      }
+    }
+  }
+}

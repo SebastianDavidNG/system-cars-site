@@ -1,0 +1,44 @@
+/**
+ * themes/system-cars-theme/blocks/styled-button-block/save.jsx
+ * Updated: 2025-12-31 - Added Tailwind CSS classes
+ */
+const { useBlockProps, RichText } = wp.blockEditor;
+const { createElement } = wp.element;
+
+export default function Save({ attributes }) {
+  const { text, url, buttonStyle, borderStyle, openInNewTab } = attributes;
+
+  const blockProps = useBlockProps.save({
+    className: 'styled-button-wrapper',
+  });
+
+  // Crear clases CSS basadas en los atributos (incluye Tailwind)
+  const buttonClasses = [
+    'styled-button',
+    'px-10',
+    'py-3',
+    `styled-button--${buttonStyle}`,
+    borderStyle !== 'none' ? `styled-button--border-${borderStyle}` : '',
+    'font-black',
+    'uppercase',
+    'text-lg',
+  ].filter(Boolean).join(' ');
+
+  return createElement(
+    'div',
+    blockProps,
+    createElement(
+      'a',
+      {
+        className: buttonClasses,
+        href: url || '#',
+        target: openInNewTab ? '_blank' : '_self',
+        rel: openInNewTab ? 'noopener noreferrer' : undefined,
+      },
+      createElement(RichText.Content, {
+        tagName: 'span',
+        value: text,
+      })
+    )
+  );
+}

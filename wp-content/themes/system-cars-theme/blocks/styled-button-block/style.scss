@@ -1,0 +1,92 @@
+@use "../../scss/variables" as *;
+
+.styled-button-wrapper {
+  display: inline-block;
+}
+
+.styled-button {
+  border-radius: 0;
+  cursor: pointer;
+  display: inline-block;
+  text-decoration: none;
+  text-transform: uppercase !important;
+  transition: all 0.3s ease;
+  border: none;
+
+  // Color de texto por defecto
+  color: $white-color;
+
+  // Sobrescribir clase capitalize de Tailwind
+  &.capitalize {
+    text-transform: uppercase !important;
+  }
+
+  span {
+    color: inherit;
+  }
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+
+  // Estilos de fondo - Azul (Secondary)
+  &--secondary {
+    background-color: $secondary-color;
+    color: $white-color;
+  }
+
+  // Estilos de fondo - Rojo (Primary)
+  &--primary {
+    background-color: $primary-color;
+    color: $white-color;
+  }
+
+  // Estilos de fondo - Gris (Tertiary)
+  &--tertiary {
+    background-color: $tertiary-color;
+    color: $white-color;
+  }
+
+  // Estilos de fondo - Blanco
+  &--white {
+    background-color: $white-color;
+    color: $black-color; // Texto negro para contraste en fondo blanco
+  }
+
+  // Estilos de fondo - Negro
+  &--black {
+    background-color: $black-color;
+    color: $white-color;
+  }
+
+  // Estilos de bordes - Transparente
+  &--border-transparent {
+    border: 2px solid transparent;
+  }
+
+  // Estilos de bordes - Azul (Secondary)
+  &--border-secondary {
+    border: 2px solid $secondary-color;
+  }
+
+  // Estilos de bordes - Rojo (Primary)
+  &--border-primary {
+    border: 2px solid $primary-color;
+  }
+
+  // Estilos de bordes - Gris (Tertiary)
+  &--border-tertiary {
+    border: 2px solid $tertiary-color;
+  }
+
+  // Estilos de bordes - Blanco
+  &--border-white {
+    border: 2px solid $white-color;
+  }
+
+  // Estilos de bordes - Negro
+  &--border-black {
+    border: 2px solid $black-color;
+  }
+}

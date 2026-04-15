@@ -1,0 +1,25 @@
+{
+    "name": "system-cars/sc-excel-products",
+    "description": "Plugin para exportar e importar productos de WooCommerce mediante Excel",
+    "type": "wordpress-plugin",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "System Cars",
+            "email": "info@systemcars.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.4",
+        "phpoffice/phpspreadsheet": "^1.29"
+    },
+    "autoload": {
+        "psr-4": {
+            "SC_Excel_Products\\": "includes/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true
+    }
+}

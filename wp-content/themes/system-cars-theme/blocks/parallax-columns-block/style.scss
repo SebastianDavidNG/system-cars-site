@@ -1,0 +1,60 @@
+@use "../../scss/variables" as *;
+
+// Editor Styles
+.parallax-block-editor {
+  position: relative;
+  border: 2px dashed #ccc;
+  min-height: 200px;
+  margin: 0;
+}
+
+// Frontend Styles
+.parallax-columns-block {
+  position: relative;
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  padding: 40px 20px;
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+
+  // Transición suave para el efecto parallax
+  transition: none;
+
+  // Hacer el background más grande para permitir el movimiento parallax
+  background-size: cover;
+
+  // Asegurar que el bloque tenga altura mínima visible
+  min-height: 300px;
+
+  // Flexbox para centrar contenido
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  // Contenedor del contenido interno
+  .parallax-content-wrapper {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  // Responsive
+  @media (max-width: 768px) {
+    min-height: 300px !important;
+    background-attachment: scroll !important;
+    background-position: center center !important;
+    padding: 30px 15px !important;
+  }
+}
+
+// Asegurar que no haya márgenes laterales
+.wp-block-system-cars-parallax-columns {
+  margin-left: 0;
+  margin-right: 0;
+  padding: 0;
+}
