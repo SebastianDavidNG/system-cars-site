@@ -2,4 +2,11 @@
 db_data/
 *.log
 .DS_Store
-*node_modules
+node_modules/
+
+# WordPress auto-generated / non-source files
+wp-content/uploads/
+wp-content/languages/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/backup-db/
