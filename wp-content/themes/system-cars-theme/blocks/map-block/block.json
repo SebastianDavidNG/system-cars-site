@@ -1,0 +1,35 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/map",
+  "version": "1.0.0",
+  "title": "Mapa",
+  "category": "system-cars",
+  "icon": "location-alt",
+  "description": "Mapa de Google Maps con la ubicación del negocio. Full-width.",
+  "keywords": ["mapa", "map", "google maps", "ubicacion", "location"],
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": ["top", "bottom"],
+      "padding": false
+    }
+  },
+  "textdomain": "system-cars-theme",
+  "attributes": {
+    "embedUrl": {
+      "type": "string",
+      "default": "https://www.google.com/maps?q=4.5951327,-74.0993906&hl=es&z=16&output=embed"
+    },
+    "mapTitle": {
+      "type": "string",
+      "default": "System Cars — Ubicación"
+    },
+    "height": {
+      "type": "number",
+      "default": 480
+    }
+  },
+  "editorScript": "file:../../dist/map-block.js",
+  "style": "file:../../dist/css/map-style.css"
+}

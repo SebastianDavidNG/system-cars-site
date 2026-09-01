@@ -1,0 +1,84 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/what-we-do",
+  "version": "1.2.0",
+  "title": "What We Do",
+  "category": "system-cars",
+  "icon": "columns",
+  "description": "Sección con subtítulo, título, texto e imágenes superpuestas. Permite invertir el orden de columnas.",
+  "keywords": ["what we do", "about", "imagenes", "columnas", "nosotros"],
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": ["top", "bottom"],
+      "padding": false
+    }
+  },
+  "textdomain": "system-cars-theme",
+  "attributes": {
+    "subtitle": {
+      "type": "string",
+      "default": "Lo que hacemos"
+    },
+    "title": {
+      "type": "string",
+      "default": "Título de la <strong>sección</strong>"
+    },
+    "content": {
+      "type": "string",
+      "default": "<p>Escribe aquí la descripción de esta sección.</p>"
+    },
+    "image1Url": {
+      "type": "string",
+      "default": ""
+    },
+    "image1Alt": {
+      "type": "string",
+      "default": ""
+    },
+    "image1Id": {
+      "type": "number",
+      "default": 0
+    },
+    "image2Url": {
+      "type": "string",
+      "default": ""
+    },
+    "image2Alt": {
+      "type": "string",
+      "default": ""
+    },
+    "image2Id": {
+      "type": "number",
+      "default": 0
+    },
+    "mediaPosition": {
+      "type": "string",
+      "default": "right"
+    },
+    "subtitleColor": {
+      "type": "string",
+      "default": "tertiary"
+    },
+    "titleColor": {
+      "type": "string",
+      "default": "black"
+    },
+    "titleAccentColor": {
+      "type": "string",
+      "default": "primary"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "tertiary"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "light"
+    }
+  },
+  "editorScript": "file:../../dist/what-we-do-block.js",
+  "editorStyle": "file:../../dist/css/what-we-do-editor.css",
+  "style": "file:../../dist/css/what-we-do-style.css"
+}

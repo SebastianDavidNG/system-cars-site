@@ -1,5 +1,5 @@
-const { useBlockProps, RichText, MediaUpload, URLInput } = wp.blockEditor;
-const { Button, IconButton } = wp.components;
+const { useBlockProps, RichText, MediaUpload, URLInput, InspectorControls } = wp.blockEditor;
+const { Button, IconButton, ToggleControl, RangeControl, PanelBody } = wp.components;
 const { createElement, Fragment, useState, useEffect } = wp.element;
 
 function ArrowLeftSVG(props) {
@@ -33,8 +33,10 @@ function ArrowRightSVG(props) {
 }
 
 export default function Edit({ attributes, setAttributes }) {
-  const { slides } = attributes;
+  const { slides, autoplay, autoplayDelay } = attributes;
   const [current, setCurrent] = useState(0);
+  const autoplayEnabled = autoplay !== false;
+  const delaySeconds = Number(autoplayDelay) > 0 ? Number(autoplayDelay) : 5;
 
   // Ajustamos current cuando el array cambia
   useEffect(() => {
@@ -62,6 +64,30 @@ export default function Edit({ attributes, setAttributes }) {
   return createElement(
     'div',
     useBlockProps(),
+    createElement(
+      InspectorControls,
+      null,
+      createElement(
+        PanelBody,
+        { title: 'Autoplay', initialOpen: true },
+        createElement(ToggleControl, {
+          label: 'Reproducción automática',
+          help: 'Avanza los slides automáticamente. Si está desactivado, solo cambian con flechas o paginación.',
+          checked: autoplayEnabled,
+          onChange: (value) => setAttributes({ autoplay: value }),
+        }),
+        autoplayEnabled &&
+          createElement(RangeControl, {
+            label: 'Duración de cada slide (segundos)',
+            value: delaySeconds,
+            onChange: (value) => setAttributes({ autoplayDelay: value }),
+            min: 2,
+            max: 15,
+            step: 1,
+            help: 'Tiempo que cada slide permanece visible antes de pasar al siguiente.',
+          })
+      )
+    ),
     // Aviso si no hay slides
     slides.length === 0 &&
       createElement('p', { className: 'editor-notice' }, 'Añade un slide para comenzar.'),

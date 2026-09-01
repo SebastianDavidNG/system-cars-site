@@ -88,7 +88,7 @@ $counts = Admin_Page::get_product_counts();
                     </h2>
                 </div>
                 <div class="sc-excel-section__content">
-                    <p><?php esc_html_e( 'Sube un archivo Excel para crear o actualizar productos. El archivo debe tener el formato correcto (usa un archivo exportado como plantilla).', 'sc-excel-products' ); ?></p>
+                    <p><?php esc_html_e( 'Sube un archivo Excel para crear o actualizar productos. Puedes usar un export de este sistema o el Excel del cliente (acepta columnas como "Precio dejando batería antigua" y "Peso en kilos").', 'sc-excel-products' ); ?></p>
 
                     <div class="sc-excel-dropzone" id="sc-dropzone">
                         <div class="sc-excel-dropzone__content">
@@ -173,8 +173,18 @@ $counts = Admin_Page::get_product_counts();
                     <tbody>
                         <tr>
                             <td><strong>ID</strong></td>
-                            <td><?php esc_html_e( 'ID del producto (vacío para nuevos)', 'sc-excel-products' ); ?></td>
+                            <td><?php esc_html_e( 'ID de WordPress (vacío para nuevos). Si el ID no existe o no coincide con el SKU, se crea/actualiza por SKU.', 'sc-excel-products' ); ?></td>
                             <td>123</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Precio oferta</strong></td>
+                            <td><?php esc_html_e( 'También acepta: "Precio dejando batería antigua"', 'sc-excel-products' ); ?></td>
+                            <td>452000</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Peso</strong></td>
+                            <td><?php esc_html_e( 'También acepta: "Peso en kilos"', 'sc-excel-products' ); ?></td>
+                            <td>18</td>
                         </tr>
                         <tr>
                             <td><strong>Tipo</strong></td>

@@ -204,3 +204,10 @@
         </a>
     </div>
 </div>
+
+<?php
+// Page title + breadcrumbs on all internal pages (not front page)
+if ( function_exists( 'sc_render_page_header' ) ) {
+	sc_render_page_header();
+}
+?>

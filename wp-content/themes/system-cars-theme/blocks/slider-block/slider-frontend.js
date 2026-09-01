@@ -26,6 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const totalSlides = sliderEl.querySelectorAll('.swiper-slide').length;
       const prevBtn = sliderEl.querySelector('.swiper-button-prev');
       const nextBtn = sliderEl.querySelector('.swiper-button-next');
+      const autoplayEnabled = sliderEl.dataset.autoplay !== 'false';
+      const autoplayDelay = parseInt(sliderEl.dataset.autoplayDelay, 10) || 5000;
 
       // Create pagination container if it doesn't exist
       let paginationEl = sliderEl.querySelector('.swiper-pagination');
@@ -39,8 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const swiper = new Swiper(sliderEl, {
         modules: [Navigation, Pagination, Autoplay, EffectFade],
         loop: totalSlides > 1,
-        autoplay: totalSlides > 1
-          ? { delay: 5000, disableOnInteraction: false }
+        autoplay: totalSlides > 1 && autoplayEnabled
+          ? { delay: autoplayDelay, disableOnInteraction: false }
           : false,
         navigation: {
           prevEl: prevBtn,

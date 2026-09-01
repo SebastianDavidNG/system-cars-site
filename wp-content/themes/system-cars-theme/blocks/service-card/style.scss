@@ -16,7 +16,7 @@
         // Contenido de la card
         .card-content {
             position: relative;
-            z-index: 2;
+            z-index: 3;
             transition: all 0.4s ease-in-out;
         }
 
@@ -28,49 +28,144 @@
         // Título y descripción
         .card-title,
         .card-description {
-            transition: transform 0.4s ease-in-out;
+            transition: transform 0.4s ease-in-out, color 0.4s ease-in-out;
         }
 
         // Flecha
         .card-arrow-link {
             opacity: 0;
             transform: translateX(-10px);
-            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out, color 0.4s ease-in-out;
+
+            .card-arrow-svg {
+                display: block;
+                transition: fill 0.4s ease-in-out;
+            }
         }
 
-        // Imagen de fondo hover (oculta por defecto)
+        // Imagen de fondo (siempre presente cuando hay hover image)
         .card-bg-hover {
-            opacity: 0;
-            transform: scale(1.1);
-            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+            background-size: cover;
+            background-position: center;
+            transform: scale(1.08);
+            transition: transform 0.5s ease-in-out;
+
+            // Scrim oscuro para legibilidad del texto
+            &::after {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: rgba($black-color, 0.25);
+                opacity: 0;
+                transition: opacity 0.4s ease-in-out;
+            }
         }
 
-        // Hover effects
-        &:hover {
-            // Mostrar imagen de fondo con zoom
+        // Capa de color sólido encima de la imagen
+        .card-bg-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            opacity: 1;
+            transition: opacity 0.4s ease-in-out;
+            pointer-events: none;
+
+            &--white {
+                background-color: $white-color;
+            }
+
+            &--primary {
+                background-color: $primary-color;
+            }
+
+            &--secondary {
+                background-color: $secondary-color;
+            }
+
+            &--tertiary {
+                background-color: $tertiary-color;
+            }
+        }
+
+        // Cards con imagen hover: fondo transparente, efecto overlay fade
+        &.card-item--has-hover {
+            background-color: transparent !important;
+            transition: color 0.4s ease-in-out;
+
+            // Tarjeta blanca: texto/flecha negros en reposo, blancos en hover
+            &.card-item--hover-white {
+                color: $black-color;
+
+                &:hover {
+                    color: $white-color;
+                }
+            }
+
+            &:hover {
+                .card-bg-overlay {
+                    opacity: 0.15;
+                }
+
+                .card-bg-hover {
+                    transform: scale(1);
+
+                    &::after {
+                        opacity: 1;
+                    }
+                }
+
+                .card-icon {
+                    transform: translateY(-5px);
+                }
+
+                .card-title {
+                    transform: translateY(-10px);
+                }
+
+                .card-description {
+                    transform: translateY(-5px);
+                }
+
+                .card-arrow-link {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+        }
+
+        // Cards sin imagen hover: comportamiento original
+        &:not(.card-item--has-hover) {
             .card-bg-hover {
-                opacity: 1;
-                transform: scale(1);
+                opacity: 0;
+                transform: scale(1.1);
+                transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
             }
 
-            // Icono permanece visible, solo se desplaza ligeramente
-            .card-icon {
-                transform: translateY(-5px);
-            }
+            &:hover {
+                .card-bg-hover {
+                    opacity: 1;
+                    transform: scale(1);
+                }
 
-            // Desplazar título y descripción hacia arriba
-            .card-title {
-                transform: translateY(-10px);
-            }
+                .card-icon {
+                    transform: translateY(-5px);
+                }
 
-            .card-description {
-                transform: translateY(-5px);
-            }
+                .card-title {
+                    transform: translateY(-10px);
+                }
 
-            // Mostrar flecha
-            .card-arrow-link {
-                opacity: 1;
-                transform: translateX(0);
+                .card-description {
+                    transform: translateY(-5px);
+                }
+
+                .card-arrow-link {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
             }
         }
     }

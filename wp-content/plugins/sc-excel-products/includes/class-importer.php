@@ -92,7 +92,7 @@ class Importer {
             // Validate headers
             $headers = $this->get_row_data( $sheet, 1, $highestColumn );
             if ( ! $this->validate_headers( $headers ) ) {
-                wp_send_json_error( array( 'message' => __( 'El formato del archivo no es válido. Asegúrate de usar un archivo exportado desde este sistema.', 'sc-excel-products' ) ) );
+                wp_send_json_error( array( 'message' => __( 'El formato del archivo no es válido. Se requieren al menos las columnas: ID, Tipo, SKU y Nombre.', 'sc-excel-products' ) ) );
             }
 
             // First pass: Process parent products (simple and variable)
@@ -302,6 +302,17 @@ class Importer {
     }
 
     /**
+     * Alternate header names accepted on import (client Excel formats).
+     * Canonical export headers remain the primary keys in $field_map.
+     *
+     * @var array
+     */
+    private static $header_aliases = array(
+        'sale_price' => array( 'Precio dejando batería antigua' ),
+        'weight'     => array( 'Peso en kilos' ),
+    );
+
+    /**
      * Map row data to product data array using headers
      *
      * @param array $headers  Headers array
@@ -314,7 +325,7 @@ class Importer {
         // Create header to index map
         $header_map = array_flip( $headers );
 
-        // Map standard fields
+        // Map standard fields (canonical headers used by export)
         $field_map = array(
             'ID'                => 'id',
             'Tipo'              => 'type',
@@ -344,6 +355,19 @@ class Importer {
                 $data[ $key ] = $row_data[ $header_map[ $header ] ];
             } else {
                 $data[ $key ] = '';
+            }
+        }
+
+        // Apply client/alternate header aliases when canonical column is empty
+        foreach ( self::$header_aliases as $key => $aliases ) {
+            if ( $data[ $key ] !== '' && $data[ $key ] !== null ) {
+                continue;
+            }
+            foreach ( $aliases as $alias ) {
+                if ( isset( $header_map[ $alias ] ) && isset( $row_data[ $header_map[ $alias ] ] ) ) {
+                    $data[ $key ] = $row_data[ $header_map[ $alias ] ];
+                    break;
+                }
             }
         }
 

@@ -1,0 +1,16 @@
+@use "./style.scss";
+
+.editor-styles-wrapper .sc-what-we-do,
+.sc-what-we-do {
+  .sc-what-we-do__subtitle,
+  .sc-what-we-do__title,
+  .sc-what-we-do__text {
+    outline: none;
+
+    &:hover,
+    &:focus {
+      outline: 1px dashed rgba(0, 32, 96, 0.35);
+      outline-offset: 4px;
+    }
+  }
+}

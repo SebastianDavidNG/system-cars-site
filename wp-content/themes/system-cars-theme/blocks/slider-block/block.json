@@ -9,6 +9,14 @@
   "textdomain": "system-cars-theme",
 
   "attributes": {
+    "autoplay": {
+      "type": "boolean",
+      "default": true
+    },
+    "autoplayDelay": {
+      "type": "number",
+      "default": 5
+    },
     "slides": {
       "type": "array",
       "default": [],

@@ -37,7 +37,7 @@ export default function Save({ attributes }) {
 
       // Main Description
       createElement(RichText.Content, {
-        tagName: 'p',
+        tagName: 'div',
         className: 'info-main-description',
         value: mainDescription,
       })
@@ -83,7 +83,7 @@ export default function Save({ attributes }) {
 
         // Column Description
         createElement(RichText.Content, {
-          tagName: 'p',
+          tagName: 'div',
           className: 'info-column-description',
           value: columnDescription,
         })

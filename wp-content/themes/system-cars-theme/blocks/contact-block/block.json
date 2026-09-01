@@ -1,0 +1,99 @@
+{
+  "apiVersion": 3,
+  "name": "system-cars/contact",
+  "version": "1.2.0",
+  "title": "Contacto",
+  "category": "system-cars",
+  "icon": "email",
+  "description": "Sección de contacto con información y formulario. Tipografía y colores alineados con What We Do.",
+  "keywords": ["contacto", "contact", "formulario", "email"],
+  "supports": {
+    "html": false,
+    "align": ["wide", "full"],
+    "spacing": {
+      "margin": ["top", "bottom"],
+      "padding": false
+    }
+  },
+  "textdomain": "system-cars-theme",
+  "attributes": {
+    "subtitle": {
+      "type": "string",
+      "default": "Contáctenos"
+    },
+    "title": {
+      "type": "string",
+      "default": "¿Tienes preguntas?"
+    },
+    "titleAccent": {
+      "type": "string",
+      "default": "¡Escríbenos!"
+    },
+    "description": {
+      "type": "string",
+      "default": "Estamos listos para ayudarte. Escríbenos o visita nuestro taller; nuestro equipo te responderá lo antes posible."
+    },
+    "address": {
+      "type": "string",
+      "default": "AV CALLE 1 # 25 - 42, Bogotá, Colombia"
+    },
+    "phone": {
+      "type": "string",
+      "default": "320 815 99 75"
+    },
+    "phoneLink": {
+      "type": "string",
+      "default": "tel:+573208159975"
+    },
+    "email": {
+      "type": "string",
+      "default": "contacto@systemcars.com"
+    },
+    "recipientEmail": {
+      "type": "string",
+      "default": "gerencia@systemcars.co"
+    },
+    "emailSubject": {
+      "type": "string",
+      "default": "Formulario desde la web"
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Enviar mensaje"
+    },
+    "privacyText": {
+      "type": "string",
+      "default": "Acepto la política de privacidad del sitio."
+    },
+    "successMessage": {
+      "type": "string",
+      "default": "¡Gracias! Tu mensaje fue enviado correctamente."
+    },
+    "errorMessage": {
+      "type": "string",
+      "default": "No se pudo enviar el mensaje. Inténtalo de nuevo."
+    },
+    "subtitleColor": {
+      "type": "string",
+      "default": "tertiary"
+    },
+    "titleColor": {
+      "type": "string",
+      "default": "black"
+    },
+    "titleAccentColor": {
+      "type": "string",
+      "default": "primary"
+    },
+    "textColor": {
+      "type": "string",
+      "default": "tertiary"
+    },
+    "backgroundColor": {
+      "type": "string",
+      "default": "white"
+    }
+  },
+  "editorScript": "file:../../dist/contact-block.js",
+  "style": "file:../../dist/css/contact-style.css"
+}

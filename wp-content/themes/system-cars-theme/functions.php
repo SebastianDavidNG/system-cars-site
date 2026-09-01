@@ -24,6 +24,169 @@ function sc_theme_setup() {
 }
 add_action('after_setup_theme', 'sc_theme_setup');
 
+/**
+ * Whether to show the internal page header (title + breadcrumbs).
+ * Hidden on the front page (home with hero/slider).
+ *
+ * @return bool
+ */
+function sc_should_show_page_header() {
+	if ( is_front_page() ) {
+		return false;
+	}
+
+	return (bool) apply_filters( 'sc_should_show_page_header', true );
+}
+
+/**
+ * Build title and breadcrumbs for the internal page header.
+ *
+ * @return array{title: string, breadcrumbs: array<int, array{label: string, url: string}>}
+ */
+function sc_get_page_header_data() {
+	$home = array(
+		'label' => __( 'Inicio', 'system-cars-theme' ),
+		'url'   => home_url( '/' ),
+	);
+
+	$title = '';
+	$crumbs = array();
+
+	if ( function_exists( 'is_woocommerce' ) && is_woocommerce() ) {
+		if ( is_shop() ) {
+			$title  = woocommerce_page_title( false );
+			$crumbs = array(
+				$home,
+				array( 'label' => $title, 'url' => '' ),
+			);
+		} elseif ( is_product_taxonomy() ) {
+			$title    = single_term_title( '', false );
+			$shop_url = get_permalink( wc_get_page_id( 'shop' ) );
+			$crumbs   = array(
+				$home,
+				array(
+					'label' => __( 'Tienda', 'system-cars-theme' ),
+					'url'   => $shop_url,
+				),
+				array( 'label' => $title, 'url' => '' ),
+			);
+		} elseif ( is_product() ) {
+			$product_id = get_queried_object_id();
+			$title      = get_the_title( $product_id );
+			$shop_url   = get_permalink( wc_get_page_id( 'shop' ) );
+			$crumbs     = array(
+				$home,
+				array(
+					'label' => __( 'Tienda', 'system-cars-theme' ),
+					'url'   => $shop_url,
+				),
+			);
+
+			$terms = get_the_terms( $product_id, 'product_cat' );
+			if ( $terms && ! is_wp_error( $terms ) ) {
+				$term = reset( $terms );
+				$crumbs[] = array(
+					'label' => $term->name,
+					'url'   => get_term_link( $term ),
+				);
+			}
+
+			$crumbs[] = array( 'label' => $title, 'url' => '' );
+		} else {
+			$title = function_exists( 'woocommerce_page_title' ) ? woocommerce_page_title( false ) : '';
+			if ( ! $title ) {
+				$title = get_the_title( get_queried_object_id() );
+			}
+			$crumbs = array(
+				$home,
+				array( 'label' => $title, 'url' => '' ),
+			);
+		}
+	} elseif ( function_exists( 'is_cart' ) && ( is_cart() || is_checkout() || is_account_page() ) ) {
+		$title  = get_the_title( get_queried_object_id() );
+		$crumbs = array( $home );
+
+		if ( ! is_cart() && function_exists( 'wc_get_page_id' ) ) {
+			$crumbs[] = array(
+				'label' => __( 'Tienda', 'system-cars-theme' ),
+				'url'   => get_permalink( wc_get_page_id( 'shop' ) ),
+			);
+		}
+
+		$crumbs[] = array( 'label' => $title, 'url' => '' );
+	} elseif ( is_404() ) {
+		$title  = __( 'Página no encontrada', 'system-cars-theme' );
+		$crumbs = array(
+			$home,
+			array( 'label' => $title, 'url' => '' ),
+		);
+	} elseif ( is_search() ) {
+		$title  = sprintf(
+			/* translators: %s: search query */
+			__( 'Resultados para: %s', 'system-cars-theme' ),
+			get_search_query()
+		);
+		$crumbs = array(
+			$home,
+			array(
+				'label' => __( 'Búsqueda', 'system-cars-theme' ),
+				'url'   => '',
+			),
+		);
+	} elseif ( is_home() ) {
+		$posts_page_id = (int) get_option( 'page_for_posts' );
+		$title         = $posts_page_id ? get_the_title( $posts_page_id ) : __( 'Blog', 'system-cars-theme' );
+		$crumbs        = array(
+			$home,
+			array( 'label' => $title, 'url' => '' ),
+		);
+	} elseif ( is_singular() ) {
+		$title  = get_the_title( get_queried_object_id() );
+		$crumbs = array(
+			$home,
+			array( 'label' => $title, 'url' => '' ),
+		);
+	} elseif ( is_archive() ) {
+		$title  = wp_strip_all_tags( get_the_archive_title() );
+		$crumbs = array(
+			$home,
+			array( 'label' => $title, 'url' => '' ),
+		);
+	} else {
+		$title = get_the_title( get_queried_object_id() );
+		if ( ! $title ) {
+			$title = wp_get_document_title();
+		}
+		$crumbs = array(
+			$home,
+			array( 'label' => $title, 'url' => '' ),
+		);
+	}
+
+	return apply_filters(
+		'sc_page_header_data',
+		array(
+			'title'       => $title,
+			'breadcrumbs' => $crumbs,
+		)
+	);
+}
+
+/**
+ * Render the internal page header template part.
+ */
+function sc_render_page_header() {
+	if ( ! sc_should_show_page_header() ) {
+		return;
+	}
+
+	$data = sc_get_page_header_data();
+	if ( empty( $data['title'] ) ) {
+		return;
+	}
+
+	get_template_part( 'template-parts/page', 'header', $data );
+}
 
 // Add "active" class to menu items
 function sc_menu_active_class($classes, $item) {
@@ -56,6 +219,9 @@ function sc_register_blocks_from_metadata() {
         'info-image-block',
         'parallax-columns-block',
         'video-modal-block',
+        'what-we-do-block',
+        'map-block',
+        'contact-block',
     ];
 
     foreach ( $blocks as $block ) {
@@ -182,6 +348,189 @@ function system_cars_enqueue_video_modal_script($block_content, $block) {
 add_filter('render_block', 'system_cars_enqueue_video_modal_script', 10, 2);
 
 /**
+ * Encolar script del formulario de contacto cuando el bloque está presente.
+ */
+function sc_enqueue_contact_form_script( $block_content, $block ) {
+    if ( 'system-cars/contact' !== ( $block['blockName'] ?? '' ) ) {
+        return $block_content;
+    }
+
+    $script_path = get_template_directory() . '/dist/contact-frontend.js';
+    if ( ! file_exists( $script_path ) ) {
+        return $block_content;
+    }
+
+    wp_enqueue_script(
+        'system-cars-contact-frontend',
+        get_template_directory_uri() . '/dist/contact-frontend.js',
+        [],
+        filemtime( $script_path ),
+        true
+    );
+
+    wp_localize_script(
+        'system-cars-contact-frontend',
+        'scContactForm',
+        [
+            'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+            'nonce'   => wp_create_nonce( 'sc_contact_form' ),
+            'action'  => 'sc_contact_form_submit',
+        ]
+    );
+
+    // Firma HMAC del destinatario/asunto para que no se puedan manipular en el cliente.
+    $attrs     = is_array( $block['attrs'] ?? null ) ? $block['attrs'] : [];
+    $recipient = sanitize_email( $attrs['recipientEmail'] ?? '' );
+    $subject   = sanitize_text_field( $attrs['emailSubject'] ?? 'Formulario desde la web' );
+
+    if ( is_email( $recipient ) && false !== strpos( $block_content, 'sc-contact__form' ) ) {
+        $sig = sc_contact_form_signature( $recipient, $subject );
+        $block_content = preg_replace(
+            '/(<form\b[^>]*\bsc-contact__form\b[^>]*)(>)/i',
+            '$1 data-sig="' . esc_attr( $sig ) . '"$2',
+            $block_content,
+            1
+        );
+    }
+
+    return $block_content;
+}
+add_filter( 'render_block', 'sc_enqueue_contact_form_script', 10, 2 );
+
+/**
+ * Firma segura para destinatario + asunto del formulario de contacto.
+ */
+function sc_contact_form_signature( $recipient, $subject ) {
+    $payload = strtolower( trim( (string) $recipient ) ) . '|' . trim( (string) $subject );
+    return hash_hmac( 'sha256', $payload, wp_salt( 'nonce' ) );
+}
+
+/**
+ * AJAX: envío del formulario de contacto.
+ */
+function sc_contact_form_submit() {
+    check_ajax_referer( 'sc_contact_form', 'nonce' );
+
+    // Honeypot — bots fill this; humans leave it empty.
+    if ( ! empty( $_POST['sc_hp'] ) ) {
+        wp_send_json_success(
+            [
+                'message' => __( '¡Gracias! Tu mensaje fue enviado correctamente.', 'system-cars-theme' ),
+            ]
+        );
+    }
+
+    $name      = isset( $_POST['name'] ) ? sanitize_text_field( wp_unslash( $_POST['name'] ) ) : '';
+    $email     = isset( $_POST['email'] ) ? sanitize_email( wp_unslash( $_POST['email'] ) ) : '';
+    $phone     = isset( $_POST['phone'] ) ? sanitize_text_field( wp_unslash( $_POST['phone'] ) ) : '';
+    $message   = isset( $_POST['message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['message'] ) ) : '';
+    $privacy   = isset( $_POST['privacy'] ) ? sanitize_text_field( wp_unslash( $_POST['privacy'] ) ) : '';
+    $recipient = isset( $_POST['recipient'] ) ? sanitize_email( wp_unslash( $_POST['recipient'] ) ) : '';
+    $subject   = isset( $_POST['subject'] ) ? sanitize_text_field( wp_unslash( $_POST['subject'] ) ) : '';
+    $sig       = isset( $_POST['sig'] ) ? sanitize_text_field( wp_unslash( $_POST['sig'] ) ) : '';
+
+    if ( '1' !== $privacy ) {
+        wp_send_json_error(
+            [
+                'message' => __( 'Debes aceptar la política de privacidad.', 'system-cars-theme' ),
+            ],
+            400
+        );
+    }
+
+    if ( '' === $name || ! is_email( $email ) || '' === $message ) {
+        wp_send_json_error(
+            [
+                'message' => __( 'Por favor completa los campos obligatorios.', 'system-cars-theme' ),
+            ],
+            400
+        );
+    }
+
+    if ( '' === $subject ) {
+        $subject = 'Formulario desde la web';
+    }
+
+    // Validar destinatario firmado (evita que alguien redirija el correo).
+    $expected_sig = is_email( $recipient ) ? sc_contact_form_signature( $recipient, $subject ) : '';
+    if ( ! is_email( $recipient ) || ! $sig || ! hash_equals( $expected_sig, $sig ) ) {
+        $recipient = apply_filters( 'sc_contact_form_fallback_recipient', 'gerencia@systemcars.co' );
+        if ( ! is_email( $recipient ) ) {
+            $recipient = get_option( 'admin_email' );
+        }
+    }
+
+    $recipient = apply_filters( 'sc_contact_form_recipient', $recipient );
+
+    $site_name = wp_specialchars_decode( get_bloginfo( 'name' ), ENT_QUOTES );
+    $body_lines = [
+        sprintf( 'Nuevo mensaje desde el formulario de contacto de %s', $site_name ),
+        '',
+        'Nombre: ' . $name,
+        'Email: ' . $email,
+    ];
+
+    if ( '' !== $phone ) {
+        $body_lines[] = 'Teléfono: ' . $phone;
+    }
+
+    $body_lines[] = '';
+    $body_lines[] = 'Mensaje:';
+    $body_lines[] = $message;
+    $body_lines[] = '';
+    $body_lines[] = '---';
+    $referer = isset( $_SERVER['HTTP_REFERER'] )
+        ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) )
+        : home_url( '/' );
+    $body_lines[] = 'Enviado desde: ' . $referer;
+
+    // From: usar correo del sitio; Reply-To: el visitante (para responder fácil).
+    $from_email = apply_filters( 'sc_contact_form_from_email', get_option( 'admin_email' ) );
+    if ( ! is_email( $from_email ) ) {
+        $from_email = get_option( 'admin_email' );
+    }
+
+    $headers = [
+        'Content-Type: text/plain; charset=UTF-8',
+        sprintf( 'From: %s <%s>', $site_name, $from_email ),
+        sprintf( 'Reply-To: %s <%s>', $name, $email ),
+    ];
+
+    $mail_error = null;
+    $on_mail_failed = static function ( $error ) use ( &$mail_error ) {
+        if ( is_wp_error( $error ) ) {
+            $mail_error = $error->get_error_message();
+        }
+    };
+    add_action( 'wp_mail_failed', $on_mail_failed );
+
+    $sent = wp_mail( $recipient, $subject, implode( "\n", $body_lines ), $headers );
+
+    remove_action( 'wp_mail_failed', $on_mail_failed );
+
+    if ( ! $sent ) {
+        if ( defined( 'WP_DEBUG' ) && WP_DEBUG && $mail_error ) {
+            error_log( '[SC Contact Form] wp_mail failed: ' . $mail_error );
+        }
+
+        wp_send_json_error(
+            [
+                'message' => __( 'No se pudo enviar el mensaje. Inténtalo de nuevo.', 'system-cars-theme' ),
+            ],
+            500
+        );
+    }
+
+    wp_send_json_success(
+        [
+            'message' => __( '¡Gracias! Tu mensaje fue enviado correctamente.', 'system-cars-theme' ),
+        ]
+    );
+}
+add_action( 'wp_ajax_sc_contact_form_submit', 'sc_contact_form_submit' );
+add_action( 'wp_ajax_nopriv_sc_contact_form_submit', 'sc_contact_form_submit' );
+
+/**
  * LIMPIEZA DE CACHÉ - YA SE EJECUTÓ, COMENTADO PARA NO EJECUTAR NUEVAMENTE
  * IMPORTANTE: Esta función ya se ejecutó y limpió la caché
  */
@@ -220,6 +569,9 @@ function system_cars_block_editor_assets() {
         'info-image-block' => [],
         'parallax-columns-block' => [],
         'video-modal-block' => [],
+        'what-we-do-block' => ['editorStyle' => 'what-we-do-editor.css'],
+        'map-block' => [],
+        'contact-block' => [],
     ];
 
     foreach ($blocks as $block_name => $config) {

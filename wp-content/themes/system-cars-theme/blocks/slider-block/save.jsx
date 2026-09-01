@@ -3,11 +3,18 @@ const { useBlockProps, RichText } = wp.blockEditor;
 const { createElement, Fragment } = wp.element;
 
 export default function Save({ attributes }) {
-  const { slides } = attributes;
+  const { slides, autoplay, autoplayDelay } = attributes;
+  const delaySeconds = Number(autoplayDelay) > 0 ? Number(autoplayDelay) : 5;
+  const autoplayEnabled = autoplay !== false;
 
   return createElement(
     'div',
-    useBlockProps.save({ className: 'swiper wp-block-system-cars-slider-block', 'data-slide-count': slides.length }),
+    useBlockProps.save({
+      className: 'swiper wp-block-system-cars-slider-block',
+      'data-slide-count': slides.length,
+      'data-autoplay': autoplayEnabled ? 'true' : 'false',
+      'data-autoplay-delay': String(delaySeconds * 1000),
+    }),
     createElement(
       'div',
       { className: 'swiper-wrapper' },

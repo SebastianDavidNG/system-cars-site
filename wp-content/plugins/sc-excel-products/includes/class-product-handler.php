@@ -317,6 +317,39 @@ class Product_Handler {
     }
 
     /**
+     * Resolve an existing product for import.
+     * Only trusts Excel ID when it points to a WooCommerce product whose SKU
+     * matches the row (client files often put non-WP IDs / barcodes in ID).
+     *
+     * @param int    $product_id Candidate WordPress / Excel ID
+     * @param string $sku        Row SKU
+     * @return \WC_Product|null
+     */
+    public static function find_existing_product( $product_id, $sku ) {
+        if ( $product_id ) {
+            $by_id = wc_get_product( $product_id );
+            if ( $by_id ) {
+                $existing_sku = (string) $by_id->get_sku();
+                // Trust ID only when row has no SKU, or SKUs match
+                if ( $sku === '' || $existing_sku === $sku ) {
+                    return $by_id;
+                }
+                // Otherwise ID collides with a different product — ignore it
+            }
+        }
+
+        if ( $sku !== '' ) {
+            $existing_id = wc_get_product_id_by_sku( $sku );
+            if ( $existing_id ) {
+                $product = wc_get_product( $existing_id );
+                return $product ? $product : null;
+            }
+        }
+
+        return null;
+    }
+
+    /**
      * Create or update product from import data
      *
      * @param array $data Row data from Excel
@@ -333,17 +366,8 @@ class Product_Handler {
                 return self::create_or_update_variation( $data );
             }
 
-            // Try to find existing product
-            $product = null;
-            if ( $product_id ) {
-                $product = wc_get_product( $product_id );
-            }
-            if ( ! $product && $sku ) {
-                $existing_id = wc_get_product_id_by_sku( $sku );
-                if ( $existing_id ) {
-                    $product = wc_get_product( $existing_id );
-                }
-            }
+            // Try to find existing product (safe ID + SKU)
+            $product = self::find_existing_product( $product_id, $sku );
 
             // Create new product if not found
             $is_new = false;
@@ -408,16 +432,10 @@ class Product_Handler {
                 );
             }
 
-            // Try to find existing variation
-            $variation = null;
-            if ( $variation_id ) {
-                $variation = wc_get_product( $variation_id );
-            }
-            if ( ! $variation && $sku ) {
-                $existing_id = wc_get_product_id_by_sku( $sku );
-                if ( $existing_id ) {
-                    $variation = wc_get_product( $existing_id );
-                }
+            // Try to find existing variation (safe ID + SKU)
+            $variation = self::find_existing_product( $variation_id, $sku );
+            if ( $variation && ! $variation->is_type( 'variation' ) ) {
+                $variation = null;
             }
 
             // Create new variation if not found

@@ -111,23 +111,35 @@ export default function Edit({ attributes, setAttributes }) {
         },
 
         // Main Title
-        createElement(RichText, {
-          tagName: 'h2',
-          className: 'info-main-title',
-          value: mainTitle,
-          onChange: (value) => setAttributes({ mainTitle: value }),
-          placeholder: 'Título principal...',
-        }),
+        createElement(
+          'div',
+          { className: 'info-image-field info-image-field--main-title' },
+          createElement(RichText, {
+            identifier: 'mainTitle',
+            tagName: 'h2',
+            className: 'info-main-title',
+            value: mainTitle,
+            onChange: (value) => setAttributes({ mainTitle: value }),
+            placeholder: 'Título principal...',
+            allowedFormats: ['core/bold', 'core/italic'],
+          })
+        ),
 
         // Main Description
-        createElement(RichText, {
-          tagName: 'p',
-          className: 'info-main-description',
-          value: mainDescription,
-          onChange: (value) => setAttributes({ mainDescription: value }),
-          placeholder: 'Descripción principal...',
-          multiline: 'br',
-        })
+        createElement(
+          'div',
+          { className: 'info-image-field info-image-field--main-description' },
+          createElement(RichText, {
+            identifier: 'mainDescription',
+            tagName: 'div',
+            className: 'info-main-description',
+            value: mainDescription,
+            onChange: (value) => setAttributes({ mainDescription: value }),
+            placeholder: 'Descripción principal...',
+            multiline: 'p',
+            allowedFormats: ['core/bold', 'core/italic', 'core/link'],
+          })
+        )
       ),
 
       // Columns Section
@@ -174,23 +186,35 @@ export default function Edit({ attributes, setAttributes }) {
           },
 
           // Column Title
-          createElement(RichText, {
-            tagName: 'h4',
-            className: 'info-column-title',
-            value: columnTitle,
-            onChange: (value) => setAttributes({ columnTitle: value }),
-            placeholder: 'Título de la columna...',
-          }),
+          createElement(
+            'div',
+            { className: 'info-image-field info-image-field--column-title' },
+            createElement(RichText, {
+              identifier: 'columnTitle',
+              tagName: 'h4',
+              className: 'info-column-title',
+              value: columnTitle,
+              onChange: (value) => setAttributes({ columnTitle: value }),
+              placeholder: 'Título de la columna...',
+              allowedFormats: ['core/bold', 'core/italic'],
+            })
+          ),
 
           // Column Description
-          createElement(RichText, {
-            tagName: 'p',
-            className: 'info-column-description',
-            value: columnDescription,
-            onChange: (value) => setAttributes({ columnDescription: value }),
-            placeholder: 'Descripción de la columna...',
-            multiline: 'br',
-          })
+          createElement(
+            'div',
+            { className: 'info-image-field info-image-field--column-description' },
+            createElement(RichText, {
+              identifier: 'columnDescription',
+              tagName: 'div',
+              className: 'info-column-description',
+              value: columnDescription,
+              onChange: (value) => setAttributes({ columnDescription: value }),
+              placeholder: 'Descripción de la columna...',
+              multiline: 'p',
+              allowedFormats: ['core/bold', 'core/italic', 'core/link'],
+            })
+          )
         )
       )
     )

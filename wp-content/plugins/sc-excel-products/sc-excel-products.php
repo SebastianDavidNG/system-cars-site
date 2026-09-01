@@ -3,7 +3,7 @@
  * Plugin Name: SC Excel Products
  * Plugin URI: https://systemcars.co
  * Description: Exportar e importar productos de WooCommerce mediante archivos Excel (.xlsx)
- * Version: 1.0.0
+ * Version: 1.1.0
  * Author: System Cars
  * Author URI: https://systemcars.co
  * Text Domain: sc-excel-products
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 // Plugin constants
-define( 'SC_EXCEL_PRODUCTS_VERSION', '1.0.0' );
+define( 'SC_EXCEL_PRODUCTS_VERSION', '1.1.0' );
 define( 'SC_EXCEL_PRODUCTS_PATH', plugin_dir_path( __FILE__ ) );
 define( 'SC_EXCEL_PRODUCTS_URL', plugin_dir_url( __FILE__ ) );
 define( 'SC_EXCEL_PRODUCTS_BASENAME', plugin_basename( __FILE__ ) );

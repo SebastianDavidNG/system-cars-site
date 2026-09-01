@@ -24,20 +24,7 @@ $max_price = ceil($price_range->max_price ?? 1000);
 // Get current filter values from URL
 $current_min = isset($_GET['min_price']) ? floatval($_GET['min_price']) : $min_price;
 $current_max = isset($_GET['max_price']) ? floatval($_GET['max_price']) : $max_price;
-
-// Get page title
-$page_title = woocommerce_page_title( false );
 ?>
-
-<!-- Page Header -->
-<section class="sc-page-header">
-    <h1 class="sc-page-header__title"><?php echo esc_html( $page_title ); ?></h1>
-    <nav class="sc-page-header__breadcrumbs">
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Inicio', 'system-cars-theme' ); ?></a>
-        <span class="breadcrumb-separator"></span>
-        <span class="breadcrumb-current"><?php echo esc_html( $page_title ); ?></span>
-    </nav>
-</section>
 
 <main id="main-content" role="main" class="container mx-auto py-8 px-4">
     <div class="shop-layout">

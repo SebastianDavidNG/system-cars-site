@@ -20,6 +20,12 @@
   color: #333;
   max-width: 900px;
 }
+.info-image-block .info-top-section .info-main-description p {
+  margin: 0 0 0.5em;
+}
+.info-image-block .info-top-section .info-main-description p:last-child {
+  margin-bottom: 0;
+}
 .info-image-block .info-top-section .info-main-description br {
   content: "";
   display: block;
@@ -64,6 +70,12 @@
   font-size: clamp(0.9rem, 1.8vw, 1rem);
   line-height: 1.8;
   color: #555;
+}
+.info-image-block .info-columns-section .info-column-right .info-column-description p {
+  margin: 0 0 0.5em;
+}
+.info-image-block .info-columns-section .info-column-right .info-column-description p:last-child {
+  margin-bottom: 0;
 }
 .info-image-block .info-columns-section .info-column-right .info-column-description br {
   content: "";

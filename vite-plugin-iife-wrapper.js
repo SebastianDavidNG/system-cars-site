@@ -14,6 +14,9 @@ export default function iifeWrapper() {
         'info-image-block',
         'parallax-columns-block',
         'video-modal-block',
+        'what-we-do-block',
+        'map-block',
+        'contact-block',
       ];
 
       for (const fileName in bundle) {

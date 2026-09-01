@@ -1,47 +1,90 @@
+.wp-block-system-cars-info-image .info-top-section,
+.wp-block-system-cars-info-image .info-column-right,
+.info-image-block .info-top-section,
+.info-image-block .info-column-right {
+  pointer-events: none;
+}
+.wp-block-system-cars-info-image .info-image-field,
+.info-image-block .info-image-field {
+  position: relative;
+  pointer-events: auto;
+  margin-bottom: 0.5rem;
+}
+.wp-block-system-cars-info-image .info-image-field:last-child,
+.info-image-block .info-image-field:last-child {
+  margin-bottom: 0;
+}
 .wp-block-system-cars-info-image .info-main-title,
 .wp-block-system-cars-info-image .info-main-description,
 .wp-block-system-cars-info-image .info-column-title,
-.wp-block-system-cars-info-image .info-column-description {
+.wp-block-system-cars-info-image .info-column-description,
+.info-image-block .info-main-title,
+.info-image-block .info-main-description,
+.info-image-block .info-column-title,
+.info-image-block .info-column-description {
   position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
   padding: 8px !important;
   border: 2px dashed transparent;
   border-radius: 4px;
-  transition: all 0.2s ease;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
   cursor: text;
+  box-sizing: border-box;
 }
 .wp-block-system-cars-info-image .info-main-title:hover,
 .wp-block-system-cars-info-image .info-main-description:hover,
 .wp-block-system-cars-info-image .info-column-title:hover,
-.wp-block-system-cars-info-image .info-column-description:hover {
+.wp-block-system-cars-info-image .info-column-description:hover,
+.info-image-block .info-main-title:hover,
+.info-image-block .info-main-description:hover,
+.info-image-block .info-column-title:hover,
+.info-image-block .info-column-description:hover {
   background-color: #f0f6fc;
   border-color: #cce0f5;
 }
-.wp-block-system-cars-info-image .info-main-title:focus, .wp-block-system-cars-info-image .info-main-title.is-selected,
+.wp-block-system-cars-info-image .info-main-title:focus,
 .wp-block-system-cars-info-image .info-main-description:focus,
-.wp-block-system-cars-info-image .info-main-description.is-selected,
 .wp-block-system-cars-info-image .info-column-title:focus,
-.wp-block-system-cars-info-image .info-column-title.is-selected,
 .wp-block-system-cars-info-image .info-column-description:focus,
-.wp-block-system-cars-info-image .info-column-description.is-selected {
+.info-image-block .info-main-title:focus,
+.info-image-block .info-main-description:focus,
+.info-image-block .info-column-title:focus,
+.info-image-block .info-column-description:focus {
   background-color: #f0f6fc !important;
   border-color: #0073aa !important;
   outline: none;
 }
-.wp-block-system-cars-info-image .info-main-title:empty::before,
-.wp-block-system-cars-info-image .info-main-description:empty::before,
-.wp-block-system-cars-info-image .info-column-title:empty::before,
-.wp-block-system-cars-info-image .info-column-description:empty::before {
-  color: #999;
-  opacity: 0.7;
+.wp-block-system-cars-info-image .info-main-description,
+.wp-block-system-cars-info-image .info-column-description,
+.info-image-block .info-main-description,
+.info-image-block .info-column-description {
+  min-height: 1.5em;
+}
+.wp-block-system-cars-info-image .info-main-description p,
+.wp-block-system-cars-info-image .info-column-description p,
+.info-image-block .info-main-description p,
+.info-image-block .info-column-description p {
+  margin: 0 0 0.5em;
+}
+.wp-block-system-cars-info-image .info-main-description p:last-child,
+.wp-block-system-cars-info-image .info-column-description p:last-child,
+.info-image-block .info-main-description p:last-child,
+.info-image-block .info-column-description p:last-child {
+  margin-bottom: 0;
 }
 .wp-block-system-cars-info-image .info-main-title:hover,
-.wp-block-system-cars-info-image .info-column-title:hover {
+.wp-block-system-cars-info-image .info-column-title:hover,
+.info-image-block .info-main-title:hover,
+.info-image-block .info-column-title:hover {
   background-color: #fff9e6;
   border-color: #ffe08a;
 }
-.wp-block-system-cars-info-image .info-main-title:focus, .wp-block-system-cars-info-image .info-main-title.is-selected,
+.wp-block-system-cars-info-image .info-main-title:focus,
 .wp-block-system-cars-info-image .info-column-title:focus,
-.wp-block-system-cars-info-image .info-column-title.is-selected {
+.info-image-block .info-main-title:focus,
+.info-image-block .info-column-title:focus {
   background-color: #fff9e6 !important;
   border-color: #f0a500 !important;
 }

@@ -36,20 +36,39 @@
   /* center overlay content */
   .slide-content {
     @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
-      text-white text-center p-4 md:p-8 z-10 pointer-events-none;
+      text-white text-center z-10 pointer-events-none;
+    width: min(92%, 640px);
+    padding: 0.75rem 1rem;
+
+    @screen md {
+      width: min(85%, 720px);
+      padding: 1.5rem 2rem;
+    }
+
+    @screen lg {
+      width: auto;
+      max-width: none;
+      @apply p-8;
+    }
   }
 
   /* animated title */
   .slide-text {
-    @apply font-bold mb-4 uppercase;
-    font-size: 2.25rem; /* Mobile */
+    @apply font-bold mb-3 uppercase;
+    font-size: clamp(1.375rem, 4.5vw, 1.75rem); /* Mobile: ~22–28px */
+    line-height: 1.15;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+
     @screen md {
-      font-size: 3.75rem; /* Tablet */
+      font-size: clamp(1.875rem, 3.5vw, 2.5rem); /* Tablet: ~30–40px */
+      margin-bottom: 1rem;
+      line-height: 1.12;
     }
+
     @screen lg {
       font-size: 5rem; /* Desktop */
       line-height: 1;
+      margin-bottom: 1rem;
     }
 
     opacity: 0;
@@ -59,11 +78,24 @@
 
   /* animated button with fade effect */
   .slide-button {
-    @apply inline-block mt-4 px-6 py-3 border-2 border-white font-bold text-white text-lg uppercase;
+    @apply inline-block mt-3 border-2 border-white font-bold text-white uppercase;
+    padding: 0.625rem 1.25rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
     background-color: transparent;
     opacity: 0;
     transform: translateY(20px);
     pointer-events: none;
+
+    @screen md {
+      @apply mt-4;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.875rem;
+    }
+
+    @screen lg {
+      @apply mt-4 px-6 py-3 text-lg;
+    }
 
     /* Smooth fade transition for hover */
     transition:

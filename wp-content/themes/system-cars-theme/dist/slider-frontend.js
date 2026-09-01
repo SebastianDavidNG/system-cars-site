@@ -5282,6 +5282,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const totalSlides = sliderEl.querySelectorAll(".swiper-slide").length;
     const prevBtn = sliderEl.querySelector(".swiper-button-prev");
     const nextBtn = sliderEl.querySelector(".swiper-button-next");
+    const autoplayEnabled = sliderEl.dataset.autoplay !== "false";
+    const autoplayDelay = parseInt(sliderEl.dataset.autoplayDelay, 10) || 5e3;
     let paginationEl = sliderEl.querySelector(".swiper-pagination");
     if (!paginationEl) {
       paginationEl = document.createElement("div");
@@ -5291,7 +5293,7 @@ document.addEventListener("DOMContentLoaded", () => {
     new Swiper(sliderEl, {
       modules: [Navigation, Pagination, Autoplay, EffectFade],
       loop: totalSlides > 1,
-      autoplay: totalSlides > 1 ? { delay: 5e3, disableOnInteraction: false } : false,
+      autoplay: totalSlides > 1 && autoplayEnabled ? { delay: autoplayDelay, disableOnInteraction: false } : false,
       navigation: {
         prevEl: prevBtn,
         nextEl: nextBtn,

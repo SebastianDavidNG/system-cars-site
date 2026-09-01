@@ -24,16 +24,6 @@ while ( have_posts() ) :
         return;
     }
 
-    // Get product categories for breadcrumb
-    $terms = get_the_terms( get_the_ID(), 'product_cat' );
-    $category_name = '';
-    $category_link = '';
-    if ( $terms && ! is_wp_error( $terms ) ) {
-        $term = reset( $terms );
-        $category_name = $term->name;
-        $category_link = get_term_link( $term );
-    }
-
     // Get all images for gallery
     $main_image_id = $product->get_image_id();
     $gallery_ids = $product->get_gallery_image_ids();
@@ -46,22 +36,6 @@ while ( have_posts() ) :
         $all_images = array_merge( $all_images, $gallery_ids );
     }
 ?>
-
-<!-- Page Header -->
-<section class="sc-page-header">
-    <h1 class="sc-page-header__title"><?php the_title(); ?></h1>
-    <nav class="sc-page-header__breadcrumbs">
-        <a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Inicio', 'system-cars-theme' ); ?></a>
-        <span class="breadcrumb-separator"></span>
-        <a href="<?php echo esc_url( get_permalink( wc_get_page_id( 'shop' ) ) ); ?>"><?php esc_html_e( 'Tienda', 'system-cars-theme' ); ?></a>
-        <?php if ( $category_name ) : ?>
-            <span class="breadcrumb-separator"></span>
-            <a href="<?php echo esc_url( $category_link ); ?>"><?php echo esc_html( $category_name ); ?></a>
-        <?php endif; ?>
-        <span class="breadcrumb-separator"></span>
-        <span class="breadcrumb-current"><?php the_title(); ?></span>
-    </nav>
-</section>
 
 <main id="main-content" role="main" class="sc-single-product">
     <div class="container mx-auto px-4 py-8 lg:py-12">

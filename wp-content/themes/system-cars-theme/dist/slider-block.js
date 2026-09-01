@@ -2,8 +2,8 @@
   'use strict';
   /* empty css                   */
 /* empty css                    */
-const { useBlockProps: useBlockProps$1, RichText: RichText$1, MediaUpload, URLInput } = wp.blockEditor;
-const { Button, IconButton } = wp.components;
+const { useBlockProps: useBlockProps$1, RichText: RichText$1, MediaUpload, URLInput, InspectorControls } = wp.blockEditor;
+const { Button, IconButton, ToggleControl, RangeControl, PanelBody } = wp.components;
 const { createElement: createElement$1, Fragment: Fragment$1, useState, useEffect } = wp.element;
 function ArrowLeftSVG(props) {
   return createElement$1(
@@ -34,8 +34,10 @@ function ArrowRightSVG(props) {
   );
 }
 function Edit({ attributes: attributes2, setAttributes }) {
-  const { slides } = attributes2;
+  const { slides, autoplay, autoplayDelay } = attributes2;
   const [current, setCurrent] = useState(0);
+  const autoplayEnabled = autoplay !== false;
+  const delaySeconds = Number(autoplayDelay) > 0 ? Number(autoplayDelay) : 5;
   useEffect(() => {
     if (current >= slides.length) {
       setCurrent(Math.max(0, slides.length - 1));
@@ -59,6 +61,29 @@ function Edit({ attributes: attributes2, setAttributes }) {
   return createElement$1(
     "div",
     useBlockProps$1(),
+    createElement$1(
+      InspectorControls,
+      null,
+      createElement$1(
+        PanelBody,
+        { title: "Autoplay", initialOpen: true },
+        createElement$1(ToggleControl, {
+          label: "Reproducción automática",
+          help: "Avanza los slides automáticamente. Si está desactivado, solo cambian con flechas o paginación.",
+          checked: autoplayEnabled,
+          onChange: (value) => setAttributes({ autoplay: value })
+        }),
+        autoplayEnabled && createElement$1(RangeControl, {
+          label: "Duración de cada slide (segundos)",
+          value: delaySeconds,
+          onChange: (value) => setAttributes({ autoplayDelay: value }),
+          min: 2,
+          max: 15,
+          step: 1,
+          help: "Tiempo que cada slide permanece visible antes de pasar al siguiente."
+        })
+      )
+    ),
     // Aviso si no hay slides
     slides.length === 0 && createElement$1("p", { className: "editor-notice" }, "Añade un slide para comenzar."),
     // Panel de edición de cada slide
@@ -173,10 +198,17 @@ function Edit({ attributes: attributes2, setAttributes }) {
 const { useBlockProps, RichText } = wp.blockEditor;
 const { createElement, Fragment } = wp.element;
 function Save({ attributes: attributes2 }) {
-  const { slides } = attributes2;
+  const { slides, autoplay, autoplayDelay } = attributes2;
+  const delaySeconds = Number(autoplayDelay) > 0 ? Number(autoplayDelay) : 5;
+  const autoplayEnabled = autoplay !== false;
   return createElement(
     "div",
-    useBlockProps.save({ className: "swiper wp-block-system-cars-slider-block", "data-slide-count": slides.length }),
+    useBlockProps.save({
+      className: "swiper wp-block-system-cars-slider-block",
+      "data-slide-count": slides.length,
+      "data-autoplay": autoplayEnabled ? "true" : "false",
+      "data-autoplay-delay": String(delaySeconds * 1e3)
+    }),
     createElement(
       "div",
       { className: "swiper-wrapper" },
@@ -221,6 +253,14 @@ const supports = {
 };
 const textdomain = "system-cars-theme";
 const attributes = {
+  autoplay: {
+    type: "boolean",
+    "default": true
+  },
+  autoplayDelay: {
+    type: "number",
+    "default": 5
+  },
   slides: {
     type: "array",
     "default": [],

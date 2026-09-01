@@ -1,28 +1,28 @@
 (function(wp) {
   'use strict';
   /* empty css                 */
-const { useBlockProps: useBlockProps$1, InspectorControls, RichText: RichText$1, MediaUpload, MediaUploadCheck } = wp.blockEditor;
+const { useBlockProps: useBlockProps$2, InspectorControls, RichText: RichText$2, MediaUpload, MediaUploadCheck } = wp.blockEditor;
 const { PanelBody, Button, TextControl, __experimentalBoxControl: BoxControl } = wp.components;
-const { createElement: createElement$1, Fragment } = wp.element;
+const { createElement: createElement$2, Fragment } = wp.element;
 function Edit({ attributes, setAttributes }) {
   const { mainTitle, mainDescription, imageUrl, imageAlt, columnTitle, columnDescription, topSectionPadding, columnRightPadding } = attributes;
-  const blockProps = useBlockProps$1({
+  const blockProps = useBlockProps$2({
     className: "info-image-block"
   });
-  return createElement$1(
+  return createElement$2(
     Fragment,
     null,
     // Inspector Controls
-    createElement$1(
+    createElement$2(
       InspectorControls,
       null,
-      createElement$1(
+      createElement$2(
         PanelBody,
         { title: "Configuración de Imagen", initialOpen: true },
-        createElement$1(
+        createElement$2(
           MediaUploadCheck,
           null,
-          createElement$1(MediaUpload, {
+          createElement$2(MediaUpload, {
             onSelect: (media) => {
               setAttributes({
                 imageUrl: media.url,
@@ -31,7 +31,7 @@ function Edit({ attributes, setAttributes }) {
             },
             allowedTypes: ["image"],
             value: imageUrl,
-            render: ({ open }) => createElement$1(
+            render: ({ open }) => createElement$2(
               Button,
               {
                 variant: "secondary",
@@ -42,7 +42,7 @@ function Edit({ attributes, setAttributes }) {
             )
           })
         ),
-        imageUrl && createElement$1(
+        imageUrl && createElement$2(
           Button,
           {
             variant: "tertiary",
@@ -52,27 +52,27 @@ function Edit({ attributes, setAttributes }) {
           },
           "Eliminar imagen"
         ),
-        createElement$1(TextControl, {
+        createElement$2(TextControl, {
           label: "Texto alternativo (ALT)",
           value: imageAlt,
           onChange: (value) => setAttributes({ imageAlt: value }),
           help: "Describe la imagen para accesibilidad"
         })
       ),
-      createElement$1(
+      createElement$2(
         PanelBody,
         { title: "Espaciado - Sección Superior", initialOpen: false },
-        createElement$1(BoxControl, {
+        createElement$2(BoxControl, {
           label: "Padding de títulos y descripción superior",
           values: topSectionPadding,
           onChange: (value) => setAttributes({ topSectionPadding: value }),
           help: "Añade espacio interior a la sección de título y descripción principal"
         })
       ),
-      createElement$1(
+      createElement$2(
         PanelBody,
         { title: "Espaciado - Columna Derecha", initialOpen: false },
-        createElement$1(BoxControl, {
+        createElement$2(BoxControl, {
           label: "Padding de la columna de contenido",
           values: columnRightPadding,
           onChange: (value) => setAttributes({ columnRightPadding: value }),
@@ -81,11 +81,11 @@ function Edit({ attributes, setAttributes }) {
       )
     ),
     // Editor Preview
-    createElement$1(
+    createElement$2(
       "div",
       blockProps,
       // Top Section
-      createElement$1(
+      createElement$2(
         "div",
         {
           className: "info-top-section text-left max-md:text-center",
@@ -97,36 +97,48 @@ function Edit({ attributes, setAttributes }) {
           }
         },
         // Main Title
-        createElement$1(RichText$1, {
-          tagName: "h2",
-          className: "info-main-title",
-          value: mainTitle,
-          onChange: (value) => setAttributes({ mainTitle: value }),
-          placeholder: "Título principal..."
-        }),
+        createElement$2(
+          "div",
+          { className: "info-image-field info-image-field--main-title" },
+          createElement$2(RichText$2, {
+            identifier: "mainTitle",
+            tagName: "h2",
+            className: "info-main-title",
+            value: mainTitle,
+            onChange: (value) => setAttributes({ mainTitle: value }),
+            placeholder: "Título principal...",
+            allowedFormats: ["core/bold", "core/italic"]
+          })
+        ),
         // Main Description
-        createElement$1(RichText$1, {
-          tagName: "p",
-          className: "info-main-description",
-          value: mainDescription,
-          onChange: (value) => setAttributes({ mainDescription: value }),
-          placeholder: "Descripción principal...",
-          multiline: "br"
-        })
+        createElement$2(
+          "div",
+          { className: "info-image-field info-image-field--main-description" },
+          createElement$2(RichText$2, {
+            identifier: "mainDescription",
+            tagName: "div",
+            className: "info-main-description",
+            value: mainDescription,
+            onChange: (value) => setAttributes({ mainDescription: value }),
+            placeholder: "Descripción principal...",
+            multiline: "p",
+            allowedFormats: ["core/bold", "core/italic", "core/link"]
+          })
+        )
       ),
       // Columns Section
-      createElement$1(
+      createElement$2(
         "div",
         { className: "info-columns-section" },
         // Left Column (Image)
-        createElement$1(
+        createElement$2(
           "div",
           { className: "info-column-left" },
-          imageUrl ? createElement$1("img", {
+          imageUrl ? createElement$2("img", {
             src: imageUrl,
             alt: imageAlt || mainTitle || "",
             className: "info-image"
-          }) : createElement$1(
+          }) : createElement$2(
             "div",
             {
               className: "placeholder",
@@ -141,7 +153,7 @@ function Edit({ attributes, setAttributes }) {
           )
         ),
         // Right Column (Content)
-        createElement$1(
+        createElement$2(
           "div",
           {
             className: "info-column-right text-left max-md:text-center",
@@ -153,39 +165,51 @@ function Edit({ attributes, setAttributes }) {
             }
           },
           // Column Title
-          createElement$1(RichText$1, {
-            tagName: "h4",
-            className: "info-column-title",
-            value: columnTitle,
-            onChange: (value) => setAttributes({ columnTitle: value }),
-            placeholder: "Título de la columna..."
-          }),
+          createElement$2(
+            "div",
+            { className: "info-image-field info-image-field--column-title" },
+            createElement$2(RichText$2, {
+              identifier: "columnTitle",
+              tagName: "h4",
+              className: "info-column-title",
+              value: columnTitle,
+              onChange: (value) => setAttributes({ columnTitle: value }),
+              placeholder: "Título de la columna...",
+              allowedFormats: ["core/bold", "core/italic"]
+            })
+          ),
           // Column Description
-          createElement$1(RichText$1, {
-            tagName: "p",
-            className: "info-column-description",
-            value: columnDescription,
-            onChange: (value) => setAttributes({ columnDescription: value }),
-            placeholder: "Descripción de la columna...",
-            multiline: "br"
-          })
+          createElement$2(
+            "div",
+            { className: "info-image-field info-image-field--column-description" },
+            createElement$2(RichText$2, {
+              identifier: "columnDescription",
+              tagName: "div",
+              className: "info-column-description",
+              value: columnDescription,
+              onChange: (value) => setAttributes({ columnDescription: value }),
+              placeholder: "Descripción de la columna...",
+              multiline: "p",
+              allowedFormats: ["core/bold", "core/italic", "core/link"]
+            })
+          )
         )
       )
     )
   );
 }
-const { useBlockProps, RichText } = wp.blockEditor;
-const { createElement } = wp.element;
+const { useBlockProps: useBlockProps$1, RichText: RichText$1 } = wp.blockEditor;
+const { createElement: createElement$1 } = wp.element;
 function Save({ attributes }) {
   const { mainTitle, mainDescription, imageUrl, imageAlt, columnTitle, columnDescription, topSectionPadding, columnRightPadding } = attributes;
-  const blockProps = useBlockProps.save({
+  const blockProps = useBlockProps$1.save({
     className: "info-image-block"
   });
-  return createElement(
+  return createElement$1(
     "div",
     blockProps,
     // Top Section
-    createElement(
+    createElement$1(
       "div",
       {
         className: "info-top-section text-left max-md:text-center",
@@ -197,34 +221,34 @@ function Save({ attributes }) {
         }
       },
       // Main Title
-      createElement(RichText.Content, {
+      createElement$1(RichText$1.Content, {
         tagName: "h2",
         className: "info-main-title",
         value: mainTitle
       }),
       // Main Description
-      createElement(RichText.Content, {
-        tagName: "p",
+      createElement$1(RichText$1.Content, {
+        tagName: "div",
         className: "info-main-description",
         value: mainDescription
       })
     ),
     // Columns Section
-    createElement(
+    createElement$1(
       "div",
       { className: "info-columns-section" },
       // Left Column (Image)
-      createElement(
+      createElement$1(
         "div",
         { className: "info-column-left" },
-        imageUrl ? createElement("img", {
+        imageUrl ? createElement$1("img", {
           src: imageUrl,
           alt: imageAlt || mainTitle || "",
           className: "info-image"
         }) : null
       ),
       // Right Column (Content)
-      createElement(
+      createElement$1(
         "div",
         {
           className: "info-column-right text-left max-md:text-center",
@@ -236,12 +260,91 @@ function Save({ attributes }) {
           }
         },
         // Column Title
-        createElement(RichText.Content, {
+        createElement$1(RichText$1.Content, {
           tagName: "h4",
           className: "info-column-title",
           value: columnTitle
         }),
         // Column Description
+        createElement$1(RichText$1.Content, {
+          tagName: "div",
+          className: "info-column-description",
+          value: columnDescription
+        })
+      )
+    )
+  );
+}
+const { registerBlockType } = wp.blocks;
+const { useBlockProps, RichText } = wp.blockEditor;
+const { createElement } = wp.element;
+function SaveLegacyDescriptions({ attributes }) {
+  const {
+    mainTitle,
+    mainDescription,
+    imageUrl,
+    imageAlt,
+    columnTitle,
+    columnDescription,
+    topSectionPadding,
+    columnRightPadding
+  } = attributes;
+  const blockProps = useBlockProps.save({
+    className: "info-image-block"
+  });
+  return createElement(
+    "div",
+    blockProps,
+    createElement(
+      "div",
+      {
+        className: "info-top-section text-left max-md:text-center",
+        style: {
+          paddingTop: (topSectionPadding == null ? void 0 : topSectionPadding.top) || "0px",
+          paddingRight: (topSectionPadding == null ? void 0 : topSectionPadding.right) || "0px",
+          paddingBottom: (topSectionPadding == null ? void 0 : topSectionPadding.bottom) || "0px",
+          paddingLeft: (topSectionPadding == null ? void 0 : topSectionPadding.left) || "0px"
+        }
+      },
+      createElement(RichText.Content, {
+        tagName: "h2",
+        className: "info-main-title",
+        value: mainTitle
+      }),
+      createElement(RichText.Content, {
+        tagName: "p",
+        className: "info-main-description",
+        value: mainDescription
+      })
+    ),
+    createElement(
+      "div",
+      { className: "info-columns-section" },
+      createElement(
+        "div",
+        { className: "info-column-left" },
+        imageUrl ? createElement("img", {
+          src: imageUrl,
+          alt: imageAlt || mainTitle || "",
+          className: "info-image"
+        }) : null
+      ),
+      createElement(
+        "div",
+        {
+          className: "info-column-right text-left max-md:text-center",
+          style: {
+            paddingTop: (columnRightPadding == null ? void 0 : columnRightPadding.top) || "0px",
+            paddingRight: (columnRightPadding == null ? void 0 : columnRightPadding.right) || "0px",
+            paddingBottom: (columnRightPadding == null ? void 0 : columnRightPadding.bottom) || "0px",
+            paddingLeft: (columnRightPadding == null ? void 0 : columnRightPadding.left) || "0px"
+          }
+        },
+        createElement(RichText.Content, {
+          tagName: "h4",
+          className: "info-column-title",
+          value: columnTitle
+        }),
         createElement(RichText.Content, {
           tagName: "p",
           className: "info-column-description",
@@ -251,10 +354,24 @@ function Save({ attributes }) {
     )
   );
 }
-const { registerBlockType } = wp.blocks;
 registerBlockType("system-cars/info-image", {
   edit: Edit,
-  save: Save
+  save: Save,
+  deprecated: [
+    {
+      attributes: {
+        mainTitle: { type: "string" },
+        mainDescription: { type: "string" },
+        imageUrl: { type: "string" },
+        imageAlt: { type: "string" },
+        columnTitle: { type: "string" },
+        columnDescription: { type: "string" },
+        topSectionPadding: { type: "object" },
+        columnRightPadding: { type: "object" }
+      },
+      save: SaveLegacyDescriptions
+    }
+  ]
 });
 
 })(window.wp || {});

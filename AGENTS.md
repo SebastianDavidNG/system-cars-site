@@ -1,0 +1,2015 @@
+---
+description: 
+alwaysApply: true
+---
+
+# Codex Instructions for System Cars Site
+
+## Project Overview
+System Cars is a WordPress site with a custom theme built using modern web development tools. The project combines traditional WordPress development with modern JavaScript tooling.
+
+**Última actualización:** 2026-01-29 (Corrección plugin SC Excel Products + limpieza SCSS)
+**Docker Container:** `system-cars-site-wordpress-1`
+**Local URL:** http://localhost:8080
+**Working Directory:** Raíz del proyecto (todos los comandos npm se ejecutan desde aquí)
+**Theme Location:** `wp-content/themes/system-cars-theme/`
+
+## 🚧 Current Development Status
+
+### Completed Blocks ✅
+- `slider-block/` - Slider de imágenes con Swiper.js (FUNCIONANDO)
+- `service-card/` - Tarjetas de servicios (FUNCIONANDO)
+- `styled-button-block/` - Botones con estilos personalizados usando Tailwind CSS (FUNCIONANDO)
+- `info-image-block/` - Bloque de imagen con información en columnas con controles de padding (FUNCIONANDO)
+- `parallax-columns-block/` - Bloque decorativo con imagen de fondo y efecto parallax (FUNCIONANDO)
+- `video-modal-block/` - Modal overlay con video embebido YouTube/Vimeo/MP4 (FUNCIONANDO)
+
+### Estilos Globales del Theme ✅
+- **Fuente:** Arial, Helvetica, sans-serif
+- **Links:** Sin underline (`text-decoration: none`)
+- **Navegación:** `.nav-menu li a` con `font-weight: bold`
+- **Tailwind CSS:** Cargado globalmente via `dist/css/style.css`
+
+### Mantenimiento del Proyecto (2026-01-29) ✅
+- **Corrección plugin SC Excel Products:**
+  - Corregida verificación de WooCommerce (ahora usa hook `plugins_loaded` con prioridad 20)
+  - Agregada compatibilidad con HPOS (High-Performance Order Storage) de WooCommerce
+  - Corregida URL del plugin de `.com` a `.co`
+- **Limpieza de archivos duplicados:** Eliminados 117 archivos con sufijo " 2" que eran duplicados innecesarios
+- **Limpieza de bloques duplicados:** Eliminados directorios de bloques con sufijo " 2"
+- **Revisión SCSS completa:**
+  - Actualizado `main.scss` de `@import` a `@use` (sintaxis moderna de SASS)
+  - Limpieza de archivos basura en `dist/` (archivos con números como "slider-block 3.css")
+  - Corregido patrón de Tailwind para excluir `node_modules` del tema
+  - Agregadas propiedades CSS estándar (`appearance`) junto a vendor prefixes
+
+---
+
+## 📦 Detalles de Bloques
+
+### slider-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-27
+**Archivos:**
+- `blocks/slider-block/index.js` - Registro del bloque
+- `blocks/slider-block/edit.jsx` - Componente del editor
+- `blocks/slider-block/save.jsx` - Componente de guardado
+- `blocks/slider-block/slider-frontend.js` - Inicialización de Swiper.js en frontend
+- `blocks/slider-block/style.scss` - Estilos del bloque
+- `blocks/slider-block/editor.scss` - Estilos del editor
+
+**Características:**
+- Slider responsive con Swiper.js
+- Navegación con flechas (Font Awesome)
+- Paginación numerada (01, 02, 03...)
+- Auto-play (5 segundos)
+- Efecto fade entre slides
+- Imágenes cargadas desde WordPress Media Library
+
+**Altura Responsive (actualizado 2026-01-20):**
+El slider ocupa el viewport completo menos la altura del header:
+```scss
+.wp-block-system-cars-slider-block {
+    --header-height: 85px; /* Mobile */
+
+    /* Mobile: Full viewport minus header */
+    height: calc(100svh - var(--header-height));
+
+    /* Tablet */
+    @screen md {
+        --header-height: 130px; /* Header + info bar */
+    }
+
+    /* Desktop */
+    @screen lg {
+        height: 80vh;
+        min-height: 600px;
+    }
+}
+```
+- **Mobile:** `calc(100svh - 85px)` - viewport completo menos header
+- **Tablet:** `calc(100svh - 130px)` - viewport menos header + info bar
+- **Desktop:** `80vh` con `min-height: 600px`
+
+**Texto del Slide (actualizado 2026-01-27):**
+```scss
+.slide-text {
+    font-size: 2.25rem; /* Mobile */
+    @screen md { font-size: 3.75rem; } /* Tablet */
+    @screen lg {
+        font-size: 5rem; /* Desktop */
+        line-height: 1;
+    }
+}
+```
+
+**Overlay Oscuro (actualizado 2026-01-27):**
+```scss
+.swiper-slide::before {
+    @apply absolute inset-0 bg-black opacity-70 z-0;
+}
+```
+- Overlay con opacity de 0.7 (70%) para mejor contraste del texto
+
+**Paginación Numerada (actualizado 2026-01-20):**
+Bullets numerados estilo referencia (detailx.ancorathemes.com):
+```javascript
+pagination: {
+    el: paginationEl,
+    clickable: true,
+    renderBullet: function (index, className) {
+        const num = String(index + 1).padStart(2, '0');
+        return `<span class="${className}">${num}</span>`;
+    },
+}
+```
+- Formato: `01`, `02`, `03`...
+- Color: blanco semi-transparente (50% opacity)
+- Active/Hover: blanco sólido con underline animado
+- Posición: `--swiper-pagination-bottom: 50px` (mobile), `60px` (tablet), `70px` (desktop)
+
+**Flechas de Navegación (actualizado 2026-01-20):**
+```scss
+.swiper-button-prev,
+.swiper-button-next {
+    background: rgba(255, 255, 255, 0.15);
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+.swiper-button-prev::before,
+.swiper-button-next::before {
+    @apply text-lg; // md: text-xl
+    font-weight: 600;
+}
+```
+- Background semi-transparente con hover más sutil
+- Iconos más pequeños y con font-weight reducido
+- **Posicionamiento:** 20px (mobile), 40px (tablet), 70px (desktop) desde los bordes
+
+**IMPORTANTE - Posicionamiento de Flechas via JavaScript:**
+Swiper.js aplica estilos inline por defecto que sobrescriben el CSS. Para mantener la posición personalizada, se fuerza via JavaScript en `slider-frontend.js`:
+```javascript
+// Force arrow positions after Swiper initialization
+const isDesktop = window.innerWidth >= 1024;
+const isTablet = window.innerWidth >= 768;
+const arrowOffset = isDesktop ? '70px' : (isTablet ? '40px' : '20px');
+
+if (prevBtn) {
+    prevBtn.style.left = arrowOffset;
+    prevBtn.style.right = 'auto';
+}
+if (nextBtn) {
+    nextBtn.style.right = arrowOffset;
+    nextBtn.style.left = 'auto';
+}
+```
+También incluye listener para `resize` para actualizar la posición al cambiar el tamaño de la ventana.
+
+**Button Hover Animation:**
+El botón del slider (`.slide-button`) tiene una animación de fade suave en hover:
+- Efecto: El fondo cambia de transparente a gris oscuro (#232225) con transición fade de 0.3s
+- Similar al comportamiento del sitio de referencia
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- Output: `dist/slider-block.js`, `dist/slider-frontend.js`, `dist/css/slider-block-style.css`
+
+---
+
+### service-card ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Archivos:**
+- `blocks/service-card/index.js` - Todo el bloque (edit + save incluidos)
+- `blocks/service-card/style.scss` - Estilos del bloque
+- `blocks/service-card/editor.scss` - Estilos del editor
+
+**Características:**
+- Tarjeta con icono, título y descripción
+- Iconos de FontAwesome
+- Estilos responsivos
+- Hover effects
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- SCSS: `npm run build:blocks`
+- Output: `dist/service-card.js`, `dist/css/service-card-style.css`
+
+---
+
+### styled-button-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-07
+
+**Archivos:**
+- `blocks/styled-button-block/index.js` - Registro con versiones deprecated
+- `blocks/styled-button-block/edit.jsx` - Editor con Tailwind classes
+- `blocks/styled-button-block/save.jsx` - Guardado con Tailwind classes
+- `blocks/styled-button-block/style.scss` - Estilos base
+- `blocks/styled-button-block/frontend.js` - JavaScript del frontend
+- `blocks/styled-button-block/block.json` - Metadata (v3.0.0)
+
+**Características:**
+- ✅ Múltiples estilos (primary, secondary, tertiary, white, black)
+- ✅ Bordes opcionales (transparent, secondary, primary, tertiary, white, black)
+- ✅ Links internos/externos
+- ✅ Opción "abrir en nueva pestaña"
+- ✅ Texto editable con RichText
+- ✅ Estilos con Tailwind CSS: `px-10 py-3 font-black uppercase text-lg`
+- ✅ Texto en mayúsculas con `text-transform: uppercase`
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- Output: `dist/styled-button-block.js` (7.86 KB), `dist/styled-button-frontend.js`, `dist/css/styled-button-style.css` (1.21 KB)
+
+**Solución implementada:**
+- Problema de caché resuelto usando versiones deprecated para migración automática
+- Versión actualizada a 3.0.0 para forzar actualización
+- Clases Tailwind correctamente aplicadas: `uppercase text-lg`
+- CSS SCSS solo maneja colores y transiciones, spacing viene de Tailwind
+
+---
+
+### parallax-columns-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-07
+
+**Archivos:**
+- `blocks/parallax-columns-block/index.js` - Registro del bloque
+- `blocks/parallax-columns-block/edit.jsx` - Componente del editor
+- `blocks/parallax-columns-block/save.jsx` - Componente de guardado
+- `blocks/parallax-columns-block/frontend.js` - Efecto parallax en frontend
+- `blocks/parallax-columns-block/style.scss` - Estilos del bloque
+- `blocks/parallax-columns-block/block.json` - Metadata (v2.0.0)
+
+**Características:**
+- ✅ Imagen de fondo con efecto parallax
+- ✅ Altura mínima configurable
+- ✅ Parallax activable/desactivable
+- ✅ Optimización para mobile
+- ✅ **Controles de spacing nativos de WordPress:**
+  - Margin-top y margin-bottom configurables
+  - Sin margin lateral (imagen siempre de lado a lado)
+  - Sin padding configurable (el bloque tiene padding fijo interno)
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- Output: `dist/parallax-columns-block.js` (4.81 KB), `dist/parallax-columns-frontend.js` (2.46 KB), `dist/css/parallax-columns-style.css` (0.93 KB)
+
+**Controles nativos de WordPress:**
+```json
+"supports": {
+  "spacing": {
+    "margin": ["top", "bottom"],  // Solo margin vertical
+    "padding": false
+  }
+}
+```
+
+---
+
+### info-image-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-07
+
+**Archivos:**
+- `blocks/info-image-block/index.js` - Registro del bloque
+- `blocks/info-image-block/edit.jsx` - Componente del editor con controles de padding
+- `blocks/info-image-block/save.jsx` - Componente de guardado
+- `blocks/info-image-block/style.scss` - Estilos del bloque
+- `blocks/info-image-block/editor.scss` - Estilos del editor
+- `blocks/info-image-block/block.json` - Metadata
+
+**Estructura HTML:**
+```html
+<div class="info-image-block">
+  <!-- Top Section (Título y descripción principal) -->
+  <div class="info-top-section text-left max-md:text-center">
+    <h2 class="info-main-title">Título Principal</h2>
+    <p class="info-main-description">Descripción principal</p>
+  </div>
+
+  <!-- Columns Section (Imagen izquierda + Contenido derecha) -->
+  <div class="info-columns-section">
+    <div class="info-column-left">
+      <img class="info-image" src="..." alt="...">
+    </div>
+    <div class="info-column-right text-left max-md:text-center">
+      <h4 class="info-column-title">Título de Columna</h4>
+      <p class="info-column-description">Descripción de columna</p>
+    </div>
+  </div>
+</div>
+```
+
+**Características:**
+- ✅ Sección superior con título (H2) y descripción principal
+- ✅ Layout de 2 columnas con CSS Grid (desktop) / 1 columna (mobile)
+- ✅ Columna izquierda: imagen desde WordPress Media Library
+- ✅ Columna derecha: título (H4) y descripción
+- ✅ **Alineación responsive con Tailwind CSS:**
+  - Desktop: `text-left` (textos alineados a la izquierda)
+  - Mobile: `max-md:text-center` (textos centrados)
+- ✅ **Controles de padding personalizados (WordPress BoxControl):**
+  - "Espaciado - Sección Superior": controla padding del título y descripción principal
+  - "Espaciado - Columna Derecha": controla padding del contenido de la columna derecha
+  - **La imagen NO se ve afectada** por estos controles (siempre pegada al borde)
+- ✅ Editor con hover states para facilitar edición de textos
+
+**Build:**
+- JSX: `npm run dev` o `npm run build`
+- Output: `dist/info-image-block.js` (9.12 KB), `dist/css/info-image-style.css` (2.51 KB), `dist/css/info-image-editor.css` (2.09 KB)
+
+**Controles de Spacing:**
+Los controles de padding son **específicos por sección**, NO afectan a todo el bloque:
+
+**Atributos personalizados:**
+```json
+"topSectionPadding": {
+  "type": "object",
+  "default": { "top": "0px", "right": "0px", "bottom": "0px", "left": "0px" }
+},
+"columnRightPadding": {
+  "type": "object",
+  "default": { "top": "0px", "right": "0px", "bottom": "0px", "left": "0px" }
+}
+```
+
+**Aplicación en save.jsx:**
+```jsx
+<div
+  className="info-top-section text-left max-md:text-center"
+  style={{
+    paddingTop: topSectionPadding?.top || '0px',
+    paddingRight: topSectionPadding?.right || '0px',
+    paddingBottom: topSectionPadding?.bottom || '0px',
+    paddingLeft: topSectionPadding?.left || '0px'
+  }}
+>
+```
+
+**Ventajas de este enfoque:**
+- Imagen siempre pegada al borde izquierdo (sin padding)
+- Control fino de spacing solo en textos
+- Usa BoxControl nativo de WordPress (mismo UI que otros bloques)
+- Valores aplicados con inline styles para máxima flexibilidad
+
+---
+
+### video-modal-block ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-15
+
+**Archivos:**
+- `blocks/video-modal-block/index.js` - Registro del bloque
+- `blocks/video-modal-block/edit.jsx` - Componente del editor
+- `blocks/video-modal-block/save.jsx` - Componente de guardado
+- `blocks/video-modal-block/frontend.js` - Lógica del modal en frontend
+- `blocks/video-modal-block/style.scss` - Estilos del bloque y modal
+- `blocks/video-modal-block/block.json` - Metadata del bloque
+
+**Características:**
+- ✅ Modal overlay responsive con fondo semi-transparente
+- ✅ Thumbnail clickable con play button SVG
+- ✅ Soporte YouTube/Vimeo/MP4
+- ✅ Close button con animación de rotación (::before/::after formando X)
+- ✅ Cierre con click fuera del modal o tecla Escape
+- ✅ Animaciones de entrada (fadeIn + zoomIn)
+
+**Build:**
+- Comando: `npm run build` (desde raíz del proyecto)
+- Output: `dist/video-modal-block.js`, `dist/video-modal-frontend.js`, `dist/css/video-modal-style.css`
+
+---
+
+## 🛒 WooCommerce - Páginas Personalizadas
+
+### Shop Page (Tienda) ✅
+**URL:** http://localhost:8080/tienda/
+**Última actualización:** 2026-01-20
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/archive-product.php` - Template de la tienda
+- `wp-content/themes/system-cars-theme/woocommerce/content-product.php` - Template de cada producto
+- `wp-content/themes/system-cars-theme/js/quick-view.js` - JavaScript del modal Quick View
+- `wp-content/themes/system-cars-theme/js/wishlist.js` - JavaScript de lista de deseos (localStorage)
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (shop-layout, shop-filter, price-slider, product-card, wishlist, pagination)
+
+**Características implementadas:**
+
+#### Layout Sidebar + Productos
+- Grid de 2 columnas: sidebar (280px) + área de productos
+- Responsive: 1 columna en móvil, 2 columnas en desktop
+- Productos en grid de 3 columnas (2 en tablet, 1 en móvil)
+- **Orden del sidebar:** Categorías primero, Filtro de precio segundo
+
+#### Filtro de Categorías (AJAX - actualizado 2026-01-20)
+Filtrado sin recargar la página, similar a la referencia (detailx):
+- **"Todos los productos"** - opción para mostrar todos
+- Lista de categorías con contador de productos
+- Click filtra productos via AJAX (sin reload)
+- Estado activo visual en categoría seleccionada
+- Loading spinner mientras carga
+
+**AJAX Endpoint:** `sc_filter_products_by_category` en `functions.php`
+
+```javascript
+// Click en categoría -> AJAX request
+fetch(ajaxUrl, {
+    method: 'POST',
+    body: FormData({ action: 'sc_filter_products_by_category', category: slug })
+})
+.then(response => response.json())
+.then(data => {
+    productsGrid.innerHTML = data.data.html;
+});
+```
+
+**Loading State:**
+```scss
+.shop-content {
+    position: relative;
+    &__loading {
+        position: absolute;
+        inset: 0;
+        background-color: rgba($white-color, 0.8);
+        // Spinner con animación
+    }
+}
+```
+
+#### Filtro de Precio
+- Slider de doble rango (min/max)
+- Inputs numéricos sincronizados con el slider
+- Barra de rango visual con color primario
+- Botón "Filtrar" y link "Limpiar filtros"
+- Filtrado real via `pre_get_posts` hook en `functions.php`
+
+#### Product Cards (actualizado 2026-01-22)
+- Imagen con efecto zoom en hover (scale 1.1)
+- Overlay con botones al hacer hover
+- **Badges en esquina superior izquierda:**
+  - `product-card__badge--sale` - Rojo con porcentaje de descuento (-15%, -34%, etc.)
+  - `product-card__badge--new` - Azul para productos nuevos (últimos 30 días)
+- **Wishlist heart icon en esquina superior derecha:**
+  - Círculo blanco con corazón outline
+  - Hover: scale + corazón rojo
+  - Active: corazón relleno rojo
+  - Animación de pulso al toggle
+  - Datos guardados en localStorage (`sc_wishlist`)
+- **Botones unificados en overlay (actualizado 2026-01-22):**
+  - "Leer Más" / "Añadir al carrito": fondo blanco, texto azul (#002060)
+  - "Vista Rápida": fondo azul (#002060), texto blanco
+  - Ambos: mismo padding (0.75rem 1.5rem), font-size (0.8rem), font-weight (700), uppercase
+  - Hover: fondo rojo ($primary-color) en ambos
+  - **IMPORTANTE:** Los estilos usan `!important` para sobrescribir estilos de WooCommerce
+- Info: categoría, título, precio
+
+**Clases CSS de botones:**
+```scss
+.product-card__btn {
+    padding: 0.75rem 1.5rem !important;
+    font-size: 0.8rem !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    background-color: $white-color !important;  // Default: blanco
+    color: $secondary-color !important;
+
+    &.quick-view-btn {
+        background-color: $secondary-color !important;  // Vista Rápida: azul
+        color: $white-color !important;
+    }
+
+    &:hover {
+        background-color: $primary-color !important;  // Hover: rojo
+    }
+}
+```
+
+**Template:** `woocommerce/content-product.php` - Los botones solo usan clases CSS (sin Tailwind inline) para evitar conflictos de especificidad.
+
+#### Wishlist Notification Modal (nuevo 2026-01-20)
+Notificación que aparece al agregar/quitar productos de la lista de deseos:
+- Posición: esquina superior derecha
+- Animación: slide-in desde la derecha
+- Icono: corazón rojo (agregado) o gris (eliminado)
+- Auto-hide después de 3 segundos
+- Botón cerrar (X)
+
+```scss
+.wishlist-notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    // Slide animation
+    transform: translateX(calc(100% + 40px));
+    &.is-visible { transform: translateX(0); }
+}
+```
+
+#### Pagination (actualizado 2026-01-20)
+Estilo similar a página de referencia (detailx):
+- Botones cuadrados 44x44px
+- Border: 1px solid #D9D9DE
+- Hover: fade a `$secondary-color` (azul oscuro)
+- Active: `$primary-color` (rojo)
+- Sin border en contenedor ul
+
+```scss
+.woocommerce-pagination ul.page-numbers li .page-numbers {
+    border: 1px solid #D9D9DE;
+    background-color: transparent;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    &:hover {
+        background-color: $secondary-color;
+        border-color: $secondary-color;
+    }
+    &.current {
+        background-color: $primary-color;
+        border-color: $primary-color;
+    }
+}
+```
+
+**CSS importante para grid de WooCommerce:**
+```scss
+// Eliminar ::before de WooCommerce que interfiere con CSS Grid
+.shop-content ul.products {
+    &::before,
+    &::after {
+        display: none !important;
+        content: none !important;
+    }
+}
+```
+
+---
+
+### Single Product Page ✅
+**URL:** http://localhost:8080/producto/[slug]/
+**Última actualización:** 2026-01-24
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/woocommerce/single-product.php` - Template personalizado
+- `wp-content/themes/system-cars-theme/woocommerce/single-product/add-to-cart/variable.php` - Template para productos variables
+- `wp-content/themes/system-cars-theme/woocommerce/single-product/add-to-cart/variation-add-to-cart-button.php` - Botón add-to-cart para variaciones
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (`.sc-single-product`, `.sc-product-gallery`, `.woocommerce-tabs`, `.sc-variations-table`)
+
+**Estructura HTML:**
+```html
+<!-- Page Header (azul) -->
+<section class="sc-page-header">
+    <h1>Nombre del Producto</h1>
+    <nav>Inicio / Tienda / Categoría / Producto</nav>
+</section>
+
+<!-- Main Content -->
+<main class="sc-single-product">
+    <div class="sc-single-product__main">
+        <!-- Galería (izquierda) -->
+        <div class="sc-single-product__gallery">
+            <div class="sc-product-gallery" id="product-gallery">
+                <div class="sc-product-gallery__main">
+                    <div class="sc-product-gallery__viewer">
+                        <img id="main-gallery-image" src="..." />
+                    </div>
+                    <button class="sc-gallery-nav sc-gallery-nav--prev">...</button>
+                    <button class="sc-gallery-nav sc-gallery-nav--next">...</button>
+                    <button class="sc-product-gallery__zoom-btn">...</button>
+                </div>
+                <div class="sc-product-gallery__thumbs" id="gallery-thumbs">...</div>
+            </div>
+        </div>
+
+        <!-- Info (derecha) -->
+        <div class="sc-single-product__info">
+            <a class="sc-single-product__category">Categoría</a>
+            <h1 class="sc-single-product__title">Título</h1>
+            <div class="sc-single-product__price">$99.00</div>
+            <div class="sc-single-product__short-description">...</div>
+            <div class="sc-single-product__add-to-cart">...</div>
+            <div class="sc-single-product__meta">SKU, Categorías, Tags</div>
+            <button class="sc-single-product__wishlist">...</button>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="sc-single-product__tabs">
+        <div class="woocommerce-tabs">...</div>
+    </div>
+
+    <!-- Related Products -->
+    <section class="related products">...</section>
+</main>
+```
+
+**Características implementadas:**
+- ✅ Page header con breadcrumbs (fondo azul, igual que otras páginas WooCommerce)
+- ✅ Layout 2 columnas: galería izquierda + info derecha
+- ✅ **Galería simple (sin Swiper)** - JavaScript vanilla para máxima compatibilidad
+- ✅ Flechas de navegación (prev/next) con hover rojo
+- ✅ Icono de zoom en imagen principal (magnifying glass)
+- ✅ **Transición fade suave** entre imágenes (opacity + scale)
+- ✅ Thumbnails clickeables con borde activo
+- ✅ Lightbox con navegación (flechas + teclado)
+- ✅ Categoría como link encima del título
+- ✅ Título, precio (con soporte para precios en oferta)
+- ✅ Descripción corta del producto
+- ✅ **Campo de cantidad con botones +/-** estilo profesional
+- ✅ **Botón añadir al carrito** con icono de flecha
+- ✅ Meta info: SKU, categorías, etiquetas
+- ✅ Botón de wishlist con localStorage (integrado con wishlist.js)
+- ✅ Tabs: Descripción, Información adicional, Reseñas
+- ✅ Formulario de reseñas con estrellas
+- ✅ Productos relacionados en grid responsive con **Quick View funcional**
+- ✅ **Soporte para productos variables** (variaciones con selectores dropdown)
+
+**Productos Variables (actualizado 2026-01-24):**
+
+El template detecta automáticamente si el producto es variable y muestra los selectores de variación:
+
+**Características:**
+- ✅ Detecta tipo de producto (`$product->is_type('variable')`)
+- ✅ Productos simples: formulario personalizado con botones +/-
+- ✅ Productos variables: usa templates de WooCommerce con estilos personalizados
+- ✅ Tabla de variaciones estilizada (`.sc-variations-table`)
+- ✅ Selectores dropdown con flecha personalizada
+- ✅ Botón "Limpiar" para resetear selecciones
+- ✅ Precio se actualiza al seleccionar variación
+- ✅ Botón deshabilitado hasta seleccionar todas las opciones
+- ✅ Botones +/- para cantidad (agregados via JavaScript en `functions.php`)
+
+**Templates de WooCommerce personalizados:**
+```
+woocommerce/single-product/add-to-cart/
+├── variable.php                    # Tabla de variaciones
+└── variation-add-to-cart-button.php # Cantidad + botón
+```
+
+**JavaScript para botones +/- (en functions.php):**
+```php
+add_action( 'wp_footer', 'sc_variable_product_quantity_buttons', 100 );
+```
+Este script agrega dinámicamente los botones +/- al input de cantidad de WooCommerce.
+
+**CSS (en main.scss):**
+- `.sc-variations-table` - Tabla de variaciones (layout flex)
+- `.sc-variations-table th.label` - Etiqueta del atributo
+- `.sc-variations-table td.value select` - Dropdown estilizado
+- `.sc-variation-add-to-cart` - Wrapper del botón add-to-cart
+- `.sc-qty-btn` - Botones +/- agregados via JS
+
+**Galería de Producto (actualizado 2026-01-22):**
+
+La galería usa **JavaScript vanilla** (sin Swiper) para evitar conflictos de dimensiones:
+
+```javascript
+// Transición fade al cambiar imagen
+function goToImage(index) {
+    // Step 1: Fade out (opacity 0, scale 0.98)
+    mainImage.style.opacity = '0';
+    mainImage.style.transform = 'scale(0.98)';
+
+    // Step 2: Preload nueva imagen
+    setTimeout(() => {
+        const newImg = new Image();
+        newImg.onload = function() {
+            mainImage.src = galleryData[index].large;
+
+            // Step 3: Fade in (opacity 1, scale 1)
+            mainImage.style.opacity = '1';
+            mainImage.style.transform = 'scale(1)';
+        };
+        newImg.src = galleryData[index].large;
+    }, 250);
+}
+```
+
+**CSS de transición:**
+```scss
+.sc-product-gallery__image {
+    transition: opacity 0.25s ease-out, transform 0.25s ease-out;
+    will-change: opacity, transform;
+}
+```
+
+**Clases CSS principales:**
+- `.sc-single-product` - Contenedor principal
+- `.sc-single-product__main` - Grid 2 columnas
+- `.sc-single-product__gallery` - Columna de galería
+- `.sc-single-product__info` - Columna de información
+- `.sc-product-gallery` - Galería de imágenes
+- `.sc-product-gallery__main` - Contenedor imagen principal
+- `.sc-product-gallery__viewer` - Wrapper de imagen con min-height
+- `.sc-product-gallery__image` - Imagen principal (con transición fade)
+- `.sc-gallery-nav` - Flechas de navegación (prev/next)
+- `.sc-product-gallery__zoom-btn` - Botón zoom (abre lightbox)
+- `.sc-product-gallery__thumbs` - Contenedor de thumbnails (flex)
+- `.sc-product-gallery__thumb` - Cada thumbnail (is-active para activo)
+- `.sc-quantity` - Campo de cantidad con +/- botones
+- `.sc-add-to-cart-btn` - Botón añadir al carrito con flecha
+- `.sc-single-product__wishlist` - Botón de wishlist (is-active, is-animating)
+- `.sc-lightbox` - Modal lightbox con navegación
+- `.woocommerce-tabs` - Contenedor de tabs (overrides de WooCommerce)
+
+**JavaScript incluido en template:**
+- Galería simple con navegación por flechas y thumbnails
+- Transición fade suave entre imágenes (preload + opacity animation)
+- Lightbox con navegación (flechas + teclado ESC, ←, →)
+- Campo de cantidad con botones +/-
+- Integración con wishlist (localStorage)
+- Animación de pulso al toggle wishlist
+
+**Nota técnica:** Se probó Swiper.js pero causaba conflictos de dimensiones (slides con width de millones de pixels). La solución JavaScript vanilla es más estable y compatible.
+
+---
+
+### Quick View Modal ✅
+**Última actualización:** 2026-01-24
+
+**Características:**
+- ✅ Modal con overlay oscuro (cierra al hacer clic)
+- ✅ Botón X con animación de rotación (mismo estilo que video-modal)
+- ✅ Spinner de carga mientras carga el producto via AJAX
+- ✅ Galería con thumbnails clickeables
+- ✅ Transición suave al cambiar imagen (fade + scale)
+- ✅ Navegación infinita entre thumbnails
+- ✅ Categoría, título, precio y descripción corta
+- ✅ Selector de cantidad (+/-)
+- ✅ Botón "Añadir al carrito" con feedback visual
+- ✅ Link "Ver detalles completos"
+- ✅ Cierra con tecla ESC
+- ✅ Responsive
+- ✅ **Soporte para productos variables** (selección de variaciones)
+- ✅ **Funciona en Productos Relacionados** del single product page
+
+**Soporte para Productos Variables (actualizado 2026-01-24):**
+
+El Quick View modal ahora soporta productos variables (productos con variaciones como Marca, Talla, Color, etc.):
+
+**Características de productos variables:**
+- ✅ Detecta automáticamente si el producto es variable
+- ✅ Muestra selectores dropdown para cada atributo de variación
+- ✅ Botón deshabilitado hasta seleccionar todas las variaciones
+- ✅ Actualiza precio dinámicamente según variación seleccionada
+- ✅ Actualiza imagen del producto si la variación tiene imagen propia
+- ✅ Muestra "Combinación no disponible" si la combinación no existe
+- ✅ Muestra "Agotado" si la variación está sin stock
+- ✅ Botón "Limpiar" para resetear selecciones
+- ✅ Envía `variation_id` y atributos al agregar al carrito
+
+**Archivos modificados:**
+- `functions.php` - `sc_quick_view_product()`: Genera HTML con selectores de variación
+- `functions.php` - `sc_quick_view_add_to_cart()`: Acepta `variation_id` y atributos
+- `js/quick-view.js` - Nueva función `initVariations()` y `findMatchingVariation()`
+- `scss/main.scss` - Estilos para `.quick-view-variation` y `.quick-view-product__variations`
+
+**Estructura HTML para productos variables:**
+```html
+<div class="quick-view-product" data-product-type="variable">
+    <!-- Gallery -->
+    <div class="quick-view-product__gallery">...</div>
+
+    <div class="quick-view-product__info">
+        <!-- Variaciones -->
+        <div class="quick-view-product__variations"
+             data-product-id="123"
+             data-variations='[{"variation_id":456,"attributes":{...},"price_html":"..."}]'>
+
+            <div class="quick-view-variation">
+                <label class="quick-view-variation__label">Marca</label>
+                <select class="quick-view-variation__select" data-attribute="attribute_pa_marca">
+                    <option value="">Seleccionar Marca</option>
+                    <option value="samsung">Samsung</option>
+                </select>
+            </div>
+
+            <a class="quick-view-variation__reset">Limpiar</a>
+        </div>
+
+        <!-- Cantidad y botón -->
+        <div class="quick-view-product__actions">
+            <div class="quick-view-product__quantity">...</div>
+            <button class="quick-view-add-to-cart"
+                    data-product-id="123"
+                    data-variation-id=""
+                    disabled>
+                Seleccionar opciones
+            </button>
+        </div>
+    </div>
+</div>
+```
+
+**AJAX Endpoints (functions.php):**
+- `sc_quick_view_product` - Obtiene HTML del producto (incluye variaciones para productos variables)
+- `sc_quick_view_add_to_cart` - Añade producto al carrito (acepta `variation_id` y `variation[]` para productos variables)
+
+**Script Loading (functions.php:356-374):**
+El script `quick-view.js` se carga en las siguientes páginas:
+- ✅ Shop page (`is_shop()`)
+- ✅ Product category pages (`is_product_category()`)
+- ✅ Product tag pages (`is_product_tag()`)
+- ✅ Single product pages (`is_product()`) - Para Productos Relacionados
+
+```php
+function sc_enqueue_quick_view_scripts() {
+    // Load on shop, category, tag, and single product pages (for Related Products)
+    if ( ! is_shop() && ! is_product_category() && ! is_product_tag() && ! is_product() ) {
+        return;
+    }
+    // ...
+}
+```
+
+**Clases CSS principales:**
+- `.quick-view-modal` - Contenedor del modal
+- `.quick-view-modal__overlay` - Fondo oscuro
+- `.quick-view-modal__container` - Contenido del modal
+- `.quick-view-modal__close` - Botón cerrar (X con ::before/::after)
+- `.quick-view-product` - Grid de producto (imagen + info)
+- `.quick-view-product__gallery` - Galería con thumbnails
+- `.quick-view-product__info` - Información del producto
+- `.quick-view-product__variations` - Contenedor de selectores de variación
+- `.quick-view-variation` - Fila de variación (label + select)
+- `.quick-view-variation__label` - Etiqueta del atributo
+- `.quick-view-variation__select` - Dropdown de opciones
+- `.quick-view-variation__reset` - Link para limpiar selecciones
+
+---
+
+### Mini Cart Dropdown ✅
+**Última actualización:** 2026-01-24
+
+Dropdown que muestra el contenido del carrito al hacer clic en el icono del carrito en el header.
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/header.php` - Estructura HTML del dropdown (líneas 114-142)
+- `wp-content/themes/system-cars-theme/functions.php` - Funciones PHP y AJAX endpoints
+- `wp-content/themes/system-cars-theme/js/mini-cart.js` - JavaScript del dropdown
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (`.sc-mini-cart-*`)
+
+**Características:**
+- ✅ Click en icono del carrito abre el dropdown
+- ✅ Lista de productos con thumbnails, nombre, cantidad y precio
+- ✅ Botón X para eliminar productos individuales
+- ✅ Subtotal del carrito
+- ✅ Botones "Ver Carrito" y "Finalizar Compra"
+- ✅ Estado vacío con icono y link a la tienda
+- ✅ Se actualiza automáticamente al añadir/eliminar productos (via WooCommerce fragments)
+- ✅ Cierra con click fuera del dropdown o tecla ESC
+- ✅ Animación suave de apertura (fade + slide)
+- ✅ Flecha decorativa apuntando al icono
+- ✅ **Sin flash de contenido desordenado** - Contenido PHP se muestra inmediatamente sin AJAX innecesario
+
+**Estructura HTML:**
+```html
+<div class="sc-mini-cart-wrapper relative">
+    <!-- Trigger button -->
+    <button class="sc-mini-cart-trigger">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="cart-icon-count">3</span>
+    </button>
+
+    <!-- Dropdown -->
+    <div class="sc-mini-cart">
+        <div class="sc-mini-cart__header">
+            <span class="sc-mini-cart__title">Tu Carrito</span>
+            <button class="sc-mini-cart__close">×</button>
+        </div>
+        <div class="sc-mini-cart__content">
+            <!-- Items del carrito -->
+            <div class="sc-mini-cart__items">
+                <div class="sc-mini-cart__item">
+                    <div class="sc-mini-cart__item-image">...</div>
+                    <div class="sc-mini-cart__item-details">...</div>
+                    <button class="sc-mini-cart__item-remove">×</button>
+                </div>
+            </div>
+            <!-- Footer con subtotal y botones -->
+            <div class="sc-mini-cart__footer">
+                <div class="sc-mini-cart__subtotal">...</div>
+                <div class="sc-mini-cart__buttons">
+                    <a class="sc-mini-cart__btn--cart">Ver Carrito</a>
+                    <a class="sc-mini-cart__btn--checkout">Finalizar Compra</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+```
+
+**Funciones PHP (functions.php):**
+- `sc_render_mini_cart_content()` - Renderiza el HTML del contenido del carrito
+- `sc_ajax_get_mini_cart()` - AJAX endpoint para refrescar el contenido
+- `sc_ajax_remove_cart_item()` - AJAX endpoint para eliminar productos
+- `sc_enqueue_mini_cart_scripts()` - Encola el script mini-cart.js
+- `sc_mini_cart_fragments()` - Actualiza el mini-cart via WooCommerce fragments
+
+**AJAX Endpoints:**
+- `sc_get_mini_cart` - Obtiene HTML del carrito actualizado
+- `sc_remove_cart_item` - Elimina un producto del carrito
+
+**Integración con WooCommerce:**
+El mini-cart se actualiza automáticamente usando el sistema de fragments de WooCommerce:
+```php
+add_filter( 'woocommerce_add_to_cart_fragments', 'sc_mini_cart_fragments' );
+```
+Esto asegura que cuando se añade un producto (desde la tienda, Quick View, o producto individual), el mini-cart se actualiza sin necesidad de recargar la página.
+
+**Clases CSS principales:**
+- `.sc-mini-cart-wrapper` - Contenedor con position: relative
+- `.sc-mini-cart-trigger` - Botón que activa el dropdown
+- `.sc-mini-cart` - El dropdown (hidden por defecto)
+- `.sc-mini-cart.is-open` - Clase cuando está abierto
+- `.sc-mini-cart__header` - Header con título y botón cerrar
+- `.sc-mini-cart__content` - Contenido scrolleable
+- `.sc-mini-cart__items` - Lista de productos
+- `.sc-mini-cart__item` - Cada producto (imagen, detalles, remove)
+- `.sc-mini-cart__footer` - Subtotal y botones
+- `.sc-mini-cart__empty` - Estado cuando el carrito está vacío
+
+**Estilos destacados:**
+```scss
+.sc-mini-cart {
+    position: absolute;
+    top: calc(100% + 15px);
+    right: 0;
+    width: 320px;
+    background: $white-color;
+    border-radius: 0;  // Bordes rectos
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+
+    &.is-open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    // Flecha decorativa
+    &::before {
+        content: '';
+        position: absolute;
+        top: -8px;
+        right: 12px;
+        width: 14px;
+        height: 14px;
+        background: $white-color;
+        border-left: 1px solid #e5e7eb;
+        border-top: 1px solid #e5e7eb;
+        transform: rotate(45deg);
+    }
+
+    // Subtotal - ambos textos bold y color secundario
+    &__subtotal {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 700;
+        color: $secondary-color;
+    }
+}
+```
+
+**Optimización - Sin Flash de Contenido:**
+
+El mini-cart evita el "flash" de contenido desordenado usando las siguientes técnicas:
+
+1. **No refresca al abrir:** El contenido PHP ya está renderizado correctamente, no se hace AJAX innecesario
+2. **Flag `needsRefresh`:** Solo refresca via AJAX cuando el contenido cambió (después de añadir/eliminar productos)
+3. **WooCommerce Fragments:** Actualiza el contenido automáticamente cuando se añaden productos
+4. **CSS Loading State:** Si hay que refrescar, el contenido se oculta con `opacity: 0` y aparece con fade suave
+
+```javascript
+// Solo refresca si el contenido fue marcado como necesitando actualización
+if (needsRefresh) {
+    refreshMiniCart();
+    needsRefresh = false;
+}
+```
+
+```scss
+// Loading state - contenido oculto durante carga
+&__content {
+    &.is-loading > * {
+        opacity: 0;
+        visibility: hidden;
+    }
+    &.is-loaded > * {
+        opacity: 1;
+        visibility: visible;
+        transition: opacity 0.2s ease;
+    }
+}
+```
+
+---
+
+### Cart Page (Carrito) ✅
+**URL:** http://localhost:8080/carrito/
+**Última actualización:** 2026-01-23
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/woocommerce/cart/cart.php` - Template personalizado del carrito
+- `wp-content/themes/system-cars-theme/index.php` - Template base que incluye el page header para páginas WooCommerce
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos (`.sc-cart`, `.sc-page-header`)
+
+**Estructura HTML:**
+```html
+<!-- Page Header (generado en index.php) -->
+<section class="sc-page-header">
+    <h1 class="sc-page-header__title">Carrito</h1>
+    <nav class="sc-page-header__breadcrumbs">
+        <a href="/">Inicio</a>
+        <span class="breadcrumb-separator"></span>
+        <span class="breadcrumb-current">Carrito</span>
+    </nav>
+</section>
+
+<!-- Cart Content -->
+<div class="sc-cart">
+    <form class="woocommerce-cart-form">
+        <div class="sc-cart__layout">
+            <!-- Columna izquierda: Items del carrito -->
+            <div class="sc-cart__items">
+                <div class="sc-cart__header">...</div>
+                <div class="sc-cart__item">...</div>
+                <div class="sc-cart__actions">...</div>
+            </div>
+
+            <!-- Columna derecha: Totales -->
+            <div class="sc-cart__totals">
+                <div class="cart-collaterals">...</div>
+            </div>
+        </div>
+    </form>
+</div>
+```
+
+**Características implementadas:**
+- ✅ Page header full-width con título y breadcrumbs (fondo azul oscuro)
+- ✅ Layout de 2 columnas (items + totales) en desktop
+- ✅ Layout de 1 columna en móvil
+- ✅ Header con columnas: Producto, Precio, Cantidad, Subtotal, Eliminar
+- ✅ Items con imagen, nombre, categoría, precio, cantidad editable, subtotal
+- ✅ **Botones +/- para cantidad** (similar a Quick View y referencia https://detailx.ancorathemes.com/cart/)
+- ✅ Botón eliminar (×) con hover rojo
+- ✅ Sección de cupón con input y botón "Aplicar"
+- ✅ Botón "Actualizar carrito"
+- ✅ Totales del carrito (subtotal, envío, total) - width: 100%
+
+**Clases CSS principales:**
+- `.sc-cart` - Contenedor principal
+- `.sc-cart__layout` - Grid de 2 columnas
+- `.sc-cart__items` - Columna de productos
+- `.sc-cart__header` - Encabezados de columnas
+- `.sc-cart__item` - Cada producto en el carrito
+- `.sc-cart__item-product` - Imagen + detalles del producto
+- `.sc-cart__item-price` - Precio unitario
+- `.sc-cart__item-quantity` - Selector de cantidad
+- `.sc-cart__item-subtotal` - Subtotal del item
+- `.sc-cart__item-remove` - Botón eliminar
+- `.sc-cart__actions` - Cupón + actualizar
+- `.sc-cart__totals` - Columna de totales
+
+**Botones +/- para Cantidad (actualizado 2026-01-23):**
+
+Similar a la referencia https://detailx.ancorathemes.com/cart/ y el modal Quick View.
+
+**JavaScript** (en `cart.php` líneas 199-281):
+```javascript
+function initCartQuantity() {
+    const quantityContainers = document.querySelectorAll('.sc-cart__item-quantity .quantity');
+
+    quantityContainers.forEach(function(container) {
+        if (container.classList.contains('sc-cart-qty-processed')) return;
+
+        const input = container.querySelector('input.qty');
+        if (!input) return;
+
+        // Mark and style container
+        container.classList.add('sc-cart-qty-processed', 'sc-cart-qty');
+
+        // Create +/- buttons
+        const minusBtn = document.createElement('button');
+        minusBtn.className = 'sc-cart-qty__btn sc-cart-qty__btn--minus';
+        minusBtn.innerHTML = '<i class="fa-solid fa-minus"></i>';
+
+        const plusBtn = document.createElement('button');
+        plusBtn.className = 'sc-cart-qty__btn sc-cart-qty__btn--plus';
+        plusBtn.innerHTML = '<i class="fa-solid fa-plus"></i>';
+
+        container.insertBefore(minusBtn, input);
+        container.appendChild(plusBtn);
+
+        // Event listeners dispatch 'change' event for WooCommerce
+    });
+}
+
+// Re-initialize after AJAX cart updates
+jQuery(document.body).on('updated_cart_totals', initCartQuantity);
+```
+
+**CSS** (en `main.scss`):
+```scss
+// Container cuando JS añade la clase
+.sc-cart__item-quantity .quantity.sc-cart-qty {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    overflow: hidden;
+    background: $white-color;
+}
+
+// Botones +/-
+.sc-cart-qty__btn {
+    width: 40px;
+    height: 40px;
+    background: $white-color;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+        background-color: $secondary-color;
+        i { color: $white-color; }
+    }
+
+    &--minus { border-right: 1px solid #e5e7eb; }
+    &--plus { border-left: 1px solid #e5e7eb; }
+}
+```
+
+**Clases CSS de cantidad:**
+- `.sc-cart-qty` - Contenedor con inline-flex
+- `.sc-cart-qty-processed` - Marca para evitar doble procesamiento
+- `.sc-cart-qty__btn` - Botones +/-
+- `.sc-cart-qty__btn--minus` - Botón decrementar
+- `.sc-cart-qty__btn--plus` - Botón incrementar
+- `.sc-cart-qty__input` - Input de cantidad
+
+**Estilos Cart Totals (actualizado 2026-01-17):**
+- Contenedor con borde 2px azul oscuro ($secondary-color)
+- Header "Total del carrito" con fondo azul oscuro y texto blanco
+- Tabla con filas alternadas (gris claro #fafafa / blanco)
+- Fila Total con fondo #f3f4f6 y precio en rojo ($primary-color)
+- Botón "Finalizar compra" con flecha → animada en hover
+
+**Override de WooCommerce:**
+```scss
+// Override WooCommerce default cart_totals width
+.woocommerce .cart-collaterals .cart_totals,
+.woocommerce-page .cart-collaterals .cart_totals {
+    width: 100% !important;
+    float: none;
+}
+```
+
+**Configuración importante:**
+- La página del carrito debe usar el template `default` de WordPress (NO `archive-product.php`)
+- El contenido de la página debe ser el shortcode `[woocommerce_cart]`
+- El template se activa automáticamente cuando WooCommerce detecta el shortcode
+- El page header se genera automáticamente en `index.php` para páginas WooCommerce (cart, checkout, my-account)
+
+**Base de datos:**
+- Page ID: 69
+- `post_content`: `[woocommerce_cart]`
+- `_wp_page_template`: `default`
+
+---
+
+### WooCommerce Page Header ✅
+**Última actualización:** 2026-01-19
+
+Sección de header full-width que se muestra en páginas de WooCommerce (/tienda, /carrito, /finalizar-compra, /mi-cuenta).
+
+**Archivos:**
+- `wp-content/themes/system-cars-theme/archive-product.php` - Header para /tienda
+- `wp-content/themes/system-cars-theme/index.php` - Header para otras páginas WooCommerce
+- `wp-content/themes/system-cars-theme/scss/main.scss` - Estilos `.sc-page-header`
+
+**Estructura HTML:**
+```html
+<section class="sc-page-header">
+    <h1 class="sc-page-header__title">Título de Página</h1>
+    <nav class="sc-page-header__breadcrumbs">
+        <a href="/">Inicio</a>
+        <span class="breadcrumb-separator"></span>
+        <span class="breadcrumb-current">Página Actual</span>
+    </nav>
+</section>
+```
+
+**Estilos:**
+- Fondo: `$secondary-color` (#002060) con gradiente sutil
+- Título: blanco, uppercase, centrado, 2rem (mobile) / 2.5rem (desktop)
+- Breadcrumbs: blanco semi-transparente, separadores con "/"
+- Padding: 3rem (mobile) / 4rem (desktop)
+
+**Clases CSS:**
+- `.sc-page-header` - Contenedor principal full-width
+- `.sc-page-header__title` - Título de la página (H1)
+- `.sc-page-header__breadcrumbs` - Navegación de breadcrumbs
+- `.breadcrumb-separator` - Separador "/" entre items
+- `.breadcrumb-current` - Item actual (sin link)
+
+---
+
+### Checkout Page ✅
+**URL:** http://localhost:8080/checkout/
+**Última actualización:** 2026-01-19
+
+**Configuración para desarrollo local:**
+- `woocommerce_force_ssl_checkout` debe estar en `no` para evitar error SSL en localhost
+- Comando para desactivar SSL checkout:
+```sql
+UPDATE wp_options SET option_value='no' WHERE option_name='woocommerce_force_ssl_checkout';
+```
+
+**Base de datos:**
+- Page ID: 70
+- Slug: `checkout`
+- Usa WooCommerce Blocks (no shortcode clásico)
+
+**Comportamiento:**
+- Redirige a /carrito/ si el carrito está vacío
+- Muestra page header con breadcrumbs (Inicio / Checkout)
+- Formulario de checkout con datos de facturación y envío
+
+**Nota producción:** En producción, reactivar `woocommerce_force_ssl_checkout` a `yes` para seguridad en pagos.
+
+---
+
+### My Account Page ✅
+**URL:** http://localhost:8080/my-account/
+**Última actualización:** 2026-01-20
+
+**Estilos ubicados en:** `wp-content/themes/system-cars-theme/scss/main.scss`
+
+**Características del formulario de login:**
+- Ancho máximo: 500px centrado
+- Fondo blanco con borde sutil (#e5e7eb) y sombra
+- Título centrado con línea roja debajo (border-bottom: 2px solid $primary-color)
+- Inputs con padding generoso y estados de focus (box-shadow azul)
+- Botón de submit rojo a ancho completo con hover oscuro
+- Checkbox "Recuérdame" estilizado
+- Link "¿Olvidaste tu contraseña?" centrado
+
+**Clases CSS principales:**
+- `.woocommerce-account` - Body class de la página
+- `.woocommerce-form-login` - Formulario de login
+- `.woocommerce-form-register` - Formulario de registro
+- `.woocommerce-form-login__rememberme` - Checkbox recuérdame
+- `.woocommerce-LostPassword` - Link recuperar contraseña
+
+**Para usuarios logueados:**
+- `.woocommerce-MyAccount-navigation` - Navegación horizontal con botones pill
+- `.woocommerce-MyAccount-content` - Área de contenido con borde
+
+**Estilos responsive:**
+- Mobile: formulario ocupa ancho completo con padding
+- Desktop: max-width 500px centrado, padding 2.5rem
+
+---
+
+## 🔌 Custom Plugins
+
+### SC Excel Products ✅
+**Estado:** COMPLETADO Y FUNCIONANDO
+**Última actualización:** 2026-01-29
+**Ubicación:** `wp-content/plugins/sc-excel-products/`
+**URL:** https://systemcars.co
+
+Plugin personalizado para exportar e importar productos de WooCommerce mediante archivos Excel (.xlsx).
+
+**Estructura del plugin:**
+```
+sc-excel-products/
+├── sc-excel-products.php          # Archivo principal
+├── composer.json                   # Dependencias (PhpSpreadsheet)
+├── composer.lock
+├── vendor/                         # PhpSpreadsheet instalado
+├── includes/
+│   ├── class-admin-page.php        # Página de administración
+│   ├── class-exporter.php          # Lógica de exportación
+│   ├── class-importer.php          # Lógica de importación
+│   └── class-product-handler.php   # Manejo de productos WooCommerce
+├── templates/
+│   └── admin-page.php              # Template de la interfaz
+└── assets/
+    ├── css/admin.css               # Estilos de la página admin
+    └── js/admin.js                 # JavaScript (dropzone, progreso, etc.)
+```
+
+**Acceso:** WooCommerce → Excel Inventario
+
+**Características:**
+- ✅ Exportación de todos los productos a Excel (.xlsx)
+- ✅ Productos simples, variables y variaciones incluidos
+- ✅ Importación con creación y actualización de productos
+- ✅ Detección automática por ID o SKU
+- ✅ Vista previa antes de importar
+- ✅ Barra de progreso durante importación
+- ✅ Reporte detallado de resultados
+- ✅ Interfaz moderna con drag & drop
+- ✅ Compatible con WooCommerce HPOS (High-Performance Order Storage)
+
+**Columnas del Excel:**
+| Columna | Campo | Descripción |
+|---------|-------|-------------|
+| A | ID | ID del producto (vacío para nuevos) |
+| B | Tipo | simple / variable / variation |
+| C | SKU | Código único |
+| D | Parent SKU | SKU del padre (solo variaciones) |
+| E | Nombre | Título del producto |
+| F | Descripción | Descripción completa |
+| G | Descripción corta | Extracto |
+| H | Precio regular | Precio sin descuento |
+| I | Precio oferta | Precio con descuento |
+| J | Stock | Cantidad disponible |
+| K | Gestionar stock | yes / no |
+| L | Estado stock | instock / outofstock / onbackorder |
+| M | Categorías | Separadas por pipe: "Cat1 \| Cat2" |
+| N | Etiquetas | Separadas por pipe |
+| O | Imagen principal | URL de imagen destacada |
+| P | Galería | URLs separadas por pipe |
+| Q-AB | Atributos 1-3 | nombre, valores, visible, variación |
+| AC-AF | Dimensiones | Peso, largo, ancho, alto |
+| AG | Estado | publish / draft / private |
+
+**Flujo de uso:**
+
+**Exportar:**
+1. Ir a WooCommerce → Excel Inventario
+2. Click en "Descargar Excel"
+3. Se descarga `productos-YYYY-MM-DD.xlsx`
+
+**Importar:**
+1. Modificar el Excel exportado o crear uno nuevo
+2. Ir a WooCommerce → Excel Inventario
+3. Arrastrar archivo o click para seleccionar
+4. Ver vista previa de cambios
+5. Click en "Importar Productos"
+6. Ver reporte de resultados
+
+**Dependencias:**
+- PhpSpreadsheet 1.29+ (instalado via Composer)
+- WooCommerce 7.0+
+- PHP 7.4+
+
+**Para reinstalar dependencias:**
+```bash
+docker exec system-cars-site-wordpress-1 bash -c "cd /var/www/html/wp-content/plugins/sc-excel-products && curl -sS https://getcomposer.org/installer | php && php composer.phar install --no-dev --optimize-autoloader && rm composer.phar"
+```
+
+**AJAX Endpoints (functions en clase Importer/Exporter):**
+- `sc_export_products` - Genera y descarga el archivo Excel
+- `sc_import_products` - Procesa el archivo subido
+- `sc_import_preview` - Muestra vista previa antes de importar
+
+**Clases PHP:**
+- `SC_Excel_Products\SC_Excel_Products` - Clase principal singleton
+- `SC_Excel_Products\Admin_Page` - Página de administración
+- `SC_Excel_Products\Exporter` - Lógica de exportación con PhpSpreadsheet
+- `SC_Excel_Products\Importer` - Lógica de importación con validación
+- `SC_Excel_Products\Product_Handler` - Manejo de productos WooCommerce (CRUD)
+
+---
+
+### Custom Translations (Traducciones) ✅
+**Última actualización:** 2026-01-19
+
+Sistema de traducciones personalizadas para textos de WooCommerce que no están traducidos.
+
+**Archivo:** `wp-content/themes/system-cars-theme/functions.php`
+
+**Implementación dual:**
+
+1. **Filtro PHP** (`gettext`) - Para traducciones en templates PHP:
+```php
+function sc_custom_translations( $translated_text, $text, $domain ) {
+    $translations = [
+        'Add coupons' => 'Agregar cupones',
+        'Add a coupon' => 'Agregar un cupón',
+        'There are no payment methods available...' => 'No hay métodos de pago disponibles...',
+    ];
+    // ...
+}
+add_filter( 'gettext', 'sc_custom_translations', 20, 3 );
+```
+
+2. **JavaScript** - Para WooCommerce Blocks (React):
+```php
+function sc_woocommerce_blocks_custom_translations() {
+    // Inyecta script con wp.i18n.setLocaleData
+    // Usa MutationObserver para contenido dinámico
+}
+add_action( 'wp_footer', 'sc_woocommerce_blocks_custom_translations', 999 );
+```
+
+**Traducciones actuales:**
+| Original (EN) | Traducción (ES) |
+|--------------|-----------------|
+| Add coupons | Agregar cupones |
+| Add a coupon | Agregar un cupón |
+| There are no payment methods available... | No hay métodos de pago disponibles... |
+| No registered Payment Methods | No hay métodos de pago registrados |
+
+**Para agregar nuevas traducciones:**
+1. Agregar al array `$translations` en `sc_custom_translations()` (PHP)
+2. Agregar al objeto en `sc_woocommerce_blocks_custom_translations()` (JS)
+
+---
+
+### Hover Animations (Fade Effect) ✅
+**Última actualización:** 2026-01-19
+
+Animaciones de hover consistentes con efecto fade suave en todo el theme, basadas en el sitio de referencia (detailx.ancorathemes.com).
+
+**Elementos con animación fade:**
+
+| Elemento | Ubicación | Clase CSS | Transición |
+|----------|-----------|-----------|------------|
+| Slider Button | `blocks/slider-block/style.scss` | `.slide-button` | `background-color 0.3s ease, border-color 0.3s ease` |
+| Botón Tienda | `scss/main.scss` | `.btn-tienda` | `background-color 0.3s ease, border-color 0.3s ease` |
+| Redes Sociales Footer | `scss/main.scss` | `.footer-social a` | `background-color 0.3s ease` |
+
+**Implementación:**
+```scss
+/* Transición fade suave para hover */
+transition: background-color 0.3s ease, border-color 0.3s ease;
+```
+
+**Archivos modificados:**
+- `blocks/slider-block/style.scss` - Botón del slider
+- `scss/main.scss` - `.btn-tienda` y `.footer-social a`
+- `footer.php` - Agregada clase `footer-social` al contenedor de redes sociales
+
+---
+
+### Mobile Menu Animation ✅
+**Última actualización:** 2026-01-19
+
+Menú móvil fullscreen con animaciones estilo referencia (detailx.ancorathemes.com).
+
+**Archivos:**
+- `header.php` - Estructura HTML del menú móvil
+- `js/menu-mobile.js` - Lógica de toggle con clase `is-open`
+- `scss/main.scss` - Estilos de animación (`#mobile-menu`)
+
+**Características:**
+- ✅ **Overlay fade-in** - El menú aparece con fade suave (0.4s)
+- ✅ **Menu items staggered** - Cada item aparece con delay escalonado (0.08s entre cada uno)
+- ✅ **Close button animado** - Botón X con `::before/::after` y rotación en hover (mismo estilo que video-modal)
+- ✅ **Body scroll lock** - Clase `mobile-menu-open` en body para bloquear scroll
+- ✅ **Cierre con ESC** - Tecla Escape cierra el menú
+- ✅ **Cierre al click en link** - Navegación automática cierra el menú
+
+**Estructura CSS:**
+```scss
+#mobile-menu {
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+
+    &.is-open {
+        visibility: visible;
+        opacity: 1;
+    }
+
+    // Staggered animation for menu items
+    .menu-item {
+        opacity: 0;
+        transform: translateY(20px);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+
+        @for $i from 1 through 10 {
+            &:nth-child(#{$i}) {
+                transition-delay: #{$i * 0.08}s;
+            }
+        }
+    }
+
+    &.is-open .menu-item {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+```
+
+**Close Button (mismo estilo que video-modal):**
+```scss
+.mobile-menu-close {
+    // X formada con ::before y ::after
+    &::before,
+    &::after {
+        content: '';
+        width: 28px;
+        height: 2px;
+        background-color: #000;
+        transition: transform 0.3s ease;
+    }
+
+    &::before { transform: translate(-50%, -50%) rotate(45deg); }
+    &::after { transform: translate(-50%, -50%) rotate(-45deg); }
+
+    // Hover: rotación 90° adicional
+    &:hover::before { transform: translate(-50%, -50%) rotate(135deg); }
+    &:hover::after { transform: translate(-50%, -50%) rotate(45deg); }
+}
+```
+
+---
+
+### Info Bar (Barra Superior) ✅
+**Última actualización:** 2026-01-19
+
+Barra de información con horarios, teléfonos y dirección.
+
+**Ubicación:** `header.php` (líneas 12-78)
+
+**Comportamiento responsive:**
+- **Mobile:** Oculta (`hidden`)
+- **Desktop (md+):** Visible (`md:block`)
+
+**Clases:** `hidden md:block w-full bg-tertiary text-white text-sm py-2 px-4 md:px-0`
+
+---
+
+## 🎨 CSS Global del Theme
+
+### Archivos CSS Principales
+| Archivo | Descripción | Tamaño |
+|---------|-------------|--------|
+| `dist/css/style.css` | Tailwind CSS completo (base, components, utilities) | ~26 KB |
+| `dist/css/main-style.css` | Estilos SCSS personalizados (header, footer, nav, WooCommerce, etc.) | ~82 KB |
+
+### style.css (Tailwind)
+**Ubicación fuente:** `scss/style.css`
+**Contenido:**
+```css
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+```
+Este archivo se compila con PostCSS y genera todas las clases de Tailwind usadas en los templates PHP.
+
+### main-style.css (SCSS personalizado)
+**Ubicación fuente:** `scss/main.scss`
+**Contiene:**
+- Estilos globales del body (font-family: Arial)
+- Reset de links (text-decoration: none)
+- Estilos del header y navegación
+- Estilos del footer
+- Estilos de WooCommerce personalizados
+
+### Carga de CSS (functions.php)
+Los CSS se cargan en este orden:
+1. Google Fonts (Roboto Condensed - legacy)
+2. Font Awesome 6.6.0
+3. `style.css` (Tailwind)
+4. `main-style.css` (SCSS personalizado)
+5. Swiper CSS (para slider-block)
+
+---
+
+## Tech Stack
+- **CMS**: WordPress
+- **Theme**: Custom theme (`system-cars-theme`)
+- **Build Tool**: Vite 5.x
+- **CSS Framework**: Tailwind CSS 3.x
+- **CSS Preprocessor**: SASS
+- **JavaScript**: React components with WordPress Gutenberg blocks
+- **Icons**: FontAwesome
+- **Slider**: Swiper.js
+- **Local Development**: Docker (see docker-compose.yml)
+- **Theme Configuration**: theme.json (WordPress FSE - Full Site Editing)
+
+## Theme Configuration (theme.json)
+
+El proyecto utiliza `theme.json` para configurar características globales del tema según el estándar de WordPress Full Site Editing (FSE).
+
+**Ubicación:** `themes/system-cars-theme/theme.json`
+
+**Características configuradas:**
+
+### Spacing Presets
+Valores predefinidos para margin y padding que aparecen en todos los bloques con soporte de spacing:
+
+| Preset | Slug | Tamaño | Uso |
+|--------|------|--------|-----|
+| Extra pequeño | `xs` | 0.5rem (8px) | Espacios mínimos |
+| Pequeño | `small` | 1rem (16px) | Espacios reducidos |
+| Mediano | `medium` | 1.5rem (24px) | Espacios estándar |
+| Grande | `large` | 2rem (32px) | Espacios generosos |
+| Extra grande | `xl` | 3rem (48px) | Separaciones grandes |
+| 2X grande | `2xl` | 4rem (64px) | Separaciones muy grandes |
+
+**Unidades soportadas:** `px`, `em`, `rem`, `%`, `vh`, `vw`
+
+### Color Palette
+Paleta de colores del tema System Cars:
+- **Primary:** `#ff0000` (Rojo)
+- **Secondary:** `#002060` (Azul oscuro)
+- **Tertiary:** `#232225` (Gris oscuro)
+- **White:** `#ffffff`
+- **Black:** `#000000`
+
+### Typography
+Tamaños de fuente predefinidos:
+- **Pequeño:** 0.875rem
+- **Mediano:** 1rem
+- **Grande:** 1.25rem
+- **Extra grande:** 1.75rem
+
+**Nota:** Estos valores se sincronizan automáticamente con WordPress y están disponibles en todos los bloques que soporten estas características.
+
+## File Structure
+```
+.
+├── wp-content/
+│   ├── themes/
+│   │   └── system-cars-theme/    # Main custom theme
+│   ├── plugins/                   # WordPress plugins
+│   │   ├── advanced-custom-fields/
+│   │   ├── woocommerce/
+│   │   └── sc-excel-products/    # Custom Excel import/export plugin
+│   └── uploads/                   # Media uploads
+├── vite.config.js                 # Vite build configuration
+├── tailwind.config.js             # Tailwind CSS configuration
+├── postcss.config.js              # PostCSS configuration
+└── package.json                   # NPM dependencies
+```
+
+## Development Commands
+
+**IMPORTANTE:** Todos los comandos se ejecutan desde la **raíz del proyecto**, NO desde el directorio del tema.
+
+### Compile Everything (JS + SCSS)
+
+Vite compila tanto JavaScript/JSX como SCSS en un solo comando:
+
+**Development Mode (Recommended while editing):**
+```bash
+npm run dev
+```
+- Watches for file changes and recompiles automatically
+- Hot Module Replacement (HMR) for faster development
+- Use this while actively developing blocks
+
+**Production Build:**
+```bash
+npm run build
+```
+- Compiles and optimizes all JSX/JS and SCSS for production
+- Output goes directly to `wp-content/themes/system-cars-theme/dist/`
+- Files are immediately available for Docker/OrbStack
+
+**Blocks compiled by Vite:**
+- `slider-block/` - `index.js`, `edit.jsx`, `save.jsx`, `slider-frontend.js`, `style.scss`
+- `service-card/` - `index.js`, `style.scss`, `editor.scss`
+- `video-modal-block/` - `index.js`, `edit.jsx`, `save.jsx`, `frontend.js`, `style.scss`
+- `parallax-columns-block/` - `index.js`, `edit.jsx`, `save.jsx`, `frontend.js`, `style.scss`
+- `styled-button-block/` - `index.js`, `edit.jsx`, `frontend.js`, `style.scss`
+- `info-image-block/` - `index.js`, `edit.jsx`, `save.jsx`, `style.scss`, `editor.scss`
+
+**Output:**
+- JS files: `wp-content/themes/system-cars-theme/dist/[block-name].js`
+- CSS files: `wp-content/themes/system-cars-theme/dist/css/[block-name]-style.css`
+
+### Docker / OrbStack
+```bash
+docker-compose up
+```
+Runs WordPress locally at http://localhost:8080
+
+**NOTA:** Los archivos compilados van directamente a `wp-content/` que es el volumen montado por Docker, por lo que los cambios se reflejan inmediatamente sin necesidad de copiar archivos.
+
+## Coding Guidelines
+
+### WordPress Theme Development
+- All theme files are in `wp-content/themes/system-cars-theme/`
+- Follow WordPress coding standards for PHP
+- Use WordPress template hierarchy conventions
+- Leverage ACF (Advanced Custom Fields) for custom fields
+
+### JavaScript/React
+- Use React components for interactive elements
+- WordPress block editor components are available (@wordpress/blocks, @wordpress/block-editor)
+- Prefer functional components with hooks
+- Keep components modular and reusable
+
+### Styling
+- Use Tailwind CSS utility classes as the primary styling method
+- SASS is available for complex custom styles
+- Follow mobile-first responsive design
+- Use PostCSS for CSS processing
+- **Tailwind safelist** (`tailwind.config.js`): Contiene clases que deben estar siempre disponibles:
+  - Grid columns: `grid`, `grid-cols-12`, `col-span-*`, `md:col-span-*`
+  - Text sizes: `text-xs` a `text-3xl` con variantes `md:` y `lg:`
+  - Text alignment: `text-left`, `text-center`, `text-right`, `max-md:text-center`
+  - Custom heights: `h-[350px]`, `md:h-[300px]`, `lg:h-[400px]`
+
+### Git Workflow
+- Main branch: `main`
+- Current working branch: `master`
+- Always review changes before committing
+- Write clear, descriptive commit messages
+
+## Important Notes
+
+### When Working on This Project:
+
+1. **Theme Location**: The active theme is `system-cars-theme` in `wp-content/themes/`
+
+2. **Asset Building**:
+   - For JSX/JS changes (block React components): `npm run dev` from theme directory
+   - For block SCSS changes: `npm run build:blocks` from theme directory
+   - The theme has TWO build systems: Vite (for JS/JSX) and SASS compiler (for styles)
+   - **Important**: Both commands run from `wp-content/themes/system-cars-theme/`
+
+3. **Block Development Workflow**:
+
+   **For JSX/React changes:**
+   - Block JSX files: `blocks/[block-name]/edit.jsx`, `save.jsx`, `index.js`, etc.
+   - Run `npm run dev` from theme directory (watches and auto-recompiles)
+   - Compiled JS outputs to `dist/[block-name].js`
+   - JS files must be enqueued in `functions.php`
+
+   **For SCSS/Style changes:**
+   - Block SCSS files: `blocks/[block-name]/style.scss`
+   - Run `npm run build:blocks` from theme directory
+   - Compiled CSS outputs to `dist/css/[block-name].css`
+   - CSS files must be enqueued in `functions.php`
+
+4. **WordPress Integration**: Vite assets need to be properly enqueued in WordPress theme files (typically in `functions.php`)
+
+5. **ACF Plugin**: Advanced Custom Fields is installed - use it for custom field management
+
+6. **Gutenberg Blocks**: The project uses WordPress block editor components - custom blocks should follow WordPress block API
+
+7. **File References**: When referencing code, use the format `file_path:line_number`
+
+### Before Making Changes:
+
+- Check if changes affect both development and production builds
+- Ensure WordPress-specific functionality remains compatible
+- Test responsive design across breakpoints
+- Verify asset paths work correctly in WordPress context
+
+### Common Patterns:
+
+- **Custom Blocks**: Located in theme directory with block editor registration
+- **Sliders**: Use Swiper.js library (already installed)
+- **Icons**: Use FontAwesome React components
+- **Responsive**: Mobile-first with Tailwind breakpoints (sm:, md:, lg:, xl:)
+
+### Asset Enqueuing in WordPress
+
+Los bloques se pueden registrar de dos formas:
+
+**1. Usando block.json (Recomendado - WordPress 5.8+):**
+```json
+{
+  "apiVersion": 3,
+  "name": "system-cars/styled-button",
+  "editorScript": "file:../../dist/styled-button-block.js",
+  "style": "file:../../dist/css/styled-button-style.css"
+}
+```
+WordPress carga automáticamente los archivos cuando se usa `register_block_type()` con el path al directorio del bloque.
+
+**2. Usando functions.php (Método manual):**
+```php
+function system_cars_block_editor_assets() {
+    wp_enqueue_script(
+        'system-cars-slider-block',
+        get_template_directory_uri() . '/dist/slider-block.js',
+        ['wp-blocks', 'wp-element', 'wp-block-editor'],
+        filemtime(get_template_directory() . '/dist/slider-block.js')
+    );
+}
+add_action('enqueue_block_editor_assets', 'system_cars_block_editor_assets');
+```
+
+**En este proyecto:**
+- `functions.php:49-66` registra todos los bloques usando `register_block_type()` con block.json
+- `functions.php:140-191` encola manualmente algunos scripts del editor (system_cars_block_editor_assets)
+- `functions.php:68-134` encola assets del frontend (sc_enqueue_frontend_assets)
+
+**NOTA IMPORTANTE**: Si un bloque está registrado en AMBOS lugares (block.json Y functions.php), puede causar que los scripts se carguen dos veces o que se use una versión cacheada. Revisar `functions.php:148` donde hay un comentario: `// 'styled-button-block' se carga desde block.json`
+
+## Build Process
+
+El proyecto usa **Vite** como único sistema de build, configurado en `vite.config.js` en la raíz del proyecto.
+
+### Vite (Unified Build System)
+
+**Ubicación:** `vite.config.js` en la raíz del proyecto
+**Output:** `wp-content/themes/system-cars-theme/dist/`
+
+**Características:**
+- Compila React/JSX para bloques (`edit.jsx`, `save.jsx`, `frontend.js`)
+- Compila SCSS a CSS (con PostCSS y Tailwind)
+- Bundle JavaScript modules
+- Maneja WordPress externals (React, WordPress packages)
+- Output directo a `wp-content/` para sincronización inmediata con Docker/OrbStack
+
+**Run from:** Raíz del proyecto
+**Commands:**
+- `npm run dev` - Development mode with file watching
+- `npm run build` - Production build
+
+**Inputs configurados** (`vite.config.js`):
+- main.js, car-block, service-card, slider-block, slider-frontend
+- styled-button-block, styled-button-frontend, styled-button-style
+- info-image-block, info-image-style, info-image-editor
+- parallax-columns-block, parallax-columns-frontend, parallax-columns-style
+- video-modal-block, video-modal-frontend, video-modal-style
+
+### Workflow Simplificado
+
+| You're editing... | Command to use | Output |
+|------------------|----------------|--------|
+| Any `.jsx`, `.js`, or `.scss` file | `npm run build` | `wp-content/themes/system-cars-theme/dist/` |
+| Active development | `npm run dev` | Watch mode, auto-recompile |
+
+**Un solo comando compila todo.** No hay necesidad de comandos separados para JS y SCSS.
+
+## Questions to Ask Before Starting Work:
+
+1. Is this a theme file, plugin, or core WordPress modification?
+2. Do changes require rebuilding? → Run `npm run build` from project root
+3. Will this affect existing WordPress functionality or custom blocks?
+4. Should this be tested in both development and production modes?
+
+## Troubleshooting
+
+### ⚠️ WordPress Block Caching - IMPORTANTE
+
+**PROBLEMA CRÍTICO:** WordPress guarda el HTML de los bloques en la base de datos cuando guardas una página. Esto significa que:
+
+1. **Los bloques guardan HTML estático en la DB**: Cuando guardas una página, WordPress ejecuta la función `save()` del bloque y guarda el HTML resultante en `wp_posts.post_content`
+
+2. **Cambios en `save.jsx` NO se reflejan automáticamente**: Si modificas el componente `save.jsx`, las páginas existentes seguirán mostrando el HTML antiguo guardado en la DB
+
+3. **Necesitas actualizar cada página**: Después de cambiar un bloque, debes:
+   - Abrir cada página que usa ese bloque en el editor
+   - WordPress detectará que el HTML es diferente
+   - Guardar la página para regenerar el HTML con la nueva versión
+
+**Síntomas:**
+- Cambios en JSX no aparecen en el frontend aunque compilaste correctamente
+- El HTML renderizado no coincide con tu código de `save.jsx`
+- Los archivos compilados son correctos pero el sitio muestra código antiguo
+
+**Soluciones:**
+1. **Usar deprecated versions**: Añade versiones antiguas en el array `deprecated` del bloque para migración automática
+2. **Regenerar páginas**: Abre y guarda cada página en el editor
+3. **Eliminar y recrear bloques**: Como último recurso, elimina el bloque de la página y añádelo nuevamente
+
+**Ejemplo en styled-button-block:**
+- ✅ Código actualizado con clases Tailwind
+- ✅ Archivos compilados correctos
+- ❌ Páginas guardadas antes del cambio siguen mostrando HTML antiguo sin las clases Tailwind
+- 🔧 Solución: Abrir página en editor → WordPress detecta cambio → Guardar → HTML regenerado
+
+---
+
+### SASS Modern Syntax ✅
+El proyecto usa la sintaxis moderna de SASS:
+
+**Imports con @use (no @import):**
+```scss
+// main.scss
+@use 'sass:color';
+@use "variables" as *;
+@use "mixins" as *;
+```
+
+**Color functions modernas:**
+```scss
+@use "sass:color";
+background-color: color.adjust($secondary-color, $lightness: -10%);  // Oscurecer
+background-color: color.adjust($black-color, $lightness: 15%);       // Aclarar
+```
+
+**Vendor prefixes con propiedad estándar:**
+```scss
+// Siempre incluir la propiedad estándar junto al vendor prefix
+-webkit-appearance: none;
+-moz-appearance: textfield;
+appearance: none;  // ← Propiedad estándar
+```
+
+### Styles Not Updating
+1. Make sure you compiled the SCSS: `npm run build:blocks`
+2. Check if CSS file exists in `dist/css/`
+3. Verify the CSS is enqueued in `functions.php`
+4. Clear WordPress cache if using caching plugins
+5. Hard refresh browser (Cmd+Shift+R / Ctrl+Shift+F5)
+6. **IMPORTANTE**: Check if WordPress is serving inline CSS (view page source and look for `<style>` tags in `<head>`)
+7. If using inline CSS, restart Docker containers: `docker-compose restart`
+
+### Block Not Appearing in Editor
+1. Check block registration in block's `index.js`
+2. Verify block is enqueued in `functions.php`
+3. Compile JavaScript: `cd wp-content/themes/system-cars-theme && npm run build`
+4. Check browser console for errors
+5. Verify compiled JS file exists in `dist/[block-name].js`
+
+### JSX/React Changes Not Reflecting
+1. Make sure Vite is running: `npm run dev` in theme directory
+2. Check for compilation errors in terminal
+3. Verify the JSX file is listed in `vite.config.js` inputs (line 45-55)
+4. Hard refresh browser (Cmd+Shift+R / Ctrl+Shift+F5)
+5. Check that WordPress externals are correctly configured
+6. For production: run `npm run build` instead of `dev`
+
+### Build Errors
+**Vite/JSX errors:**
+- Check for syntax errors in JSX files
+- Verify React imports are correct
+- Ensure WordPress packages are marked as external in `vite.config.js:57-66`
+
+**SASS errors:**
+- Check SCSS syntax in `style.scss` files
+- Verify variable imports: `@use "../../scss/variables" as *;`
+- Ensure `sass:color` is imported if using color functions
+
+---
+
+### WordPress Inline CSS vs External CSS Files
+
+**Problema:** WordPress puede servir CSS de bloques como inline CSS en el `<head>` en lugar de cargar archivos externos.
+
+**Cómo detectar:**
+1. Abrir página en el navegador
+2. Ver código fuente (View Page Source)
+3. Buscar `<style id="wp-block-library-inline-css">` o similar en el `<head>`
+4. Si encuentras los estilos del bloque inline en lugar de `<link>` tags, WordPress está usando inline CSS
+
+**Por qué pasa:**
+- WordPress optimiza cargando CSS crítico inline
+- Puede usar versiones cacheadas del CSS
+- Cambios en archivos CSS compilados no se reflejan hasta reiniciar WordPress
+
+**Solución:**
+1. Reiniciar contenedores Docker: `docker-compose restart`
+2. Verificar que el CSS está encolado correctamente en `functions.php`
+3. Verificar que `block.json` tiene la propiedad `style` correcta
+4. En desarrollo, desactivar plugins de optimización/caché si existen
+
+**Archivos a verificar:**
+- `themes/system-cars-theme/dist/css/[block-name].css` (archivo compilado)
+- `themes/system-cars-theme/blocks/[block-name]/block.json` (metadata)
+- `themes/system-cars-theme/functions.php` (enqueue functions)
+
+## Quick Reference
+
+### Command Cheat Sheet
+
+All commands run from: **project root** (NOT from theme directory)
+
+```bash
+# Development (watching for changes)
+npm run dev                    # Watch and compile everything (JS + SCSS)
+
+# Production build
+npm run build                  # Compile everything for production
+
+# Docker/OrbStack
+docker-compose up              # Start WordPress at http://localhost:8080
+```
+
+### File Types & Output
+
+| File Type | Example | Output |
+|-----------|---------|--------|
+| Block JSX | `blocks/slider-block/edit.jsx` | `wp-content/.../dist/slider-block.js` |
+| Block JS | `blocks/slider-block/index.js` | `wp-content/.../dist/slider-block.js` |
+| Block SCSS | `blocks/slider-block/style.scss` | `wp-content/.../dist/css/slider-block-style.css` |
+| Main JS | `js/main.js` | `wp-content/.../dist/main.js` |
+
+**Un solo comando (`npm run build`) compila todo.**
+
+### Typical Development Workflow
+
+```bash
+# Terminal 1: Watch and auto-compile
+npm run dev
+
+# That's it! Changes sync automatically to Docker/OrbStack
+```
+
+**Before committing/deploying:**
+```bash
+npm run build
+```
