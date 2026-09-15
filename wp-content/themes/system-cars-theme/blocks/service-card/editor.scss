@@ -17,3 +17,37 @@
     @apply text-primary font-bold;
   }
 }
+
+.sc-service-card-editor {
+  &__order-wrap {
+    background: rgba(255, 255, 255, 0.92);
+    color: #111;
+    border-radius: 4px;
+    padding: 2px 6px;
+  }
+
+  &__order-label {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__order-select {
+    margin-bottom: 0 !important;
+    min-width: 64px;
+
+    .components-base-control__field {
+      margin-bottom: 0;
+    }
+
+    select {
+      min-height: 28px;
+      padding: 0 24px 0 8px;
+      line-height: 1.2;
+    }
+  }
+
+  &__order {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+}

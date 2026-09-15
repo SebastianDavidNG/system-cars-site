@@ -4,21 +4,82 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-// Dynamically measure header height and update CSS variable on each slider
-function updateSliderHeights() {
+/**
+ * Document-layout height of info bar + header.
+ * Avoid getBoundingClientRect(): it changes with scroll and caused intermittent
+ * oversized sliders until a lucky reload.
+ */
+function getTopChromeHeight() {
   const header = document.querySelector('header[role="banner"]');
-  if (!header) return;
-  // getBoundingClientRect().bottom = distance from viewport top to header bottom
-  // This naturally includes the info bar above the header
-  const headerBottom = header.getBoundingClientRect().bottom;
+  if (!header) {
+    return 0;
+  }
+  return header.offsetTop + header.offsetHeight;
+}
+
+function updateSliderHeights() {
+  const topChrome = getTopChromeHeight();
+  // If header layout is not ready yet, skip — a later pass will apply.
+  if (topChrome <= 0) {
+    return;
+  }
+
+  const viewportHeight =
+    (window.visualViewport && window.visualViewport.height) || window.innerHeight;
+  const available = Math.max(Math.round(viewportHeight - topChrome), 240);
+
   document.querySelectorAll('.wp-block-system-cars-slider-block').forEach((el) => {
-    el.style.setProperty('--header-height', headerBottom + 'px');
+    el.style.setProperty('--header-height', `${topChrome}px`);
+    el.style.height = `${available}px`;
+    el.style.maxHeight = `${available}px`;
   });
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+/**
+ * Remeasure after layout/fonts/images settle — fixes the intermittent wrong height.
+ */
+function scheduleHeightUpdates() {
   updateSliderHeights();
+
+  requestAnimationFrame(() => {
+    updateSliderHeights();
+    requestAnimationFrame(updateSliderHeights);
+  });
+
+  window.addEventListener('load', updateSliderHeights, { once: true });
+
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(updateSliderHeights).catch(() => {});
+  }
+
+  const header = document.querySelector('header[role="banner"]');
+  if (header && typeof ResizeObserver !== 'undefined') {
+    const ro = new ResizeObserver(() => updateSliderHeights());
+    ro.observe(header);
+  }
+}
+
+function setArrowPositions(prevBtn, nextBtn) {
+  const isDesktop = window.innerWidth >= 1024;
+  const isTablet = window.innerWidth >= 768;
+  const arrowOffset = isDesktop ? '70px' : (isTablet ? '40px' : '20px');
+
+  if (prevBtn) {
+    prevBtn.style.left = arrowOffset;
+    prevBtn.style.right = 'auto';
+  }
+  if (nextBtn) {
+    nextBtn.style.right = arrowOffset;
+    nextBtn.style.left = 'auto';
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  scheduleHeightUpdates();
   window.addEventListener('resize', updateSliderHeights);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', updateSliderHeights);
+  }
 
   document
     .querySelectorAll('.wp-block-system-cars-slider-block')
@@ -29,7 +90,6 @@ document.addEventListener('DOMContentLoaded', () => {
       const autoplayEnabled = sliderEl.dataset.autoplay !== 'false';
       const autoplayDelay = parseInt(sliderEl.dataset.autoplayDelay, 10) || 5000;
 
-      // Create pagination container if it doesn't exist
       let paginationEl = sliderEl.querySelector('.swiper-pagination');
       if (!paginationEl) {
         paginationEl = document.createElement('div');
@@ -37,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
         sliderEl.appendChild(paginationEl);
       }
 
-      // The block element itself is the swiper container (has class .swiper)
       const swiper = new Swiper(sliderEl, {
         modules: [Navigation, Pagination, Autoplay, EffectFade],
         loop: totalSlides > 1,
@@ -53,7 +112,6 @@ document.addEventListener('DOMContentLoaded', () => {
           el: paginationEl,
           clickable: true,
           renderBullet: function (index, className) {
-            // Format number with leading zero (01, 02, 03...)
             const num = String(index + 1).padStart(2, '0');
             return `<span class="${className}">${num}</span>`;
           },
@@ -64,28 +122,13 @@ document.addEventListener('DOMContentLoaded', () => {
         speed: 800,
       });
 
-      // Force arrow positions after Swiper initialization (overrides Swiper defaults)
-      const isDesktop = window.innerWidth >= 1024;
-      const isTablet = window.innerWidth >= 768;
-      const arrowOffset = isDesktop ? '70px' : (isTablet ? '40px' : '20px');
+      setArrowPositions(prevBtn, nextBtn);
+      window.addEventListener('resize', () => setArrowPositions(prevBtn, nextBtn));
 
-      if (prevBtn) {
-        prevBtn.style.left = arrowOffset;
-        prevBtn.style.right = 'auto';
-      }
-      if (nextBtn) {
-        nextBtn.style.right = arrowOffset;
-        nextBtn.style.left = 'auto';
-      }
-
-      // Update positions on window resize
-      window.addEventListener('resize', () => {
-        const isDesktopNow = window.innerWidth >= 1024;
-        const isTabletNow = window.innerWidth >= 768;
-        const newOffset = isDesktopNow ? '70px' : (isTabletNow ? '40px' : '20px');
-
-        if (prevBtn) prevBtn.style.left = newOffset;
-        if (nextBtn) nextBtn.style.right = newOffset;
-      });
+      // After Swiper mutates the DOM, re-fit to viewport
+      updateSliderHeights();
+      swiper.on('init', updateSliderHeights);
+      swiper.on('resize', updateSliderHeights);
+      swiper.on('imagesReady', updateSliderHeights);
     });
 });

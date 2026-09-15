@@ -5,8 +5,11 @@
  * This template maintains WooCommerce's original structure for JS compatibility
  * while applying custom styling via CSS classes.
  *
- * @package System_Cars_Theme
- * @version 9.6.0
+ * This template can be overridden by copying it to yourtheme/woocommerce/single-product/add-to-cart/variable.php.
+ *
+ * @see https://woocommerce.com/document/template-structure/
+ * @package WooCommerce\Templates
+ * @version 11.1.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -25,7 +28,6 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 	<?php if ( empty( $available_variations ) && false !== $available_variations ) : ?>
 		<p class="stock out-of-stock sc-out-of-stock"><?php echo esc_html( apply_filters( 'woocommerce_out_of_stock_message', __( 'Este producto está agotado.', 'system-cars-theme' ) ) ); ?></p>
 	<?php else : ?>
-		<!-- WooCommerce Variations Table - Required for JS functionality -->
 		<table class="variations sc-variations-table" cellspacing="0" role="presentation">
 			<tbody>
 				<?php foreach ( $attributes as $attribute_name => $options ) : ?>
@@ -45,16 +47,29 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 										'class'     => 'sc-variations__select',
 									)
 								);
-								echo end( $attribute_keys ) === $attribute_name ? wp_kses_post( apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#">' . esc_html__( 'Limpiar', 'system-cars-theme' ) . '</a>' ) ) : '';
+								/**
+								 * Filters the reset variation button.
+								 *
+								 * @since 2.5.0
+								 *
+								 * @param string $button The reset variation button HTML.
+								 */
+								echo end( $attribute_keys ) === $attribute_name ? wp_kses_post( apply_filters( 'woocommerce_reset_variations_link', '<a class="reset_variations" href="#" aria-label="' . esc_attr__( 'Clear options', 'woocommerce' ) . '">' . esc_html__( 'Limpiar', 'system-cars-theme' ) . '</a>' ) ) : '';
 							?>
 						</td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
 		</table>
-
 		<div class="reset_variations_alert screen-reader-text" role="alert" aria-live="polite" aria-relevant="all"></div>
-
+		<?php
+		// Reset snapshot for cases where a theme/plugin loads the variation form later, like quick-view modals.
+		if ( function_exists( 'wc_get_product_gallery_html' ) ) :
+			?>
+		<template class="wc-product-gallery-default-template"><?php echo wc_get_product_gallery_html( $product ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></template>
+			<?php
+		endif;
+		?>
 		<?php do_action( 'woocommerce_after_variations_table' ); ?>
 
 		<div class="single_variation_wrap sc-single-variation-wrap">
@@ -67,6 +82,7 @@ do_action( 'woocommerce_before_add_to_cart_form' ); ?>
 				/**
 				 * Hook: woocommerce_single_variation. Used to output the cart button and placeholder for variation data.
 				 *
+				 * @since 2.4.0
 				 * @hooked woocommerce_single_variation - 10 Empty div for variation data.
 				 * @hooked woocommerce_single_variation_add_to_cart_button - 20 Qty and cart button.
 				 */

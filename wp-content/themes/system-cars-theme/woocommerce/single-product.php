@@ -1,8 +1,12 @@
 <?php
 /**
- * Single Product Template
+ * The Template for displaying all single products
  *
- * @package System_Cars_Theme
+ * This template can be overridden by copying it to yourtheme/woocommerce/single-product.php.
+ *
+ * @see         https://woocommerce.com/document/template-structure/
+ * @package     WooCommerce\Templates
+ * @version     1.6.4
  */
 
 defined( 'ABSPATH' ) || exit;

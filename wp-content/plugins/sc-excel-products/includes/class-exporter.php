@@ -52,9 +52,13 @@ class Exporter {
             wp_die( __( 'PhpSpreadsheet no está disponible. Ejecuta "composer install" en el directorio del plugin.', 'sc-excel-products' ) );
         }
 
-        // Increase memory and time limits
-        ini_set( 'memory_limit', '512M' );
-        set_time_limit( 300 );
+        // Increase memory and time limits when the host allows it.
+        if ( function_exists( '\ini_set' ) ) {
+            @\ini_set( 'memory_limit', '512M' );
+        }
+        if ( function_exists( '\set_time_limit' ) ) {
+            @\set_time_limit( 300 );
+        }
 
         // Generate Excel
         $this->generate_excel();

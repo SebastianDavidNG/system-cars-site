@@ -1,33 +1,60 @@
 .service-card {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    border-width: 1px;
-    --tw-border-opacity: 1;
-    border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
-    --tw-bg-opacity: 1;
-    background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: rgb(229 231 235 / var(--tw-border-opacity, 1));
+  --tw-bg-opacity: 1;
+  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1));
 }
 .service-card__icon {
-    margin-bottom: 1rem;
-    height: 3rem;
-    width: 3rem
+  margin-bottom: 1rem;
+  height: 3rem;
+  width: 3rem;
 }
 .service-card h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.25rem;
-    line-height: 1.75rem;
-    font-weight: 600
+  margin-bottom: 0.5rem;
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
 }
 .service-card p {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-    --tw-text-opacity: 1;
-    color: rgb(75 85 99 / var(--tw-text-opacity, 1))
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  --tw-text-opacity: 1;
+  color: rgb(75 85 99 / var(--tw-text-opacity, 1));
 }
 .service-card__arrow {
-    font-weight: 700;
-    --tw-text-opacity: 1;
-    color: rgb(255 0 0 / var(--tw-text-opacity, 1))
+  font-weight: 700;
+  --tw-text-opacity: 1;
+  color: rgb(255 0 0 / var(--tw-text-opacity, 1));
+}
+
+.sc-service-card-editor__order-wrap {
+  background: rgba(255, 255, 255, 0.92);
+  color: #111;
+  border-radius: 4px;
+  padding: 2px 6px;
+}
+.sc-service-card-editor__order-label {
+  font-weight: 600;
+  white-space: nowrap;
+}
+.sc-service-card-editor__order-select {
+  margin-bottom: 0 !important;
+  min-width: 64px;
+}
+.sc-service-card-editor__order-select .components-base-control__field {
+  margin-bottom: 0;
+}
+.sc-service-card-editor__order-select select {
+  min-height: 28px;
+  padding: 0 24px 0 8px;
+  line-height: 1.2;
+}
+.sc-service-card-editor__order {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }

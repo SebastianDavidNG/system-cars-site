@@ -11,3 +11,7 @@ wp-content/cache/
 wp-content/upgrade/
 wp-content/backup-db/
 .opencode
+
+# All-in-One WP Migration backups (too large for GitHub)
+wp-content/ai1wm-backups/*.wpress
+wp-content/ai1wm-backups/*.wpress.*

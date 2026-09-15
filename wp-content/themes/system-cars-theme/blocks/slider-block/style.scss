@@ -5,32 +5,43 @@
 @tailwind utilities;
 
 .wp-block-system-cars-slider-block {
-  /* CSS variable set dynamically by JS (slider-frontend.js measures real header height) */
-  --header-height: 0px;
+  /* Fallback until JS measures real top chrome (info bar + header) */
+  --header-height: 85px;
 
   /* full-width viewport hack */
   @apply relative overflow-hidden;
   width: 100vw;
   margin-left: calc(50% - 50vw);
 
-  /* Fill exactly the viewport below the header, at any resolution */
+  /*
+   * Fill exactly the visible viewport below the header.
+   * JS (slider-frontend.js) also sets an explicit px height for reliability.
+   * Use svh first (stable visible viewport), then dvh where supported.
+   */
+  height: calc(100svh - var(--header-height));
   height: calc(100dvh - var(--header-height));
-  min-height: 300px; /* safety fallback */
+  max-height: calc(100svh - var(--header-height));
+  max-height: calc(100dvh - var(--header-height));
+  min-height: 240px;
+
+  @screen md {
+    --header-height: 130px;
+  }
 
   .swiper {
     @apply w-full h-full;
   }
 
   .swiper-wrapper {
-    @apply flex;
+    @apply flex h-full;
   }
 
   .swiper-slide {
-    @apply relative flex-shrink-0 w-full h-full;
+    @apply relative flex-shrink-0 w-full h-full overflow-hidden;
   }
 
   .swiper-slide img {
-    @apply w-full h-full object-cover;
+    @apply absolute inset-0 w-full h-full object-cover;
   }
 
   /* center overlay content */
@@ -209,23 +220,22 @@
     @apply hidden;
   }
 
-  /* Numbered pagination (01, 02, 03...) */
-  /* Override Swiper default pagination position */
-  --swiper-pagination-bottom: 50px;
+  /* Numbered pagination (01, 02, 03...) — cerca del bottom del viewport */
+  --swiper-pagination-bottom: 20px;
 
   @screen md {
-    --swiper-pagination-bottom: 60px;
+    --swiper-pagination-bottom: 24px;
   }
 
   @screen lg {
-    --swiper-pagination-bottom: 70px;
+    --swiper-pagination-bottom: 30px;
   }
 
   .swiper-pagination,
   .swiper-pagination-bullets,
   .swiper-pagination-bullets.swiper-pagination-horizontal {
     @apply absolute left-0 right-0 flex justify-center items-center gap-4 z-20;
-    bottom: var(--swiper-pagination-bottom, 80px) !important;
+    bottom: var(--swiper-pagination-bottom, 30px) !important;
 
     @screen md {
       @apply gap-6;

@@ -707,11 +707,11 @@ video {
 .flex-wrap{
   flex-wrap: wrap;
 }
+.items-start{
+  align-items: flex-start;
+}
 .items-center{
   align-items: center;
-}
-.justify-end{
-  justify-content: flex-end;
 }
 .justify-center{
   justify-content: center;
@@ -1013,6 +1013,9 @@ video {
 .opacity-50{
   opacity: 0.5;
 }
+.opacity-70{
+  opacity: 0.7;
+}
 .shadow{
   --tw-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
   --tw-shadow-colored: 0 1px 3px 0 var(--tw-shadow-color), 0 1px 2px -1px var(--tw-shadow-color);
@@ -1059,16 +1062,28 @@ video {
   transition-duration: 500ms;
 }
 .wp-block-system-cars-slider-block {
-  /* CSS variable set dynamically by JS (slider-frontend.js measures real header height) */
-  --header-height: 0px;
+  /* Fallback until JS measures real top chrome (info bar + header) */
+  --header-height: 85px;
   /* full-width viewport hack */
   position: relative;
   overflow: hidden;
   width: 100vw;
   margin-left: calc(50% - 50vw);
-  /* Fill exactly the viewport below the header, at any resolution */
+  /*
+   * Fill exactly the visible viewport below the header.
+   * JS (slider-frontend.js) also sets an explicit px height for reliability.
+   * Use svh first (stable visible viewport), then dvh where supported.
+   */
+  height: calc(100svh - var(--header-height));
   height: calc(100dvh - var(--header-height));
-  min-height: 300px; /* safety fallback */
+  max-height: calc(100svh - var(--header-height));
+  max-height: calc(100dvh - var(--header-height));
+  min-height: 240px;
+}
+@media (min-width: 768px) {
+  .wp-block-system-cars-slider-block {
+    --header-height: 130px;
+  }
 }
 .wp-block-system-cars-slider-block .swiper{
   height: 100%;
@@ -1076,14 +1091,18 @@ video {
 }
 .wp-block-system-cars-slider-block .swiper-wrapper{
   display: flex;
+  height: 100%;
 }
 .wp-block-system-cars-slider-block .swiper-slide{
   position: relative;
   height: 100%;
   width: 100%;
   flex-shrink: 0;
+  overflow: hidden;
 }
 .wp-block-system-cars-slider-block .swiper-slide img{
+  position: absolute;
+  inset: 0px;
   height: 100%;
   width: 100%;
   -o-object-fit: cover;
@@ -1318,18 +1337,17 @@ video {
   display: none;
 }
 .wp-block-system-cars-slider-block {
-  /* Numbered pagination (01, 02, 03...) */
-  /* Override Swiper default pagination position */
-  --swiper-pagination-bottom: 50px;
+  /* Numbered pagination (01, 02, 03...) — cerca del bottom del viewport */
+  --swiper-pagination-bottom: 20px;
 }
 @media (min-width: 768px) {
   .wp-block-system-cars-slider-block {
-    --swiper-pagination-bottom: 60px;
+    --swiper-pagination-bottom: 24px;
   }
 }
 @media (min-width: 1024px) {
   .wp-block-system-cars-slider-block {
-    --swiper-pagination-bottom: 70px;
+    --swiper-pagination-bottom: 30px;
   }
 }
 .wp-block-system-cars-slider-block .swiper-pagination,
@@ -1343,7 +1361,7 @@ video {
   align-items: center;
   justify-content: center;
   gap: 1rem;
-  bottom: var(--swiper-pagination-bottom, 80px) !important;
+  bottom: var(--swiper-pagination-bottom, 30px) !important;
 }
 @media (min-width: 768px) {
   .wp-block-system-cars-slider-block .swiper-pagination,

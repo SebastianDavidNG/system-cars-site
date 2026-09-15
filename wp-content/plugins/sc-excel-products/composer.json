@@ -20,6 +20,7 @@
     },
     "config": {
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "platform-check": false
     }
 }

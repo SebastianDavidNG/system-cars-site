@@ -20,9 +20,40 @@
             <ul class="space-y-2 text-sm text-white">
                 <li>BOGOTÁ - COLOMBIA</li>
                 <li><a href="https://maps.app.goo.gl/GZrgUUa9p6Dk5tek6?g_st=ipc" target="_blank">AV CALLE 1 # 25 - 42</a></li>
-                <li><a href="mailto:contacto@systemcars.com?subject=Quisiera%20recibir%20más%20información&body=Hola,%20es%20System%20Cars,%20quisiera%20una%20cotización%20sobre...">contacto@systemcars.com</a></li>
-                <li><a href="tel:3208158975">320 815 89 75</a></li>
-                <li><a href="tel:3005605344">300 560 53 44</a></li>
+                <li>
+                    <?php
+                    $footer_email = function_exists( 'get_field' ) ? get_field( 'email_footer', 61 ) : '';
+                    $footer_email = is_string( $footer_email ) ? trim( $footer_email ) : '';
+                    if ( $footer_email === '' ) {
+                        $footer_email = 'info@systemcars.com';
+                    }
+                    $footer_mailto = 'mailto:' . $footer_email
+                        . '?subject=' . rawurlencode( 'Quisiera recibir más información' )
+                        . '&body=' . rawurlencode( 'Hola, es System Cars, quisiera una cotización sobre...' );
+                    ?>
+                    <a href="<?php echo esc_url( $footer_mailto ); ?>">
+                        <?php echo esc_html( $footer_email ); ?>
+                    </a>
+                </li>
+                <?php
+                // Mismos teléfonos ACF que la barra de información del header.
+                $info_page = get_page_by_path( 'barra-de-informacion' );
+                $info_id   = $info_page ? $info_page->ID : 0;
+                $telefono1 = ( function_exists( 'get_field' ) && $info_id ) ? get_field( 'telefono_1', $info_id ) : '';
+                $telefono2 = ( function_exists( 'get_field' ) && $info_id ) ? get_field( 'telefono_2', $info_id ) : '';
+                $tel1_href = $telefono1 ? preg_replace( '/\D+/', '', (string) $telefono1 ) : '';
+                $tel2_href = $telefono2 ? preg_replace( '/\D+/', '', (string) $telefono2 ) : '';
+                ?>
+                <?php if ( $telefono1 && $tel1_href ) : ?>
+                    <li><a href="tel:<?php echo esc_attr( $tel1_href ); ?>"><?php echo esc_html( $telefono1 ); ?></a></li>
+                <?php endif; ?>
+                <?php if ( $telefono2 && $tel2_href ) : ?>
+                    <li><a href="tel:<?php echo esc_attr( $tel2_href ); ?>"><?php echo esc_html( $telefono2 ); ?></a></li>
+                <?php endif; ?>
+
+
+
+                
             </ul>
         </div>
 
@@ -42,10 +73,10 @@
         <div class="text-center md:text-left">
             <h3 class="text-lg font-semibold mb-4 uppercase">Encuéntranos en</h3>
             <div class="footer-social flex space-x-3 justify-center md:justify-start">
-                <a href="https://facebook.com" target="_blank" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-blue-600">
+                <a href="https://www.facebook.com/system.cars1" target="_blank" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-blue-600">
                     <i class="fab fa-facebook-f"></i>
                 </a>
-                <a href="https://instagram.com" target="_blank" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-pink-500">
+                <a href="https://www.instagram.com/system.cars" target="_blank" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-pink-500">
                     <i class="fab fa-instagram"></i>
                 </a>
                 <a href="https://youtube.com" target="_blank" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-red-600">

@@ -4,9 +4,15 @@
  *
  * This template can be overridden by copying it to yourtheme/woocommerce/cart/cart.php.
  *
+ * HOWEVER, on occasion WooCommerce will need to update template files and you
+ * (the theme developer) will need to copy the new files to your theme to
+ * maintain compatibility. We try to do this as little as possible, but it does
+ * happen. When this occurs the version of the template file will be bumped and
+ * the readme will list any important changes.
+ *
  * @see     https://woocommerce.com/document/template-structure/
  * @package WooCommerce\Templates
- * @version 10.1.0
+ * @version 11.0.0
  */
 
 defined( 'ABSPATH' ) || exit;
@@ -35,7 +41,26 @@ do_action( 'woocommerce_before_cart' ); ?>
                     $_product   = apply_filters( 'woocommerce_cart_item_product', $cart_item['data'], $cart_item, $cart_item_key );
                     $product_id = apply_filters( 'woocommerce_cart_item_product_id', $cart_item['product_id'], $cart_item, $cart_item_key );
 
-                    if ( $_product && $_product->exists() && $cart_item['quantity'] > 0 && apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key ) ) {
+                    /**
+                     * Filter whether this cart item is visible in the cart.
+                     *
+                     * @since 2.1.0
+                     * @param bool   $visible       Whether the cart item is visible. Default true.
+                     * @param array  $cart_item     The cart item data.
+                     * @param string $cart_item_key The cart item key.
+                     */
+                    $visible = apply_filters( 'woocommerce_cart_item_visible', true, $cart_item, $cart_item_key );
+
+                    if ( $_product instanceof WC_Product && $_product->exists() && $cart_item['quantity'] > 0 && $visible ) {
+                        /**
+                         * Filter the product name.
+                         *
+                         * @since 2.1.0
+                         * @param string $product_name Name of the product in the cart.
+                         * @param array  $cart_item    The product in the cart.
+                         * @param string $cart_item_key Key for the product in the cart.
+                         */
+                        $product_name      = apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key );
                         $product_permalink = apply_filters( 'woocommerce_cart_item_permalink', $_product->is_visible() ? $_product->get_permalink( $cart_item ) : '', $cart_item, $cart_item_key );
                         ?>
                         <div class="sc-cart__item woocommerce-cart-form__cart-item <?php echo esc_attr( apply_filters( 'woocommerce_cart_item_class', 'cart_item', $cart_item, $cart_item_key ) ); ?>">
@@ -44,12 +69,21 @@ do_action( 'woocommerce_before_cart' ); ?>
                             <div class="sc-cart__item-product">
                                 <div class="sc-cart__item-image">
                                     <?php
+                                    /**
+                                     * Filter the product thumbnail displayed in the WooCommerce cart.
+                                     *
+                                     * @param string $thumbnail     The HTML for the product image.
+                                     * @param array  $cart_item     The cart item data.
+                                     * @param string $cart_item_key Unique key for the cart item.
+                                     *
+                                     * @since 2.1.0
+                                     */
                                     $thumbnail = apply_filters( 'woocommerce_cart_item_thumbnail', $_product->get_image(), $cart_item, $cart_item_key );
 
                                     if ( ! $product_permalink ) {
-                                        echo $thumbnail;
+                                        echo $thumbnail; // PHPCS: XSS ok.
                                     } else {
-                                        printf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $thumbnail );
+                                        printf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $thumbnail ); // PHPCS: XSS ok.
                                     }
                                     ?>
                                 </div>
@@ -57,7 +91,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                     <h4 class="sc-cart__item-name">
                                         <?php
                                         if ( ! $product_permalink ) {
-                                            echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', $_product->get_name(), $cart_item, $cart_item_key ) . '&nbsp;' );
+                                            echo wp_kses_post( $product_name . '&nbsp;' );
                                         } else {
                                             echo wp_kses_post( apply_filters( 'woocommerce_cart_item_name', sprintf( '<a href="%s">%s</a>', esc_url( $product_permalink ), $_product->get_name() ), $cart_item, $cart_item_key ) );
                                         }
@@ -65,7 +99,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                                         do_action( 'woocommerce_after_cart_item_name', $cart_item, $cart_item_key );
 
                                         // Meta data.
-                                        echo wc_get_formatted_cart_item_data( $cart_item );
+                                        echo wc_get_formatted_cart_item_data( $cart_item ); // PHPCS: XSS ok.
 
                                         // Backorder notification.
                                         if ( $_product->backorders_require_notification() && $_product->is_on_backorder( $cart_item['quantity'] ) ) {
@@ -87,7 +121,7 @@ do_action( 'woocommerce_before_cart' ); ?>
                             <!-- Price -->
                             <div class="sc-cart__item-price" data-title="<?php esc_attr_e( 'Precio', 'system-cars-theme' ); ?>">
                                 <?php
-                                    echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key );
+                                    echo apply_filters( 'woocommerce_cart_item_price', WC()->cart->get_product_price( $_product ), $cart_item, $cart_item_key ); // PHPCS: XSS ok.
                                 ?>
                             </div>
 
@@ -108,32 +142,33 @@ do_action( 'woocommerce_before_cart' ); ?>
                                         'input_value'  => $cart_item['quantity'],
                                         'max_value'    => $max_quantity,
                                         'min_value'    => $min_quantity,
-                                        'product_name' => $_product->get_name(),
+                                        'product_name' => $product_name,
                                     ),
                                     $_product,
                                     false
                                 );
 
-                                echo apply_filters( 'woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item );
+                                echo apply_filters( 'woocommerce_cart_item_quantity', $product_quantity, $cart_item_key, $cart_item ); // PHPCS: XSS ok.
                                 ?>
                             </div>
 
                             <!-- Subtotal -->
                             <div class="sc-cart__item-subtotal" data-title="<?php esc_attr_e( 'Subtotal', 'system-cars-theme' ); ?>">
                                 <?php
-                                    echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key );
+                                    echo apply_filters( 'woocommerce_cart_item_subtotal', WC()->cart->get_product_subtotal( $_product, $cart_item['quantity'] ), $cart_item, $cart_item_key ); // PHPCS: XSS ok.
                                 ?>
                             </div>
 
                             <!-- Remove -->
                             <div class="sc-cart__item-remove">
                                 <?php
-                                    echo apply_filters(
+                                    echo apply_filters( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
                                         'woocommerce_cart_item_remove_link',
                                         sprintf(
-                                            '<a href="%s" class="sc-cart__remove-btn" aria-label="%s" data-product_id="%s" data-product_sku="%s">&times;</a>',
+                                            '<a role="button" href="%s" class="sc-cart__remove-btn" aria-label="%s" data-product_id="%s" data-product_sku="%s">&times;</a>',
                                             esc_url( wc_get_cart_remove_url( $cart_item_key ) ),
-                                            esc_attr( sprintf( __( 'Eliminar %s del carrito', 'system-cars-theme' ), wp_strip_all_tags( $_product->get_name() ) ) ),
+                                            /* translators: %s is the product name */
+                                            esc_attr( sprintf( __( 'Eliminar %s del carrito', 'system-cars-theme' ), wp_strip_all_tags( $product_name ) ) ),
                                             esc_attr( $product_id ),
                                             esc_attr( $_product->get_sku() )
                                         ),

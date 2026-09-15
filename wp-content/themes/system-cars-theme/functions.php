@@ -1417,6 +1417,11 @@ function sc_enqueue_mini_cart_scripts() {
 add_action( 'wp_enqueue_scripts', 'sc_enqueue_mini_cart_scripts' );
 
 /**
+ * Battery checkout: restrict shipping cities for "baterias" category.
+ */
+require_once get_template_directory() . '/inc/battery-checkout.php';
+
+/**
  * Refresh mini cart fragments via WooCommerce AJAX
  */
 function sc_mini_cart_fragments( $fragments ) {

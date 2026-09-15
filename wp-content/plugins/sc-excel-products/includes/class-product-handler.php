@@ -355,11 +355,44 @@ class Product_Handler {
      * @param array $data Row data from Excel
      * @return array Result with status and message
      */
+    /**
+     * Normalize a cell value used as SKU / parent SKU (Excel often sends floats).
+     *
+     * @param mixed $value Raw value
+     * @return string
+     */
+    public static function normalize_sku_value( $value ) {
+        if ( $value === null || $value === '' ) {
+            return '';
+        }
+        if ( is_float( $value ) ) {
+            if ( floor( $value ) == $value ) {
+                $value = sprintf( '%.0f', $value );
+            } else {
+                $value = rtrim( rtrim( sprintf( '%.8F', $value ), '0' ), '.' );
+            }
+        } elseif ( is_int( $value ) ) {
+            $value = (string) $value;
+        }
+
+        return sanitize_text_field( (string) $value );
+    }
+
     public static function create_or_update_product( $data ) {
         try {
-            $product_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
-            $sku = ! empty( $data['sku'] ) ? sanitize_text_field( $data['sku'] ) : '';
+            // Excel "ID" is often a barcode, not a WordPress post ID — only use numeric WP-sized IDs.
+            $raw_id     = isset( $data['id'] ) ? $data['id'] : '';
+            $product_id = 0;
+            if ( $raw_id !== '' && $raw_id !== null && is_numeric( $raw_id ) ) {
+                $as_int = absint( $raw_id );
+                // Ignore barcode-sized IDs that cannot be real WP post IDs in practice for lookup-by-ID.
+                // Still allow lookup; find_existing_product will discard mismatches via SKU.
+                $product_id = $as_int;
+            }
+
+            $sku  = self::normalize_sku_value( isset( $data['sku'] ) ? $data['sku'] : '' );
             $type = ! empty( $data['type'] ) ? sanitize_text_field( $data['type'] ) : 'simple';
+            $data['sku'] = $sku;
 
             // Handle variations separately
             if ( $type === 'variation' ) {
@@ -386,6 +419,13 @@ class Product_Handler {
             // Save product
             $product_id = $product->save();
 
+            if ( ! $product_id ) {
+                return array(
+                    'success' => false,
+                    'message' => sprintf( __( 'No se pudo guardar el producto: %s', 'sc-excel-products' ), $sku ? $sku : $data['name'] ),
+                );
+            }
+
             return array(
                 'success' => true,
                 'id'      => $product_id,
@@ -395,7 +435,7 @@ class Product_Handler {
                     : sprintf( __( 'Producto actualizado: %s (ID: %d)', 'sc-excel-products' ), $product->get_name(), $product_id ),
             );
 
-        } catch ( \Exception $e ) {
+        } catch ( \Throwable $e ) {
             return array(
                 'success' => false,
                 'message' => sprintf( __( 'Error: %s', 'sc-excel-products' ), $e->getMessage() ),
@@ -411,9 +451,10 @@ class Product_Handler {
      */
     public static function create_or_update_variation( $data ) {
         try {
-            $variation_id = ! empty( $data['id'] ) ? absint( $data['id'] ) : 0;
-            $parent_sku = ! empty( $data['parent_sku'] ) ? sanitize_text_field( $data['parent_sku'] ) : '';
-            $sku = ! empty( $data['sku'] ) ? sanitize_text_field( $data['sku'] ) : '';
+            $variation_id = ! empty( $data['id'] ) && is_numeric( $data['id'] ) ? absint( $data['id'] ) : 0;
+            $parent_sku   = self::normalize_sku_value( isset( $data['parent_sku'] ) ? $data['parent_sku'] : '' );
+            $sku          = self::normalize_sku_value( isset( $data['sku'] ) ? $data['sku'] : '' );
+            $data['sku']  = $sku;
 
             // Find parent product
             $parent_id = wc_get_product_id_by_sku( $parent_sku );
@@ -461,7 +502,7 @@ class Product_Handler {
                     : sprintf( __( 'Variación actualizada: %s (ID: %d)', 'sc-excel-products' ), $sku, $variation_id ),
             );
 
-        } catch ( \Exception $e ) {
+        } catch ( \Throwable $e ) {
             return array(
                 'success' => false,
                 'message' => sprintf( __( 'Error en variación: %s', 'sc-excel-products' ), $e->getMessage() ),
@@ -480,8 +521,12 @@ class Product_Handler {
         if ( ! empty( $data['name'] ) ) {
             $product->set_name( sanitize_text_field( $data['name'] ) );
         }
-        if ( ! empty( $data['sku'] ) ) {
-            $product->set_sku( sanitize_text_field( $data['sku'] ) );
+        $sku = self::normalize_sku_value( isset( $data['sku'] ) ? $data['sku'] : '' );
+        if ( $sku !== '' ) {
+            // Avoid WC_Data_Exception when the product already owns this SKU.
+            if ( (string) $product->get_sku() !== $sku ) {
+                $product->set_sku( $sku );
+            }
         }
         if ( isset( $data['description'] ) ) {
             $product->set_description( wp_kses_post( $data['description'] ) );
@@ -570,8 +615,9 @@ class Product_Handler {
      */
     public static function set_variation_data( $variation, $data ) {
         // Basic data
-        if ( ! empty( $data['sku'] ) ) {
-            $variation->set_sku( sanitize_text_field( $data['sku'] ) );
+        $sku = self::normalize_sku_value( isset( $data['sku'] ) ? $data['sku'] : '' );
+        if ( $sku !== '' && (string) $variation->get_sku() !== $sku ) {
+            $variation->set_sku( $sku );
         }
         if ( isset( $data['description'] ) ) {
             $variation->set_description( wp_kses_post( $data['description'] ) );

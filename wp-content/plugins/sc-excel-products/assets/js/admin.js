@@ -128,6 +128,31 @@
     }
 
     /**
+     * Extract a useful message from a failed AJAX response.
+     */
+    function getAjaxErrorMessage(xhr, fallback) {
+        if (xhr && xhr.responseJSON) {
+            if (xhr.responseJSON.data && xhr.responseJSON.data.message) {
+                return xhr.responseJSON.data.message;
+            }
+            if (typeof xhr.responseJSON.data === 'string') {
+                return xhr.responseJSON.data;
+            }
+        }
+        if (xhr && xhr.responseText) {
+            const text = String(xhr.responseText).replace(/<[^>]+>/g, ' ').trim();
+            if (text) {
+                // Truncate huge HTML error pages
+                return text.substring(0, 300);
+            }
+        }
+        if (xhr && xhr.status) {
+            return (fallback || scExcelProducts.strings.error) + ' (HTTP ' + xhr.status + ')';
+        }
+        return fallback || scExcelProducts.strings.error;
+    }
+
+    /**
      * Load file preview
      */
     function loadPreview(file) {
@@ -148,6 +173,7 @@
             data: formData,
             processData: false,
             contentType: false,
+            timeout: 120000,
             success: function(response) {
                 $progress.hide();
                 $progressFill.css('width', '0%');
@@ -155,14 +181,15 @@
                 if (response.success) {
                     showPreview(response.data);
                 } else {
-                    alert(response.data.message || scExcelProducts.strings.error);
+                    const msg = (response.data && response.data.message) ? response.data.message : scExcelProducts.strings.error;
+                    alert(msg);
                     resetFileSelection();
                 }
             },
-            error: function() {
+            error: function(xhr) {
                 $progress.hide();
                 $progressFill.css('width', '0%');
-                alert(scExcelProducts.strings.error);
+                alert(getAjaxErrorMessage(xhr, scExcelProducts.strings.error));
                 resetFileSelection();
             }
         });
@@ -239,6 +266,7 @@
             data: formData,
             processData: false,
             contentType: false,
+            timeout: 600000,
             success: function(response) {
                 clearInterval(progressInterval);
                 $progressFill.css('width', '100%');
@@ -250,14 +278,19 @@
                     if (response.success) {
                         showResults(response.data);
                     } else {
-                        alert(response.data.message || scExcelProducts.strings.error);
+                        const msg = (response.data && response.data.message) ? response.data.message : scExcelProducts.strings.error;
+                        alert(msg);
+                        $preview.show();
+                        $importActions.show();
                     }
                 }, 500);
             },
-            error: function() {
+            error: function(xhr) {
                 clearInterval(progressInterval);
                 $progress.hide();
-                alert(scExcelProducts.strings.error);
+                alert(getAjaxErrorMessage(xhr, scExcelProducts.strings.error));
+                $preview.show();
+                $importActions.show();
             }
         });
     }

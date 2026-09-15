@@ -5267,17 +5267,62 @@ function EffectFade(_ref) {
     })
   });
 }
-function updateSliderHeights() {
+function getTopChromeHeight() {
   const header = document.querySelector('header[role="banner"]');
-  if (!header) return;
-  const headerBottom = header.getBoundingClientRect().bottom;
+  if (!header) {
+    return 0;
+  }
+  return header.offsetTop + header.offsetHeight;
+}
+function updateSliderHeights() {
+  const topChrome = getTopChromeHeight();
+  if (topChrome <= 0) {
+    return;
+  }
+  const viewportHeight = window.visualViewport && window.visualViewport.height || window.innerHeight;
+  const available = Math.max(Math.round(viewportHeight - topChrome), 240);
   document.querySelectorAll(".wp-block-system-cars-slider-block").forEach((el) => {
-    el.style.setProperty("--header-height", headerBottom + "px");
+    el.style.setProperty("--header-height", `${topChrome}px`);
+    el.style.height = `${available}px`;
+    el.style.maxHeight = `${available}px`;
   });
 }
-document.addEventListener("DOMContentLoaded", () => {
+function scheduleHeightUpdates() {
   updateSliderHeights();
+  requestAnimationFrame(() => {
+    updateSliderHeights();
+    requestAnimationFrame(updateSliderHeights);
+  });
+  window.addEventListener("load", updateSliderHeights, { once: true });
+  if (document.fonts && document.fonts.ready) {
+    document.fonts.ready.then(updateSliderHeights).catch(() => {
+    });
+  }
+  const header = document.querySelector('header[role="banner"]');
+  if (header && typeof ResizeObserver !== "undefined") {
+    const ro = new ResizeObserver(() => updateSliderHeights());
+    ro.observe(header);
+  }
+}
+function setArrowPositions(prevBtn, nextBtn) {
+  const isDesktop = window.innerWidth >= 1024;
+  const isTablet = window.innerWidth >= 768;
+  const arrowOffset = isDesktop ? "70px" : isTablet ? "40px" : "20px";
+  if (prevBtn) {
+    prevBtn.style.left = arrowOffset;
+    prevBtn.style.right = "auto";
+  }
+  if (nextBtn) {
+    nextBtn.style.right = arrowOffset;
+    nextBtn.style.left = "auto";
+  }
+}
+document.addEventListener("DOMContentLoaded", () => {
+  scheduleHeightUpdates();
   window.addEventListener("resize", updateSliderHeights);
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", updateSliderHeights);
+  }
   document.querySelectorAll(".wp-block-system-cars-slider-block").forEach((sliderEl) => {
     const totalSlides = sliderEl.querySelectorAll(".swiper-slide").length;
     const prevBtn = sliderEl.querySelector(".swiper-button-prev");
@@ -5290,7 +5335,7 @@ document.addEventListener("DOMContentLoaded", () => {
       paginationEl.className = "swiper-pagination";
       sliderEl.appendChild(paginationEl);
     }
-    new Swiper(sliderEl, {
+    const swiper = new Swiper(sliderEl, {
       modules: [Navigation, Pagination, Autoplay, EffectFade],
       loop: totalSlides > 1,
       autoplay: totalSlides > 1 && autoplayEnabled ? { delay: autoplayDelay, disableOnInteraction: false } : false,
@@ -5312,23 +5357,11 @@ document.addEventListener("DOMContentLoaded", () => {
       slidesPerView: 1,
       speed: 800
     });
-    const isDesktop = window.innerWidth >= 1024;
-    const isTablet = window.innerWidth >= 768;
-    const arrowOffset = isDesktop ? "70px" : isTablet ? "40px" : "20px";
-    if (prevBtn) {
-      prevBtn.style.left = arrowOffset;
-      prevBtn.style.right = "auto";
-    }
-    if (nextBtn) {
-      nextBtn.style.right = arrowOffset;
-      nextBtn.style.left = "auto";
-    }
-    window.addEventListener("resize", () => {
-      const isDesktopNow = window.innerWidth >= 1024;
-      const isTabletNow = window.innerWidth >= 768;
-      const newOffset = isDesktopNow ? "70px" : isTabletNow ? "40px" : "20px";
-      if (prevBtn) prevBtn.style.left = newOffset;
-      if (nextBtn) nextBtn.style.right = newOffset;
-    });
+    setArrowPositions(prevBtn, nextBtn);
+    window.addEventListener("resize", () => setArrowPositions(prevBtn, nextBtn));
+    updateSliderHeights();
+    swiper.on("init", updateSliderHeights);
+    swiper.on("resize", updateSliderHeights);
+    swiper.on("imagesReady", updateSliderHeights);
   });
 });

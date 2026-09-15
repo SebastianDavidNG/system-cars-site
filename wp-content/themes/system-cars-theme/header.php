@@ -70,9 +70,9 @@
                 ?>
             </div>
             <div class="info-bar-right w-full md:w-auto flex justify-center md:justify-end space-x-4 mb-4 md:mb-0">
-                <a href="#" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-facebook-f"></span></a>
-                <a href="#" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-instagram"></span></a>
-                <a href="#" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-youtube"></span></a>
+                <a href="https://www.facebook.com/system.cars1" target="_blank" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-facebook-f"></span></a>
+                <a href="https://www.instagram.com/system.cars" target="_blank" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-instagram"></span></a>
+                <a href="https://www.youtube.com/" target="_blank" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-youtube"></span></a>
             </div>
         </div>
     </div>

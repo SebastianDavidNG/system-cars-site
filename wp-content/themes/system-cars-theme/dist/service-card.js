@@ -23,16 +23,49 @@ function Edit({ attributes, setAttributes }) {
   };
   const removeCard = (idx) => {
     setAttributes({ cards: cards.filter((_, i) => i !== idx) });
-    if (expandedCard === idx) setExpandedCard(null);
+    if (expandedCard === idx) {
+      setExpandedCard(null);
+    } else if (expandedCard !== null && expandedCard > idx) {
+      setExpandedCard(expandedCard - 1);
+    }
   };
   const updateCard = (idx, key, val) => {
     setAttributes({
       cards: cards.map((c, i) => i === idx ? { ...c, [key]: val } : c)
     });
   };
+  const moveCard = (from, to) => {
+    if (from === to || from < 0 || to < 0 || from >= cards.length || to >= cards.length) {
+      return;
+    }
+    const next = [...cards];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    setAttributes({ cards: next });
+    if (expandedCard === null) {
+      return;
+    }
+    if (expandedCard === from) {
+      setExpandedCard(to);
+      return;
+    }
+    if (from < expandedCard && to >= expandedCard) {
+      setExpandedCard(expandedCard - 1);
+    } else if (from > expandedCard && to <= expandedCard) {
+      setExpandedCard(expandedCard + 1);
+    }
+  };
+  const setCardOrder = (from, orderValue) => {
+    const to = Number(orderValue) - 1;
+    moveCard(from, to);
+  };
   const toggleCardSettings = (idx) => {
     setExpandedCard(expandedCard === idx ? null : idx);
   };
+  const orderOptions = cards.map((_, i) => ({
+    label: String(i + 1),
+    value: i + 1
+  }));
   const colSpanMap = {
     1: "md:col-span-1",
     2: "md:col-span-2",
@@ -49,7 +82,7 @@ function Edit({ attributes, setAttributes }) {
   };
   return createElement$1(
     "div",
-    useBlockProps$1(),
+    useBlockProps$1({ className: "sc-service-card-editor" }),
     // Mensaje si no hay cards
     cards.length === 0 && createElement$1(
       "div",
@@ -73,27 +106,53 @@ function Edit({ attributes, setAttributes }) {
           "div",
           {
             key: idx,
-            className: `${bgColorClass} ${textColorClass} ${colSpanClass} p-4 rounded border-2 border-gray-400 relative`,
+            className: `${bgColorClass} ${textColorClass} ${colSpanClass} p-4 rounded border-2 border-gray-400 relative sc-service-card-editor__item`,
             style: { minHeight: "200px" }
           },
-          // Toolbar en la parte superior (eliminar y settings)
+          // Toolbar: orden + config + eliminar
           createElement$1(
             "div",
-            { className: "flex justify-end gap-2 mb-2" },
-            createElement$1(IconButton, {
-              icon: "admin-generic",
-              label: "Configuración",
-              className: "bg-white",
-              onClick: () => toggleCardSettings(idx),
-              style: { padding: "4px" }
-            }),
-            createElement$1(IconButton, {
-              icon: "trash",
-              label: "Eliminar",
-              className: "is-destructive bg-white",
-              onClick: () => removeCard(idx),
-              style: { padding: "4px" }
-            })
+            { className: "flex justify-between gap-2 mb-2 items-start" },
+            createElement$1(
+              "div",
+              { className: "flex gap-2 items-center sc-service-card-editor__order-wrap" },
+              createElement$1(
+                "label",
+                { className: "sc-service-card-editor__order-label text-xs" },
+                "Orden"
+              ),
+              createElement$1(SelectControl, {
+                label: "",
+                hideLabelFromVision: true,
+                value: idx + 1,
+                options: orderOptions,
+                onChange: (value) => setCardOrder(idx, value),
+                className: "sc-service-card-editor__order-select"
+              }),
+              createElement$1(
+                "span",
+                { className: "sc-service-card-editor__order text-xs opacity-70" },
+                `de ${cards.length}`
+              )
+            ),
+            createElement$1(
+              "div",
+              { className: "flex gap-2" },
+              createElement$1(IconButton, {
+                icon: "admin-generic",
+                label: "Configuración",
+                className: "bg-white",
+                onClick: () => toggleCardSettings(idx),
+                style: { padding: "4px" }
+              }),
+              createElement$1(IconButton, {
+                icon: "trash",
+                label: "Eliminar",
+                className: "is-destructive bg-white",
+                onClick: () => removeCard(idx),
+                style: { padding: "4px" }
+              })
+            )
           ),
           // Panel de configuración expandible
           isExpanded && createElement$1(

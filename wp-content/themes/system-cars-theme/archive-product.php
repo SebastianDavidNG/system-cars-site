@@ -1,10 +1,17 @@
 <?php
 /**
- * Template Name: WooCommerce Shop
- * Template for displaying the shop page.
+ * The Template for displaying product archives, including the main shop page.
  *
- * @package System_Cars_Theme
+ * Template Name: WooCommerce Shop
+ *
+ * This template can be overridden by copying it to yourtheme/woocommerce/archive-product.php.
+ *
+ * @see https://woocommerce.com/document/template-structure/
+ * @package WooCommerce\Templates
+ * @version 8.6.0
  */
+
+defined( 'ABSPATH' ) || exit;
 
 get_header();
 

@@ -1958,13 +1958,17 @@ footer.bg-footer {
 .sc-cart__coupon .coupon {
   display: flex;
   gap: 0.5rem;
+  align-items: stretch;
 }
 .sc-cart__coupon .coupon input[type=text] {
   flex: 1;
   min-width: 180px;
-  padding: 0.75rem 1rem;
+  height: 2.75rem;
+  padding: 0 1rem;
   border: 1px solid #e5e7eb;
   font-size: 0.875rem;
+  line-height: 1.25;
+  box-sizing: border-box;
   transition: border-color 0.3s ease;
 }
 .sc-cart__coupon .coupon input[type=text]:focus {
@@ -1978,33 +1982,45 @@ footer.bg-footer {
   color: #9ca3af;
 }
 .sc-cart__coupon .coupon button {
-  padding: 0.75rem 1.5rem;
+  height: 2.75rem;
+  padding: 0 1.5rem;
   background-color: #002060;
   color: #ffffff;
   border: none;
   font-size: 0.875rem;
   font-weight: 600;
+  line-height: 1.25;
   text-transform: uppercase;
   cursor: pointer;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: background-color 0.3s ease;
 }
 .sc-cart__coupon .coupon button:hover {
   background-color: #003193;
 }
 .sc-cart__update-btn {
-  padding: 0.75rem 1.5rem;
-  background-color: transparent;
-  color: #002060;
-  border: 2px solid #002060;
-  font-size: 0.875rem;
+  height: 2.75rem !important;
+  padding: 0 1.5rem !important;
+  background-color: #002060 !important;
+  color: #ffffff !important;
+  border: none !important;
+  font-size: 0.875rem !important;
   font-weight: 600;
+  line-height: 1.25 !important;
   text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.3s ease;
+  box-sizing: border-box !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
 }
 .sc-cart__update-btn:hover {
-  background-color: #002060;
-  color: #ffffff;
+  background-color: #003193 !important;
+  color: #ffffff !important;
 }
 .sc-cart__update-btn:disabled {
   opacity: 0.5;

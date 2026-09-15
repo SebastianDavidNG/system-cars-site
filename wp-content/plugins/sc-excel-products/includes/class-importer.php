@@ -50,9 +50,176 @@ class Importer {
     }
 
     /**
+     * Raise PHP limits for Excel processing (hosting often defaults to 128M).
+     * Note: set_time_limit / ini_set are frequently disabled on shared hosting.
+     */
+    private function raise_limits() {
+        if ( function_exists( 'wp_raise_memory_limit' ) ) {
+            wp_raise_memory_limit( 'admin' );
+        }
+
+        // Leading '\' is required inside a namespace; also guard disabled functions.
+        if ( function_exists( '\ini_set' ) ) {
+            @\ini_set( 'memory_limit', '512M' );
+            @\ini_set( 'max_execution_time', '600' );
+        }
+
+        if ( function_exists( '\set_time_limit' ) ) {
+            @\set_time_limit( 600 );
+        }
+    }
+
+    /**
+     * Load spreadsheet rows into a plain PHP array, then free PhpSpreadsheet memory.
+     *
+     * @param string $file_path Absolute path to uploaded temp file
+     * @param string $original_name Original upload filename (used to detect xlsx/xls)
+     * @return array{headers: array, rows: array<int, array>}
+     * @throws \Exception
+     */
+    private function load_rows_from_file( $file_path, $original_name = '' ) {
+        // PHP upload tmp paths have no extension — detect type from original filename.
+        $ext = strtolower( pathinfo( $original_name !== '' ? $original_name : $file_path, PATHINFO_EXTENSION ) );
+
+        if ( $ext === 'xlsx' ) {
+            $reader = IOFactory::createReader( 'Xlsx' );
+        } elseif ( $ext === 'xls' ) {
+            $reader = IOFactory::createReader( 'Xls' );
+        } else {
+            // Fallback: sniff file contents (works for tmp uploads without extension).
+            $reader = IOFactory::createReaderForFile( $file_path );
+        }
+
+        if ( method_exists( $reader, 'setReadDataOnly' ) ) {
+            $reader->setReadDataOnly( true );
+        }
+
+        $spreadsheet = $reader->load( $file_path );
+        $sheet       = $spreadsheet->getActiveSheet();
+        $highest_row = max( 1, (int) $sheet->getHighestDataRow() );
+        $highest_col = $sheet->getHighestDataColumn();
+
+        $headers = $this->normalize_row_values( $this->get_row_data( $sheet, 1, $highest_col ) );
+        $rows    = array();
+
+        for ( $row = 2; $row <= $highest_row; $row++ ) {
+            $rows[ $row ] = $this->normalize_row_values( $this->get_row_data( $sheet, $row, $highest_col ) );
+        }
+
+        // Free PhpSpreadsheet before WooCommerce product writes (avoids 128M OOM on shared hosting).
+        $spreadsheet->disconnectWorksheets();
+        unset( $spreadsheet, $sheet, $reader );
+        if ( function_exists( '\gc_collect_cycles' ) ) {
+            \gc_collect_cycles();
+        }
+
+        return array(
+            'headers' => $headers,
+            'rows'    => $rows,
+        );
+    }
+
+    /**
+     * Normalize Excel cell values (floats/RichText → stable strings for ID/SKU barcodes).
+     *
+     * @param array $row_data Raw row values
+     * @return array
+     */
+    private function normalize_row_values( $row_data ) {
+        foreach ( $row_data as $i => $value ) {
+            if ( $value === null ) {
+                $row_data[ $i ] = '';
+                continue;
+            }
+
+            // PhpSpreadsheet may return RichText for formatted cells.
+            if ( is_object( $value ) ) {
+                if ( method_exists( $value, 'getPlainText' ) ) {
+                    $value = $value->getPlainText();
+                } elseif ( method_exists( $value, '__toString' ) ) {
+                    $value = (string) $value;
+                } else {
+                    $value = '';
+                }
+            }
+
+            if ( is_bool( $value ) ) {
+                $row_data[ $i ] = $value ? '1' : '';
+                continue;
+            }
+
+            if ( is_float( $value ) ) {
+                // Avoid scientific notation for barcode-like numeric SKUs/IDs.
+                if ( floor( $value ) == $value ) {
+                    $row_data[ $i ] = sprintf( '%.0f', $value );
+                } else {
+                    $row_data[ $i ] = rtrim( rtrim( sprintf( '%.8F', $value ), '0' ), '.' );
+                }
+                continue;
+            }
+
+            if ( is_int( $value ) ) {
+                $row_data[ $i ] = (string) $value;
+                continue;
+            }
+
+            if ( is_string( $value ) ) {
+                $row_data[ $i ] = trim( $value );
+                continue;
+            }
+
+            $row_data[ $i ] = '';
+        }
+
+        return $row_data;
+    }
+
+    /**
+     * Ensure AJAX fatals return JSON instead of the WP "critical error" HTML page.
+     */
+    private function register_ajax_fatal_handler() {
+        register_shutdown_function( function () {
+            $error = error_get_last();
+            if ( ! $error ) {
+                return;
+            }
+
+            $fatal_types = array( E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR );
+            if ( ! in_array( $error['type'], $fatal_types, true ) ) {
+                return;
+            }
+
+            // Clear any partial HTML output from WP critical error handler if possible.
+            while ( ob_get_level() > 0 ) {
+                ob_end_clean();
+            }
+
+            if ( ! headers_sent() ) {
+                status_header( 500 );
+                header( 'Content-Type: application/json; charset=utf-8' );
+            }
+
+            echo wp_json_encode( array(
+                'success' => false,
+                'data'    => array(
+                    'message' => sprintf(
+                        /* translators: 1: error message, 2: file, 3: line */
+                        __( 'Error crítico PHP: %1$s en %2$s:%3$d', 'sc-excel-products' ),
+                        $error['message'],
+                        basename( $error['file'] ),
+                        $error['line']
+                    ),
+                ),
+            ) );
+        } );
+    }
+
+    /**
      * Handle import AJAX request
      */
     public function handle_import() {
+        $this->register_ajax_fatal_handler();
+
         // Security check
         check_ajax_referer( 'sc_import_products', 'nonce' );
 
@@ -62,7 +229,14 @@ class Importer {
 
         // Check file upload
         if ( empty( $_FILES['file'] ) || $_FILES['file']['error'] !== UPLOAD_ERR_OK ) {
-            wp_send_json_error( array( 'message' => __( 'Error al subir el archivo.', 'sc-excel-products' ) ) );
+            $upload_error = isset( $_FILES['file']['error'] ) ? (int) $_FILES['file']['error'] : -1;
+            wp_send_json_error( array(
+                'message' => sprintf(
+                    /* translators: %d: PHP upload error code */
+                    __( 'Error al subir el archivo (código %d).', 'sc-excel-products' ),
+                    $upload_error
+                ),
+            ) );
         }
 
         // Validate file type
@@ -78,30 +252,23 @@ class Importer {
             wp_send_json_error( array( 'message' => __( 'PhpSpreadsheet no está disponible.', 'sc-excel-products' ) ) );
         }
 
-        // Increase memory and time limits
-        ini_set( 'memory_limit', '512M' );
-        set_time_limit( 600 );
+        $this->raise_limits();
 
         try {
-            // Load spreadsheet
-            $spreadsheet = IOFactory::load( $file['tmp_name'] );
-            $sheet = $spreadsheet->getActiveSheet();
-            $highestRow = $sheet->getHighestRow();
-            $highestColumn = $sheet->getHighestColumn();
+            $loaded  = $this->load_rows_from_file( $file['tmp_name'], $file['name'] );
+            $headers = $loaded['headers'];
+            $rows    = $loaded['rows'];
 
-            // Validate headers
-            $headers = $this->get_row_data( $sheet, 1, $highestColumn );
             if ( ! $this->validate_headers( $headers ) ) {
                 wp_send_json_error( array( 'message' => __( 'El formato del archivo no es válido. Se requieren al menos las columnas: ID, Tipo, SKU y Nombre.', 'sc-excel-products' ) ) );
             }
 
             // First pass: Process parent products (simple and variable)
-            for ( $row = 2; $row <= $highestRow; $row++ ) {
-                $row_data = $this->get_row_data( $sheet, $row, $highestColumn );
+            foreach ( $rows as $row => $row_data ) {
                 $mapped_data = $this->map_row_to_data( $headers, $row_data );
 
                 // Skip empty rows
-                if ( empty( $mapped_data['name'] ) && empty( $mapped_data['sku'] ) ) {
+                if ( $mapped_data['name'] === '' && $mapped_data['sku'] === '' ) {
                     continue;
                 }
 
@@ -115,8 +282,7 @@ class Importer {
             }
 
             // Second pass: Process variations
-            for ( $row = 2; $row <= $highestRow; $row++ ) {
-                $row_data = $this->get_row_data( $sheet, $row, $highestColumn );
+            foreach ( $rows as $row => $row_data ) {
                 $mapped_data = $this->map_row_to_data( $headers, $row_data );
 
                 // Only process variations
@@ -125,7 +291,7 @@ class Importer {
                 }
 
                 // Skip if no parent SKU
-                if ( empty( $mapped_data['parent_sku'] ) ) {
+                if ( $mapped_data['parent_sku'] === '' ) {
                     $this->results['skipped']++;
                     $this->results['messages'][] = sprintf(
                         __( 'Fila %d: Variación omitida - no tiene SKU del producto padre.', 'sc-excel-products' ),
@@ -149,8 +315,13 @@ class Importer {
                 ),
             ) );
 
-        } catch ( \Exception $e ) {
-            wp_send_json_error( array( 'message' => sprintf( __( 'Error al procesar el archivo: %s', 'sc-excel-products' ), $e->getMessage() ) ) );
+        } catch ( \Throwable $e ) {
+            wp_send_json_error( array(
+                'message' => sprintf(
+                    __( 'Error al procesar el archivo: %s', 'sc-excel-products' ),
+                    $e->getMessage()
+                ),
+            ) );
         }
     }
 
@@ -158,6 +329,8 @@ class Importer {
      * Handle preview AJAX request
      */
     public function handle_preview() {
+        $this->register_ajax_fatal_handler();
+
         // Security check
         check_ajax_referer( 'sc_import_products', 'nonce' );
 
@@ -177,72 +350,72 @@ class Importer {
             wp_send_json_error( array( 'message' => __( 'Solo se permiten archivos Excel (.xlsx, .xls).', 'sc-excel-products' ) ) );
         }
 
-        try {
-            $spreadsheet = IOFactory::load( $file['tmp_name'] );
-            $sheet = $spreadsheet->getActiveSheet();
-            $highestRow = $sheet->getHighestRow();
-            $highestColumn = $sheet->getHighestColumn();
+        $this->raise_limits();
 
-            // Get headers
-            $headers = $this->get_row_data( $sheet, 1, $highestColumn );
+        try {
+            $loaded  = $this->load_rows_from_file( $file['tmp_name'], $file['name'] );
+            $headers = $loaded['headers'];
+            $rows    = $loaded['rows'];
 
             if ( ! $this->validate_headers( $headers ) ) {
                 wp_send_json_error( array( 'message' => __( 'El formato del archivo no es válido.', 'sc-excel-products' ) ) );
             }
 
             // Get preview (first 10 rows)
-            $preview = array();
-            $max_preview = min( $highestRow, 11 ); // Header + 10 rows
+            $preview     = array();
+            $preview_max = 10;
+            $shown       = 0;
 
-            for ( $row = 2; $row <= $max_preview; $row++ ) {
-                $row_data = $this->get_row_data( $sheet, $row, $highestColumn );
+            foreach ( $rows as $row => $row_data ) {
                 $mapped_data = $this->map_row_to_data( $headers, $row_data );
 
                 // Skip empty rows
-                if ( empty( $mapped_data['name'] ) && empty( $mapped_data['sku'] ) ) {
+                if ( $mapped_data['name'] === '' && $mapped_data['sku'] === '' ) {
                     continue;
                 }
 
-                // Determine action (create/update)
-                $action = 'create';
-                if ( ! empty( $mapped_data['id'] ) ) {
-                    $existing = wc_get_product( $mapped_data['id'] );
-                    if ( $existing ) {
-                        $action = 'update';
+                if ( $shown < $preview_max ) {
+                    // Determine action (create/update) — prefer SKU; Excel ID is often a barcode, not WP ID
+                    $action = 'create';
+                    if ( $mapped_data['sku'] !== '' ) {
+                        $existing_id = wc_get_product_id_by_sku( $mapped_data['sku'] );
+                        if ( $existing_id ) {
+                            $action = 'update';
+                        }
+                    } elseif ( $mapped_data['id'] !== '' && absint( $mapped_data['id'] ) ) {
+                        $existing = wc_get_product( absint( $mapped_data['id'] ) );
+                        if ( $existing ) {
+                            $action = 'update';
+                        }
                     }
-                } elseif ( ! empty( $mapped_data['sku'] ) ) {
-                    $existing_id = wc_get_product_id_by_sku( $mapped_data['sku'] );
-                    if ( $existing_id ) {
-                        $action = 'update';
-                    }
-                }
 
-                $preview[] = array(
-                    'row'    => $row,
-                    'type'   => $mapped_data['type'],
-                    'sku'    => $mapped_data['sku'],
-                    'name'   => $mapped_data['name'],
-                    'price'  => $mapped_data['regular_price'],
-                    'action' => $action,
-                );
+                    $preview[] = array(
+                        'row'    => $row,
+                        'type'   => $mapped_data['type'],
+                        'sku'    => $mapped_data['sku'],
+                        'name'   => $mapped_data['name'],
+                        'price'  => $mapped_data['regular_price'],
+                        'action' => $action,
+                    );
+                    $shown++;
+                }
             }
 
             // Count totals
             $totals = array(
-                'total'      => $highestRow - 1,
+                'total'      => 0,
                 'products'   => 0,
                 'variations' => 0,
             );
 
-            for ( $row = 2; $row <= $highestRow; $row++ ) {
-                $row_data = $this->get_row_data( $sheet, $row, $highestColumn );
+            foreach ( $rows as $row_data ) {
                 $mapped_data = $this->map_row_to_data( $headers, $row_data );
 
-                if ( empty( $mapped_data['name'] ) && empty( $mapped_data['sku'] ) ) {
-                    $totals['total']--;
+                if ( $mapped_data['name'] === '' && $mapped_data['sku'] === '' ) {
                     continue;
                 }
 
+                $totals['total']++;
                 if ( $mapped_data['type'] === 'variation' ) {
                     $totals['variations']++;
                 } else {
@@ -255,8 +428,13 @@ class Importer {
                 'totals'  => $totals,
             ) );
 
-        } catch ( \Exception $e ) {
-            wp_send_json_error( array( 'message' => sprintf( __( 'Error al leer el archivo: %s', 'sc-excel-products' ), $e->getMessage() ) ) );
+        } catch ( \Throwable $e ) {
+            wp_send_json_error( array(
+                'message' => sprintf(
+                    __( 'Error al leer el archivo: %s', 'sc-excel-products' ),
+                    $e->getMessage()
+                ),
+            ) );
         }
     }
 
@@ -322,8 +500,13 @@ class Importer {
     private function map_row_to_data( $headers, $row_data ) {
         $data = array();
 
-        // Create header to index map
-        $header_map = array_flip( $headers );
+        // Create header to index map (only string/int keys — avoids PHP 8 TypeError on array_flip).
+        $header_map = array();
+        foreach ( $headers as $index => $header ) {
+            if ( is_string( $header ) && $header !== '' ) {
+                $header_map[ $header ] = $index;
+            }
+        }
 
         // Map standard fields (canonical headers used by export)
         $field_map = array(

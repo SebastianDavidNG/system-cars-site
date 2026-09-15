@@ -25,7 +25,11 @@ export default function Edit({ attributes, setAttributes }) {
 
   const removeCard = idx => {
     setAttributes({ cards: cards.filter((_, i) => i !== idx) });
-    if (expandedCard === idx) setExpandedCard(null);
+    if (expandedCard === idx) {
+      setExpandedCard(null);
+    } else if (expandedCard !== null && expandedCard > idx) {
+      setExpandedCard(expandedCard - 1);
+    }
   };
 
   const updateCard = (idx, key, val) => {
@@ -34,9 +38,52 @@ export default function Edit({ attributes, setAttributes }) {
     });
   };
 
+  /**
+   * Reorder cards without recreating them.
+   * Keeps expanded settings panel attached to the moved card.
+   */
+  const moveCard = (from, to) => {
+    if (from === to || from < 0 || to < 0 || from >= cards.length || to >= cards.length) {
+      return;
+    }
+
+    const next = [...cards];
+    const [item] = next.splice(from, 1);
+    next.splice(to, 0, item);
+    setAttributes({ cards: next });
+
+    if (expandedCard === null) {
+      return;
+    }
+
+    if (expandedCard === from) {
+      setExpandedCard(to);
+      return;
+    }
+
+    if (from < expandedCard && to >= expandedCard) {
+      setExpandedCard(expandedCard - 1);
+    } else if (from > expandedCard && to <= expandedCard) {
+      setExpandedCard(expandedCard + 1);
+    }
+  };
+
+  /**
+   * Set absolute order (1-based) for a card.
+   */
+  const setCardOrder = (from, orderValue) => {
+    const to = Number(orderValue) - 1;
+    moveCard(from, to);
+  };
+
   const toggleCardSettings = (idx) => {
     setExpandedCard(expandedCard === idx ? null : idx);
   };
+
+  const orderOptions = cards.map((_, i) => ({
+    label: String(i + 1),
+    value: i + 1,
+  }));
 
   // Mapeo de clases para el preview
   const colSpanMap = {
@@ -48,7 +95,7 @@ export default function Edit({ attributes, setAttributes }) {
 
   return createElement(
     'div',
-    useBlockProps(),
+    useBlockProps({ className: 'sc-service-card-editor' }),
 
     // Mensaje si no hay cards
     cards.length === 0 &&
@@ -76,28 +123,54 @@ export default function Edit({ attributes, setAttributes }) {
           'div',
           {
             key: idx,
-            className: `${bgColorClass} ${textColorClass} ${colSpanClass} p-4 rounded border-2 border-gray-400 relative`,
-            style: { minHeight: '200px' }
+            className: `${bgColorClass} ${textColorClass} ${colSpanClass} p-4 rounded border-2 border-gray-400 relative sc-service-card-editor__item`,
+            style: { minHeight: '200px' },
           },
 
-          // Toolbar en la parte superior (eliminar y settings)
+          // Toolbar: orden + config + eliminar
           createElement(
             'div',
-            { className: 'flex justify-end gap-2 mb-2' },
-            createElement(IconButton, {
-              icon: 'admin-generic',
-              label: 'Configuración',
-              className: 'bg-white',
-              onClick: () => toggleCardSettings(idx),
-              style: { padding: '4px' }
-            }),
-            createElement(IconButton, {
-              icon: 'trash',
-              label: 'Eliminar',
-              className: 'is-destructive bg-white',
-              onClick: () => removeCard(idx),
-              style: { padding: '4px' }
-            })
+            { className: 'flex justify-between gap-2 mb-2 items-start' },
+            createElement(
+              'div',
+              { className: 'flex gap-2 items-center sc-service-card-editor__order-wrap' },
+              createElement(
+                'label',
+                { className: 'sc-service-card-editor__order-label text-xs' },
+                'Orden'
+              ),
+              createElement(SelectControl, {
+                label: '',
+                hideLabelFromVision: true,
+                value: idx + 1,
+                options: orderOptions,
+                onChange: (value) => setCardOrder(idx, value),
+                className: 'sc-service-card-editor__order-select',
+              }),
+              createElement(
+                'span',
+                { className: 'sc-service-card-editor__order text-xs opacity-70' },
+                `de ${cards.length}`
+              )
+            ),
+            createElement(
+              'div',
+              { className: 'flex gap-2' },
+              createElement(IconButton, {
+                icon: 'admin-generic',
+                label: 'Configuración',
+                className: 'bg-white',
+                onClick: () => toggleCardSettings(idx),
+                style: { padding: '4px' }
+              }),
+              createElement(IconButton, {
+                icon: 'trash',
+                label: 'Eliminar',
+                className: 'is-destructive bg-white',
+                onClick: () => removeCard(idx),
+                style: { padding: '4px' }
+              })
+            )
           ),
 
           // Panel de configuración expandible
