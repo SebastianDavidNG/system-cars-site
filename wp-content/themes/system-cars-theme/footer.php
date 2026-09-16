@@ -73,14 +73,14 @@
         <div class="text-center md:text-left">
             <h3 class="text-lg font-semibold mb-4 uppercase">Encuéntranos en</h3>
             <div class="footer-social flex space-x-3 justify-center md:justify-start">
-                <a href="https://www.facebook.com/system.cars1" target="_blank" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-blue-600">
-                    <i class="fab fa-facebook-f"></i>
+                <a href="https://www.facebook.com/system.cars1" target="_blank" rel="noopener noreferrer" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-blue-600" aria-label="Facebook de System Cars">
+                    <i class="fab fa-facebook-f" aria-hidden="true"></i>
                 </a>
-                <a href="https://www.instagram.com/system.cars" target="_blank" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-pink-500">
-                    <i class="fab fa-instagram"></i>
+                <a href="https://www.instagram.com/system.cars" target="_blank" rel="noopener noreferrer" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-pink-500" aria-label="Instagram de System Cars">
+                    <i class="fab fa-instagram" aria-hidden="true"></i>
                 </a>
-                <a href="https://youtube.com" target="_blank" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-red-600">
-                    <i class="fab fa-youtube"></i>
+                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="w-10 h-10 flex items-center justify-center bg-secondary rounded hover:bg-red-600" aria-label="YouTube de System Cars">
+                    <i class="fab fa-youtube" aria-hidden="true"></i>
                 </a>
             </div>
         </div>

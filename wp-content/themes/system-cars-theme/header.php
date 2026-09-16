@@ -70,9 +70,9 @@
                 ?>
             </div>
             <div class="info-bar-right w-full md:w-auto flex justify-center md:justify-end space-x-4 mb-4 md:mb-0">
-                <a href="https://www.facebook.com/system.cars1" target="_blank" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-facebook-f"></span></a>
-                <a href="https://www.instagram.com/system.cars" target="_blank" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-instagram"></span></a>
-                <a href="https://www.youtube.com/" target="_blank" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]"><span class="fab fa-youtube"></span></a>
+                <a href="https://www.facebook.com/system.cars1" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]" aria-label="Facebook de System Cars"><span class="fab fa-facebook-f" aria-hidden="true"></span></a>
+                <a href="https://www.instagram.com/system.cars" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]" aria-label="Instagram de System Cars"><span class="fab fa-instagram" aria-hidden="true"></span></a>
+                <a href="https://www.youtube.com/" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-white text-[18px] md:text-[17px] lg:text-[20px]" aria-label="YouTube de System Cars"><span class="fab fa-youtube" aria-hidden="true"></span></a>
             </div>
         </div>
     </div>
@@ -107,14 +107,14 @@
             </nav>
 
             <!-- Usuario -->
-            <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>">
-                <i class="fa-solid fa-user font-s-icon text-gray-800 hover:text-tertiary"></i>
+            <a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" aria-label="<?php esc_attr_e( 'Mi cuenta', 'system-cars-theme' ); ?>">
+                <i class="fa-solid fa-user font-s-icon text-gray-800 hover:text-tertiary" aria-hidden="true"></i>
             </a>
 
             <!-- Carrito con Mini-Cart Dropdown -->
             <div class="sc-mini-cart-wrapper relative">
                 <button type="button" class="sc-mini-cart-trigger" aria-label="<?php esc_attr_e( 'Ver carrito', 'system-cars-theme' ); ?>">
-                    <i class="fa-solid fa-cart-shopping font-s-icon text-gray-800 hover:text-tertiary"></i>
+                    <i class="fa-solid fa-cart-shopping font-s-icon text-gray-800 hover:text-tertiary" aria-hidden="true"></i>
                     <?php
                     $cart_count = function_exists('WC') ? WC()->cart->get_cart_contents_count() : 0;
                     if ( $cart_count > 0 ) : ?>
@@ -151,9 +151,9 @@
         </div>
 
         <!-- Botón toggle Mobile -->
-        <button id="menu-toggle" class="sm:hidden flex items-center text-gray-800 focus:outline-none z-50 relative max-w-2xs">
-            <i id="icon-open" class="fa-solid fa-bars"></i>
-            <i id="icon-close" class="fa-solid fa-xmark hidden"></i>
+        <button id="menu-toggle" class="sm:hidden flex items-center text-gray-800 focus:outline-none z-50 relative max-w-2xs" aria-label="<?php esc_attr_e( 'Abrir menú', 'system-cars-theme' ); ?>">
+            <i id="icon-open" class="fa-solid fa-bars" aria-hidden="true"></i>
+            <i id="icon-close" class="fa-solid fa-xmark hidden" aria-hidden="true"></i>
         </button>
     </div>
 </header>
@@ -176,13 +176,13 @@
         <div class="mobile-menu-icons flex justify-center items-center space-x-8 mt-8">
 
             <!-- Usuario -->
-            <a href="<?php echo get_permalink( get_option('woocommerce_myaccount_page_id') ); ?>">
-                <i class="fa-solid fa-user text-2xl text-gray-800 hover:text-primary transition-colors duration-300"></i>
+            <a href="<?php echo esc_url( get_permalink( get_option('woocommerce_myaccount_page_id') ) ); ?>" aria-label="<?php esc_attr_e( 'Mi cuenta', 'system-cars-theme' ); ?>">
+                <i class="fa-solid fa-user text-2xl text-gray-800 hover:text-primary transition-colors duration-300" aria-hidden="true"></i>
             </a>
 
             <!-- Carrito -->
-            <a href="<?php echo function_exists('WC') ? wc_get_cart_url() : '#'; ?>" class="relative">
-                <i class="fa-solid fa-cart-shopping text-2xl text-gray-800 hover:text-primary transition-colors duration-300"></i>
+            <a href="<?php echo esc_url( function_exists('WC') ? wc_get_cart_url() : '#' ); ?>" class="relative" aria-label="<?php esc_attr_e( 'Ver carrito', 'system-cars-theme' ); ?>">
+                <i class="fa-solid fa-cart-shopping text-2xl text-gray-800 hover:text-primary transition-colors duration-300" aria-hidden="true"></i>
 
 <?php
                 $cart_count = function_exists('WC') ? WC()->cart->get_cart_contents_count() : 0;
