@@ -233,13 +233,6 @@ function sc_register_blocks_from_metadata() {
 add_action('init', 'sc_register_blocks_from_metadata');
 
 function sc_enqueue_frontend_assets() {
-    // Google Fonts
-    wp_enqueue_style(
-        'systemcars-roboto-condensed',
-        'https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@200;300;400;500;700&display=swap',
-        [], null
-    );
-
     // Font Awesome
     wp_enqueue_style(
         'fa-cdn',
@@ -269,44 +262,11 @@ function sc_enqueue_frontend_assets() {
         );
     }
 
-    // Swiper en frontend (CDN) - necesario para slider-block
-    wp_enqueue_style(
-        'swiper-css',
-        'https://unpkg.com/swiper/swiper-bundle.min.css',
-        [], '10.3.1'
-    );
-    wp_enqueue_script(
-        'swiper-js',
-        'https://unpkg.com/swiper/swiper-bundle.min.js',
-        [], '10.3.1', true
-    );
-
-    // slider-frontend.js se carga manualmente porque necesita Swiper como dependencia
-    // (block.json no permite especificar dependencias)
-    $slider_frontend = get_template_directory() . '/dist/slider-frontend.js';
-    if ( file_exists( $slider_frontend ) ) {
-        wp_enqueue_script(
-            'system-cars-slider-frontend',
-            get_template_directory_uri() . '/dist/slider-frontend.js',
-            [ 'swiper-js' ],
-            filemtime( $slider_frontend ),
-            true
-        );
-        wp_script_add_data( 'system-cars-slider-frontend', 'type', 'module' );
-    }
-
-    // NOTA: parallax-columns-frontend.js se carga automáticamente desde block.json
-
-    // video-modal-frontend.js - siempre cargar para asegurar que funcione
-    $video_modal_frontend = get_template_directory() . '/dist/video-modal-frontend.js';
-    if ( file_exists( $video_modal_frontend ) ) {
-        wp_enqueue_script(
-            'system-cars-video-modal-frontend',
-            get_template_directory_uri() . '/dist/video-modal-frontend.js',
-            [],
-            filemtime( $video_modal_frontend ),
-            true
-        );
+    // Slider: Swiper is bundled in slider-frontend.js (+ effect-fade CSS).
+    // Load on front page or whenever the block is present (has_block can miss some layouts).
+    $needs_slider = is_front_page() || is_home() || has_block( 'system-cars/slider-block' );
+    if ( $needs_slider ) {
+        sc_enqueue_slider_frontend_assets();
     }
 
     // Wishlist functionality - cargar en páginas de tienda y productos
@@ -326,9 +286,307 @@ function sc_enqueue_frontend_assets() {
 add_action('wp_enqueue_scripts', 'sc_enqueue_frontend_assets', 999);
 
 /**
- * Encolar video-modal-frontend.js cuando el bloque está presente
- * Usando render_block para mayor confiabilidad
+ * Enqueue slider frontend JS/CSS (Swiper bundled, including fade effect styles).
  */
+function sc_enqueue_slider_frontend_assets() {
+    static $done = false;
+    if ( $done ) {
+        return;
+    }
+    $done = true;
+
+    $slider_css = get_template_directory() . '/dist/css/slider-frontend.css';
+    if ( file_exists( $slider_css ) ) {
+        wp_enqueue_style(
+            'system-cars-slider-frontend',
+            get_template_directory_uri() . '/dist/css/slider-frontend.css',
+            [],
+            filemtime( $slider_css )
+        );
+    }
+
+    $slider_frontend = get_template_directory() . '/dist/slider-frontend.js';
+    if ( file_exists( $slider_frontend ) ) {
+        wp_enqueue_script(
+            'system-cars-slider-frontend',
+            get_template_directory_uri() . '/dist/slider-frontend.js',
+            [],
+            filemtime( $slider_frontend ),
+            true
+        );
+        wp_script_add_data( 'system-cars-slider-frontend', 'type', 'module' );
+    }
+}
+
+/**
+ * Fallback: enqueue slider assets when the block renders (covers reusable blocks, etc.).
+ *
+ * @param string $block_content Block HTML.
+ * @param array  $block         Parsed block.
+ * @return string
+ */
+function sc_enqueue_slider_on_render( $block_content, $block ) {
+    if ( ( $block['blockName'] ?? '' ) === 'system-cars/slider-block' ) {
+        sc_enqueue_slider_frontend_assets();
+    }
+    return $block_content;
+}
+add_filter( 'render_block', 'sc_enqueue_slider_on_render', 5, 2 );
+
+/**
+ * Optimize slider images for LCP / Speed Index (works on already-saved block HTML).
+ * - First slide: eager + fetchpriority + excluded from 3rd-party lazy-load plugins
+ * - Other slides: native loading="lazy"
+ *
+ * @param string $block_content Block HTML.
+ * @param array  $block         Parsed block.
+ * @return string
+ */
+function sc_optimize_slider_images( $block_content, $block ) {
+    if ( ( $block['blockName'] ?? '' ) !== 'system-cars/slider-block' ) {
+        return $block_content;
+    }
+
+    $index = 0;
+    return preg_replace_callback(
+        '/<img\b([^>]*)\/?>/i',
+        static function ( $matches ) use ( &$index ) {
+            $attrs = trim( $matches[1] );
+            // Drop self-closing slash and previous loading hints / plugin lazy attrs.
+            $attrs = rtrim( $attrs, '/' );
+            $attrs = preg_replace( '/\s+(loading|fetchpriority|decoding|data-src|data-lazyloaded|data-lazy-src|data-orig-src|data-no-lazy|data-skip-lazy)=(["\'])[^"\']*\2/i', '', $attrs );
+
+            // Preserve existing classes and add skip-lazy markers for cache plugins.
+            if ( preg_match( '/\sclass=(["\'])([^"\']*)\1/i', $attrs, $class_match ) ) {
+                $classes = trim( $class_match[2] . ' sc-slider-img skip-lazy' );
+                if ( 0 === $index ) {
+                    $classes .= ' sc-slider-img--lcp';
+                }
+                $attrs = preg_replace(
+                    '/\sclass=(["\'])([^"\']*)\1/i',
+                    ' class="' . esc_attr( $classes ) . '"',
+                    $attrs,
+                    1
+                );
+            } else {
+                $classes = 'sc-slider-img skip-lazy' . ( 0 === $index ? ' sc-slider-img--lcp' : '' );
+                $attrs  .= ' class="' . esc_attr( $classes ) . '"';
+            }
+
+            if ( 0 === $index ) {
+                $attrs .= ' fetchpriority="high" loading="eager" decoding="async" data-no-lazy="1" data-skip-lazy="1"';
+            } else {
+                $attrs .= ' loading="lazy" decoding="async" data-no-lazy="1" data-skip-lazy="1"';
+            }
+            ++$index;
+            return '<img ' . trim( $attrs ) . '>';
+        },
+        $block_content
+    );
+}
+add_filter( 'render_block', 'sc_optimize_slider_images', 10, 2 );
+
+/**
+ * Preload the first slider image early (helps mobile Speed Index / LCP).
+ */
+function sc_preload_slider_lcp_image() {
+    if ( ! is_front_page() && ! is_home() && ! has_block( 'system-cars/slider-block' ) ) {
+        return;
+    }
+
+    $post = get_post();
+    if ( ! $post || empty( $post->post_content ) ) {
+        return;
+    }
+
+    if ( ! preg_match(
+        '/wp-block-system-cars-slider-block[\s\S]*?<img[^>]+(?:src|data-src)=["\']([^"\']+)["\']/i',
+        $post->post_content,
+        $match
+    ) ) {
+        return;
+    }
+
+    $url = esc_url( $match[1] );
+    if ( ! $url || strpos( $url, 'data:' ) === 0 ) {
+        return;
+    }
+
+    printf(
+        '<link rel="preload" as="image" href="%s" fetchpriority="high" />' . "\n",
+        $url
+    );
+}
+add_action( 'wp_head', 'sc_preload_slider_lcp_image', 2 );
+
+/**
+ * Tell common lazy-load plugins to skip slider images (LiteSpeed / WP Rocket / etc.).
+ *
+ * @param string|array $excludes Exclusions.
+ * @return string|array
+ */
+function sc_exclude_slider_from_lazyload( $excludes ) {
+    $tokens = array(
+        'wp-block-system-cars-slider-block',
+        'sc-slider-img',
+        'sc-slider-img--lcp',
+        'skip-lazy',
+    );
+
+    if ( is_array( $excludes ) ) {
+        return array_values( array_unique( array_merge( $excludes, $tokens ) ) );
+    }
+
+    $excludes = (string) $excludes;
+    foreach ( $tokens as $token ) {
+        if ( false === strpos( $excludes, $token ) ) {
+            $excludes .= ( $excludes ? "\n" : '' ) . $token;
+        }
+    }
+    return $excludes;
+}
+add_filter( 'litespeed_media_lazy_img_excludes', 'sc_exclude_slider_from_lazyload' );
+add_filter( 'rocket_lazyload_excluded_src', 'sc_exclude_slider_from_lazyload' );
+add_filter( 'rocket_lazyload_excluded_attributes', 'sc_exclude_slider_from_lazyload' );
+
+/**
+ * Do not dequeue WooCommerce styles on shop flows; remove them on marketing pages
+ * to reduce render-blocking CSS (Speed Index) without touching the slider.
+ */
+function sc_dequeue_unused_woocommerce_styles() {
+    if ( is_admin() || ! function_exists( 'is_woocommerce' ) ) {
+        return;
+    }
+
+    $keep = is_woocommerce() || is_cart() || is_checkout() || is_account_page();
+    if ( $keep ) {
+        return;
+    }
+
+    wp_dequeue_style( 'woocommerce-general' );
+    wp_dequeue_style( 'woocommerce-layout' );
+    wp_dequeue_style( 'woocommerce-smallscreen' );
+    wp_dequeue_style( 'woocommerce-blocktheme' );
+    wp_dequeue_style( 'wc-blocks-style' );
+    wp_dequeue_style( 'wc-blocks-vendors-style' );
+}
+add_action( 'wp_enqueue_scripts', 'sc_dequeue_unused_woocommerce_styles', 1000 );
+
+/**
+ * Faster connection to Font Awesome CDN (does not change icon look).
+ */
+function sc_resource_hints( $urls, $relation_type ) {
+    if ( 'preconnect' === $relation_type ) {
+        $urls[] = array(
+            'href'        => 'https://cdnjs.cloudflare.com',
+            'crossorigin' => 'anonymous',
+        );
+    }
+    return $urls;
+}
+add_filter( 'wp_resource_hints', 'sc_resource_hints', 10, 2 );
+
+/**
+ * Blocks that get scroll fade-in (slider excluded — LCP / hero).
+ *
+ * @return array<string, array{mode: string, items?: string}>
+ */
+function sc_scroll_reveal_blocks() {
+	return array(
+		'system-cars/service-card'      => array(
+			'mode'  => 'stagger',
+			'items' => ':scope > a, :scope > div',
+		),
+		'system-cars/what-we-do'        => array( 'mode' => 'block' ),
+		'system-cars/info-image'        => array( 'mode' => 'block' ),
+		'system-cars/parallax-columns'  => array( 'mode' => 'block' ),
+		'system-cars/video-modal'       => array( 'mode' => 'block' ),
+		'system-cars/contact'           => array( 'mode' => 'block' ),
+		'system-cars/map'               => array( 'mode' => 'block' ),
+		'system-cars/styled-button'     => array( 'mode' => 'block' ),
+		'system-cars/car-block'         => array( 'mode' => 'block' ),
+	);
+}
+
+/**
+ * Mark custom blocks for scroll reveal without re-saving post content.
+ *
+ * @param string $block_content Block HTML.
+ * @param array  $block         Parsed block.
+ * @return string
+ */
+function sc_add_scroll_reveal_to_blocks( $block_content, $block ) {
+	$name   = $block['blockName'] ?? '';
+	$config = sc_scroll_reveal_blocks();
+
+	if ( $block_content === '' || ! isset( $config[ $name ] ) ) {
+		return $block_content;
+	}
+
+	if ( ! class_exists( 'WP_HTML_Tag_Processor' ) ) {
+		return $block_content;
+	}
+
+	$processor = new WP_HTML_Tag_Processor( $block_content );
+	if ( ! $processor->next_tag() ) {
+		return $block_content;
+	}
+
+	$processor->add_class( 'sc-reveal' );
+	$processor->set_attribute( 'data-sc-reveal', $config[ $name ]['mode'] );
+
+	if ( ! empty( $config[ $name ]['items'] ) ) {
+		$processor->set_attribute( 'data-sc-reveal-items', $config[ $name ]['items'] );
+	}
+
+	return $processor->get_updated_html();
+}
+add_filter( 'render_block', 'sc_add_scroll_reveal_to_blocks', 12, 2 );
+
+/**
+ * Enqueue scroll-reveal script on the front end.
+ */
+function sc_enqueue_scroll_reveal() {
+	if ( is_admin() ) {
+		return;
+	}
+
+	$path = get_template_directory() . '/js/scroll-reveal.js';
+	if ( ! file_exists( $path ) ) {
+		return;
+	}
+
+	wp_enqueue_script(
+		'systemcars-scroll-reveal',
+		get_template_directory_uri() . '/js/scroll-reveal.js',
+		array(),
+		filemtime( $path ),
+		true
+	);
+}
+add_action( 'wp_enqueue_scripts', 'sc_enqueue_scroll_reveal', 30 );
+
+/**
+ * Critical reveal CSS in head so opacity:0 applies before deferred/cached CSS.
+ */
+function sc_scroll_reveal_critical_css() {
+	if ( is_admin() ) {
+		return;
+	}
+	?>
+<style id="sc-scroll-reveal-critical">
+@media (prefers-reduced-motion: no-preference) {
+  .sc-reveal:not(.is-revealed):not(.sc-reveal--children){opacity:0!important;transform:translate3d(0,48px,0)!important}
+  .sc-reveal.is-revealed,.sc-reveal.sc-reveal--children{opacity:1!important;transform:none!important}
+  .sc-reveal-item:not(.is-revealed){opacity:0!important;transform:translate3d(0,40px,0)!important}
+  .sc-reveal-item.is-revealed{opacity:1!important;transform:none!important}
+  .sc-reveal,.sc-reveal-item{transition:opacity .85s cubic-bezier(.22,1,.36,1),transform .85s cubic-bezier(.22,1,.36,1)}
+  @media (min-width:768px){.sc-reveal-item{opacity:1!important;transform:none!important;transition:none!important}}
+}
+</style>
+	<?php
+}
+add_action( 'wp_head', 'sc_scroll_reveal_critical_css', 5 );
 function system_cars_enqueue_video_modal_script($block_content, $block) {
     if ('system-cars/video-modal' === $block['blockName']) {
         $script_path = get_template_directory() . '/dist/video-modal-frontend.js';
@@ -634,8 +892,8 @@ function systemcars_scripts() {
     wp_enqueue_script(
         'mi-menu-mobile',
         get_template_directory_uri() . '/js/menu-mobile.js',
-        array('jquery'),
-        null,
+        array(),
+        filemtime( get_template_directory() . '/js/menu-mobile.js' ),
         true
     );
 }

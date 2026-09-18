@@ -22,7 +22,7 @@ export default defineConfig({
   build: {
     outDir: './wp-content/themes/system-cars-theme/dist',
     emptyOutDir: false,
-    minify: false, // CRÍTICO: No minificar para evitar conflictos de variables
+    minify: false, // Keep unminified: safer for WP block IIFE builds; size win comes from conditional enqueue
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'wp-content/themes/system-cars-theme/js/main.js'),

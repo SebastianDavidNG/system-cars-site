@@ -216,7 +216,11 @@ function Save({ attributes: attributes2 }) {
         (slide, idx) => createElement(
           "div",
           { className: "swiper-slide", key: idx },
-          createElement("img", { src: slide.image, alt: "" }),
+          createElement("img", {
+            src: slide.image,
+            alt: "",
+            ...idx === 0 ? { fetchpriority: "high", loading: "eager", decoding: "async" } : { loading: "lazy", decoding: "async" }
+          }),
           createElement(
             "div",
             { className: "slide-content" },
